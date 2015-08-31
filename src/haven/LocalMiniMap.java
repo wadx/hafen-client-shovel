@@ -146,7 +146,17 @@ public class LocalMiniMap extends Widget {
 			Coord gc = p2c(gob.rc);
 			Tex tex = icon.tex();
 			g.image(tex, gc.sub(tex.sz().div(2)));
-		    }
+		    } else {
+				KinInfo kinInfo = gob.getattr(KinInfo.class);
+				if (kinInfo != null) {
+					Coord dotPosition = p2c(gob.rc).sub(3, 3);
+					g.chcolor(Color.BLACK);
+					g.fellipse(dotPosition, new Coord(6, 6));
+					g.chcolor(BuddyWnd.gc[kinInfo.group]);
+					g.fellipse(dotPosition, new Coord(5, 5));
+					g.chcolor();
+				}
+			}
 		} catch(Loading l) {}
 	    }
 	}
