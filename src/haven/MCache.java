@@ -146,27 +146,29 @@ public class MCache {
 	    Collection<Gob>[] fo = (Collection<Gob>[])new Collection[cutn.x * cutn.y];
 	    for(int i = 0; i < fo.length; i++)
 		fo[i] = new LinkedList<Gob>();
-	    Coord c = new Coord(0, 0);
-	    Coord tc = gc.mul(cmaps);
-	    int i = 0;
-	    Random rnd = new Random(id);
-	    for(c.y = 0; c.y < cmaps.x; c.y++) {
-		for(c.x = 0; c.x < cmaps.y; c.x++, i++) {
-		    Tileset set = tileset(tiles[i]);
-		    int fp = rnd.nextInt();
-		    int rp = rnd.nextInt();
-		    double a = rnd.nextDouble();
-		    if(set.flavobjs.size() > 0) {
-			if((fp % set.flavprob) == 0) {
-			    Indir<Resource> r = set.flavobjs.pick(rp % set.flavobjs.tw);
-			    Gob g = new Flavobj(c.add(tc).mul(tilesz).add(tilesz.div(2)), a * 2 * Math.PI);
-			    g.setattr(new ResDrawable(g, r, Message.nil));
-			    Coord cc = c.div(cutsz);
-			    fo[cc.x + (cc.y * cutn.x)].add(g);
-			}
-		    }
-		}
-	    }
+		if (Config.flavor) {
+            Coord c = new Coord(0, 0);
+            Coord tc = gc.mul(cmaps);
+            int i = 0;
+            Random rnd = new Random(id);
+            for (c.y = 0; c.y < cmaps.x; c.y++) {
+                for (c.x = 0; c.x < cmaps.y; c.x++, i++) {
+                    Tileset set = tileset(tiles[i]);
+                    int fp = rnd.nextInt();
+                    int rp = rnd.nextInt();
+                    double a = rnd.nextDouble();
+                    if (set.flavobjs.size() > 0) {
+                        if ((fp % set.flavprob) == 0) {
+                            Indir<Resource> r = set.flavobjs.pick(rp % set.flavobjs.tw);
+                            Gob g = new Flavobj(c.add(tc).mul(tilesz).add(tilesz.div(2)), a * 2 * Math.PI);
+                            g.setattr(new ResDrawable(g, r, Message.nil));
+                            Coord cc = c.div(cutsz);
+                            fo[cc.x + (cc.y * cutn.x)].add(g);
+                        }
+                    }
+                }
+            }
+        }
 	    this.fo = fo;
 	}
 

@@ -51,6 +51,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private Coord3f camoff = new Coord3f(Coord3f.o);
     public double shake = 0.0;
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
+    Color clWhite = new Color(255, 255, 255);
     
     public interface Delayed {
 	public void run(GOut g);
@@ -357,8 +358,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void release() {
-	    if(tfield > 100)
-		tangl = (float)(Math.PI * 0.5 * (Math.floor(tangl / (Math.PI * 0.5)) + 0.5));
+	    //if(tfield > 100)
+		//tangl = (float)(Math.PI * 0.5 * (Math.floor(tangl / (Math.PI * 0.5)) + 0.5));
 	}
 
 	public boolean wheel(Coord c, int amount) {
@@ -549,10 +550,17 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    this.cc = new Coord(pl.getc());
 	synchronized(glob) {
 	    if(glob.lightamb != null) {
-		DirLight light = new DirLight(glob.lightamb, glob.lightdif, glob.lightspc, Coord3f.o.sadd((float)glob.lightelev, (float)glob.lightang, 1f));
-		rl.add(light, null);
-		updsmap(rl, light);
-		amb = light;
+        if (Config.nightvision) {
+            DirLight light = new DirLight(clWhite, clWhite, clWhite, Coord3f.o.sadd((float) glob.lightelev, (float) glob.lightang, 1f));
+            rl.add(light, null);
+            updsmap(rl, light);
+            amb = light;
+        } else {
+            DirLight light = new DirLight(glob.lightamb, glob.lightdif, glob.lightspc, Coord3f.o.sadd((float) glob.lightelev, (float) glob.lightang, 1f));
+            rl.add(light, null);
+            updsmap(rl, light);
+            amb = light;
+        }
 	    } else {
 		amb = null;
 	    }

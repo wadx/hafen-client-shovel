@@ -50,6 +50,9 @@ public class Config {
     public static boolean softres = getprop("haven.softres", "on").equals("on");
     public static byte[] authck = null;
     public static String prefspec = "hafen";
+
+	public static boolean flavor = false;
+    public static boolean nightvision = true;
     
     static {
 	String p;
