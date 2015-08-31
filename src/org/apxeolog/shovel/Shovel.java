@@ -53,9 +53,10 @@ public class Shovel {
         File settingsFile = new File(workingDirectory, "settings.json");
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.WRITE);
+            Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -73,7 +74,7 @@ public class Shovel {
     public static void init() {
         try {
             // Detect working directory, in case jar not in WORKING_DIR
-            workingDirectory = new File(Shovel.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+            workingDirectory = new File(Shovel.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile();
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot detect jar path, using working directory instead");
             workingDirectory = new File("");
