@@ -11,3 +11,4 @@ Feautures:
 * Free camera rotation
 * Removed flavor objects
 * Added nightvision feature
+* Mapper with non-random minimaps
