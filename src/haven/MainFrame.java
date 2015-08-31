@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -169,7 +171,7 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
     }
 
     public MainFrame(Coord isz) {
-	super("Haven and Hearth");
+	super("H&H Shovel[" + Shovel.getVersion() + "]");
 	Coord sz;
 	if(isz == null) {
 	    sz = Utils.getprefc("wndsz", new Coord(800, 600));
@@ -249,10 +251,10 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 			    Config.authck = null;
 			}
 			fun = bill;
-			setTitle("Haven and Hearth");
+			setTitle("H&H Shovel[" + Shovel.getVersion() + "]");
 		    } else {
 			fun = new RemoteUI(sess);
-			setTitle("Haven and Hearth \u2013 " + sess.username);
+			setTitle("H&H Shovel[" + Shovel.getVersion() + "] -> " + sess.username);
 		    }
 		    sess = fun.run(p.newui(sess));
 		}
@@ -371,6 +373,8 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
     }
 
     private static void main2(String[] args) {
+		// Initialize Shovel
+		Shovel.init();
 	Config.cmdline(args);
 	try {
 	    javabughack();
