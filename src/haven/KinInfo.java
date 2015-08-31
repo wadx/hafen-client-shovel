@@ -26,6 +26,9 @@
 
 package haven;
 
+import org.apxeolog.shovel.Settings;
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
@@ -91,29 +94,36 @@ public class KinInfo extends GAttrib {
     }
     
     final PView.Draw2D fx = new PView.Draw2D() {
-	    public void draw2d(GOut g) {
-		if(gob.sc != null) {
-		    Coord sc = gob.sc.add(new Coord(gob.sczu.mul(15)));
-		    if(sc.isect(Coord.z, g.sz)) {
-			long now = System.currentTimeMillis();
-			if(seen == 0)
-			    seen = now;
-			int tm = (int)(now - seen);
-			Color show = null;
-			boolean auto = (type & 1) == 0;
-			if(auto && (tm < 7500)) {
-			    show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+		public void draw2d(GOut g) {
+			if (gob.sc != null) {
+				Coord sc = gob.sc.add(new Coord(gob.sczu.mul(15)));
+				if (Shovel.getSettings().alwaysShowNickname) {
+					Tex t = rendered();
+					g.chcolor(255, 255, 255, 255);
+					g.aimage(t, sc, 0.5, 1.0);
+					g.chcolor();
+				} else {
+					if (sc.isect(Coord.z, g.sz)) {
+						long now = System.currentTimeMillis();
+						if (seen == 0)
+							seen = now;
+						int tm = (int) (now - seen);
+						Color show = null;
+						boolean auto = (type & 1) == 0;
+						if (auto && (tm < 7500)) {
+							show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+						}
+						if (show != null) {
+							Tex t = rendered();
+							g.chcolor(show);
+							g.aimage(t, sc, 0.5, 1.0);
+							g.chcolor();
+						}
+					} else {
+						seen = 0;
+					}
+				}
 			}
-			if(show != null) {
-			    Tex t = rendered();
-			    g.chcolor(show);
-			    g.aimage(t, sc, 0.5, 1.0);
-			    g.chcolor();
-			}
-		    } else {
-			seen = 0;
-		    }
 		}
-	    }
 	};
 }
