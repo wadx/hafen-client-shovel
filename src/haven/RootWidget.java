@@ -27,6 +27,7 @@
 package haven;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 public class RootWidget extends ConsoleHost {
     public static final Resource defcurs = Resource.local().loadwait("gfx/hud/curs/arw");
@@ -41,6 +42,8 @@ public class RootWidget extends ConsoleHost {
 	
     public boolean globtype(char key, KeyEvent ev) {
 	if(!super.globtype(key, ev)) {
+        boolean ctrl = (((ev.getModifiers() & InputEvent.CTRL_MASK) != 0));
+        int code = ev.getKeyCode();
 	    if(key == '`') {
 		GameUI gi = findchild(GameUI.class);
 		if(Config.profile) {
@@ -54,7 +57,9 @@ public class RootWidget extends ConsoleHost {
 		}
 	    } else if(key == ':') {
 		entercmd();
-	    } else if(key != 0) {
+	    } else if((code == KeyEvent.VK_N)&&ctrl) {
+            Config.nightvision = !Config.nightvision;
+        } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }
 	}

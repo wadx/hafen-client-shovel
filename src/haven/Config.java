@@ -52,6 +52,7 @@ public class Config {
     public static String prefspec = "hafen";
 
 	public static boolean flavor = false;
+    public static boolean nightvision = true;
     
     static {
 	String p;
