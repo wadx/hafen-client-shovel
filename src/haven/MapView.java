@@ -30,6 +30,8 @@ import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import haven.Resource.Tile;
 import haven.GLProgram.VarID;
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.Color;
 import java.util.*;
 import java.lang.reflect.*;
@@ -550,7 +552,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    this.cc = new Coord(pl.getc());
 	synchronized(glob) {
 	    if(glob.lightamb != null) {
-        if (Config.nightvision) {
+        if (Shovel.getSettings().nightvision) {
             DirLight light = new DirLight(clWhite, clWhite, clWhite, Coord3f.o.sadd((float) glob.lightelev, (float) glob.lightang, 1f));
             rl.add(light, null);
             updsmap(rl, light);

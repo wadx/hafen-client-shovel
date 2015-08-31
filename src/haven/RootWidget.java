@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 
@@ -58,8 +60,9 @@ public class RootWidget extends ConsoleHost {
 	    } else if(key == ':') {
 		entercmd();
 	    } else if((code == KeyEvent.VK_N)&&ctrl) {
-            Config.nightvision = !Config.nightvision;
-        } else if(key != 0) {
+			Shovel.getSettings().nightvision = !Shovel.getSettings().nightvision;
+			Shovel.saveSettings();
+		} else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }
 	}

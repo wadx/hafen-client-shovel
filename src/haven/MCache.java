@@ -30,6 +30,7 @@ import java.util.*;
 import java.lang.ref.*;
 import haven.Resource.Tileset;
 import haven.Resource.Tile;
+import org.apxeolog.shovel.Shovel;
 
 public class MCache {
     public static final Coord tilesz = new Coord(11, 11);
@@ -146,7 +147,7 @@ public class MCache {
 	    Collection<Gob>[] fo = (Collection<Gob>[])new Collection[cutn.x * cutn.y];
 	    for(int i = 0; i < fo.length; i++)
 		fo[i] = new LinkedList<Gob>();
-		if (Config.flavor) {
+		if (Shovel.getSettings().showFlavor) {
             Coord c = new Coord(0, 0);
             Coord tc = gc.mul(cmaps);
             int i = 0;
