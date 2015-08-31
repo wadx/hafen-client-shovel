@@ -47,7 +47,7 @@ public class Button extends SIWidget {
     public Text text;
     public BufferedImage cont;
     static Text.Foundry tf = new Text.Foundry(Text.serif.deriveFont(Font.BOLD, 12)).aa(true);
-    static Text.Furnace nf = new PUtils.BlurFurn(new PUtils.TexFurn(tf, Window.ctex), 1, 1, new Color(80, 40, 0));
+    static Text.Furnace nf = new PUtils.BlurFurn(tf, 1, 1, new Color(80, 40, 0));
     boolean a = false;
     UI.Grab d = null;
 	

@@ -55,7 +55,7 @@ public class Shovel {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.WRITE);
         } catch (Exception ex) {
-            ALS.alDebugPrint("Cannot save settings file: ", ex.getMessage());
+            ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
         }
     }
 
