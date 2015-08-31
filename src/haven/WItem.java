@@ -215,7 +215,12 @@ public class WItem extends Widget implements DTarget {
 		item.wdgmsg("take", c);
 	    return(true);
 	} else if(btn == 3) {
-	    item.wdgmsg("iact", c, ui.modflags());
+		if (ui.modshift) {
+			wdgmsg("transfer_all", item.resource().name);
+		} else if (ui.modctrl) {
+			wdgmsg("drop_all", item.resource().name);
+		} else
+	    	item.wdgmsg("iact", c, ui.modflags());
 	    return(true);
 	}
 	return(false);

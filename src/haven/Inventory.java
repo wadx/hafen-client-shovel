@@ -90,8 +90,27 @@ public class Inventory extends Widget implements DTarget {
 	wdgmsg("drop", ul.add(sqsz.div(2)).div(invsq.sz()));
 	return(true);
     }
-	
-    public boolean iteminteract(Coord cc, Coord ul) {
+
+	@Override
+	public void wdgmsg(Widget sender, String msg, Object... args) {
+		if ("transfer_all".equals(msg)) {
+			String resName = args[0] != null ? (String) args[0] : "";
+			for (GItem item : wmap.keySet()) {
+				if (resName.equals(item.resource().name)) {
+					item.wdgmsg("transfer", Coord.z);
+				}
+			}
+		} else if ("drop_all".equals(msg)) {
+			String resName = args[0] != null ? (String) args[0] : "";
+			for (GItem item : wmap.keySet()) {
+				if (resName.equals(item.resource().name)) {
+					item.wdgmsg("drop", Coord.z);
+				}
+			}
+		} else super.wdgmsg(sender, msg, args);
+	}
+
+	public boolean iteminteract(Coord cc, Coord ul) {
 	return(false);
     }
 	
