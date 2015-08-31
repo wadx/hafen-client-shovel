@@ -7,5 +7,4 @@ package org.apxeolog.shovel;
 public class Settings {
     public boolean dumpMinimaps = true;
     public boolean alwaysShowNickname = true;
-
 }
