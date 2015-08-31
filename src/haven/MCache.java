@@ -26,11 +26,21 @@
 
 package haven;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.ref.*;
 import haven.Resource.Tileset;
 import haven.Resource.Tile;
+import haven.resutil.Ridges;
 import org.apxeolog.shovel.Shovel;
+
+import javax.imageio.ImageIO;
 
 public class MCache {
     public static final Coord tilesz = new Coord(11, 11);
@@ -445,20 +455,23 @@ public class MCache {
     }
 
     public void mapdata2(Message msg) {
-	Coord c = msg.coord();
-	synchronized(grids) {
-	    synchronized(req) {
-		if(req.containsKey(c)) {
-		    Grid g = grids.get(c);
-		    if(g == null)
-			grids.put(c, g = new Grid(c));
-		    g.fill(msg);
-		    req.remove(c);
-		    olseq++;
+		Coord c = msg.coord();
+		Grid g = null;
+		synchronized (grids) {
+			synchronized (req) {
+				if (req.containsKey(c)) {
+					g = grids.get(c);
+					if (g == null)
+						grids.put(c, g = new Grid(c));
+					g.fill(msg);
+					req.remove(c);
+					olseq++;
+				}
+			}
 		}
-	    }
+		if (Shovel.getSettings().dumpMinimaps)
+			drawGrid(this, g);
 	}
-    }
 
     public void mapdata(Message msg) {
 	long now = System.currentTimeMillis();
@@ -604,4 +617,114 @@ public class MCache {
 	    }
 	}
     }
+
+	protected BufferedImage drawmap(Grid grid) {
+		BufferedImage[] texes = new BufferedImage[256];
+		BufferedImage buf = TexI.mkbuf(MCache.cmaps);
+		int t;
+		int y;
+		Coord c = new Coord();
+		for (c.y = 0; c.y < MCache.cmaps.y; c.y++) {
+			for (c.x = 0; c.x < MCache.cmaps.x; c.x++) {
+				t = grid.gettile(c);
+				BufferedImage tl = this.tileimg(t, texes);
+				y = 0;
+				if(tl != null) {
+					y = tl.getRGB(Utils.floormod(c.x, tl.getWidth()),
+							Utils.floormod(c.y, tl.getHeight()));
+				}
+				buf.setRGB(c.x, c.y, y);
+			}
+		}
+
+		for (c.y = 1; c.y < MCache.cmaps.y - 1; ++c.y) {
+			for (c.x = 1; c.x < MCache.cmaps.x - 1; ++c.x) {
+				t = grid.gettile(c);
+				Tiler var12 = tiler(t);
+				if(var12 instanceof Ridges.RidgeTile && Ridges.brokenp(this, grid, c)) {
+					for(y = c.y - 1; y <= c.y + 1; ++y) {
+						for(int x = c.x - 1; x <= c.x + 1; ++x) {
+							Color cc = new Color(buf.getRGB(x, y));
+							buf.setRGB(x, y, Utils.blendcol(cc, Color.BLACK, x == c.x && y == c.y?1.0D:0.1D).getRGB());
+						}
+					}
+				}
+			}
+		}
+
+		for (c.y = 1; c.y < MCache.cmaps.y - 1; c.y++) {
+			for (c.x = 1; c.x < MCache.cmaps.x - 1; c.x++) {
+				t = grid.gettile(c);
+				if(grid.gettile(c.add(-1, 0)) > t || grid.gettile(c.add(1, 0)) > t || grid.gettile(c.add(0, -1)) > t || grid.gettile(c.add(0, 1)) > t) {
+					buf.setRGB(c.x, c.y, Color.BLACK.getRGB());
+				}
+			}
+		}
+
+		return buf;
+	}
+
+	protected BufferedImage tileimg(int t, BufferedImage[] texes) {
+		BufferedImage img = texes[t];
+		if(img == null) {
+			Resource r = sess.glob.map.tilesetr(t);
+			if(r == null) {
+				return null;
+			}
+			Resource.Image ir = (Resource.Image)r.layer(Resource.imgc);
+			if(ir == null) {
+				return null;
+			}
+			img = ir.img;
+			texes[t] = img;
+		}
+		return img;
+	}
+
+	private static Coord mapStartPosition = null;
+	private static Coord mapLastPosition = null;
+	private static String mapSession = null;
+	private static Queue<SoftReference<Grid>> drawQueue = new LinkedList<SoftReference<Grid>>();
+
+	public static void drawGrid(MCache mCache, Grid grid) {
+		if (grid == null) return;
+		if (mapLastPosition == null || (mapLastPosition != null && mapLastPosition.dist(grid.gc) > 10)) {
+			// Start new session
+			drawQueue.clear();
+			mapLastPosition = new Coord(grid.gc);
+			mapStartPosition = new Coord(grid.gc);
+			mapSession = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(new Date(System.currentTimeMillis()));
+			// Write JS file
+			File sessionFolder = new File("maps/" + mapSession);
+			try {
+				sessionFolder.mkdirs();
+				Writer currentSessionFile = new FileWriter(new File("maps/currentsession.js"));
+				currentSessionFile.write("var currentSession = '" + mapSession + "';\n");
+				currentSessionFile.close();
+			} catch (Exception e) {}
+		}
+		{
+			BufferedImage image = null;
+			try {
+				image = mCache.drawmap(grid);
+			} catch (Resource.Loading ex) {
+				// Add to queue
+				drawQueue.add(new SoftReference<Grid>(grid));
+				return;
+			}
+			Coord offset = grid.gc.sub(mapStartPosition);
+			File sessionFolder = new File("maps/" + mapSession);
+			File outputfile = new File(sessionFolder, String.format("tile_%d_%d.png", offset.x, offset.y));
+			try {
+				ImageIO.write(image, "png", outputfile);
+			} catch (IOException e) {
+
+			}
+			mapLastPosition = grid.gc;
+			// Proceed with queue
+			if (drawQueue.peek() != null) {
+				drawGrid(mCache, drawQueue.poll().get());
+			}
+		}
+	}
 }
