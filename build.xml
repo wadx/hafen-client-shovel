@@ -67,7 +67,7 @@
       <fileset dir="build/classes-lib" />
       <manifest>
 	<attribute name="Main-Class" value="haven.MainFrame" />
-	<attribute name="Class-Path" value="jogl.jar gluegen-rt.jar gson-2.3.1.jar builtin-res.jar hafen-res.jar" />
+	<attribute name="Class-Path" value="lib/jogl.jar lib/gluegen-rt.jar lib/gson-2.3.1.jar builtin-res.jar hafen-res.jar" />
       </manifest>
     </jar>
     <chmod file="build/hafen.jar" perm="a+x" />
