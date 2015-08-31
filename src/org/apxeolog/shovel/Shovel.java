@@ -81,6 +81,16 @@ public class Shovel {
         loadSettings();
     }
 
+    /**
+     * Directory for custom resources
+     * @return
+     */
+    public static File getCustomResourceDir() {
+        File customResDir = new File(workingDirectory, "res");
+        if (!customResDir.exists()) customResDir.mkdir();
+        return customResDir;
+    }
+
     public static void main(String[] args) {
         // Just for testing purposes
     }

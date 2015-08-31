@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.*;
@@ -606,6 +608,9 @@ public class Resource implements Serializable {
 			    dir = System.getenv("HAFEN_RESDIR");
 			if(dir != null)
 			    local.add(new FileSource(new File(dir)));
+			else {
+				local.add(new FileSource(Shovel.getCustomResourceDir()));
+			}
 		    } catch(Exception e) {
 			/* Ignore these. We don't want to be crashing the client
 			 * for users just because of errors in development
