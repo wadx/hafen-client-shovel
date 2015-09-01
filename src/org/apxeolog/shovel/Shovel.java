@@ -17,6 +17,7 @@ public class Shovel {
     private static String version = "1.0.1";
     private static Settings settings;
     private static File workingDirectory;
+    private static File userDirectory;
 
     /**
      * Load settings from settings.json
@@ -56,7 +57,6 @@ public class Shovel {
             Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
-            ex.printStackTrace();
         }
     }
 
@@ -79,7 +79,23 @@ public class Shovel {
             ALS.alDebugPrint("Cannot detect jar path, using working directory instead");
             workingDirectory = new File("");
         }
+        try {
+            // Get user directory
+            userDirectory = new File(new File(System.getProperty("user.home", ""), ".haven"), "hafen");
+            if (!userDirectory.exists()) userDirectory.mkdirs();
+        } catch (Exception ex) {
+            ALS.alDebugPrint("Cannot create user directory");
+            userDirectory = new File("");
+        }
         loadSettings();
+    }
+
+    /**
+     * User directory
+     * @return
+     */
+    public static File getUserDirectory() {
+        return userDirectory;
     }
 
     /**

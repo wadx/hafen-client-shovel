@@ -26,7 +26,19 @@
 
 package haven;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
 
 public class LoginScreen extends Widget {
     Login cur;
@@ -48,6 +60,7 @@ public class LoginScreen extends Widget {
 	setfocustab(true);
 	add(new Img(bg), Coord.z);
 	optbtn = adda(new Button(100, "Options"), 10, sz.y - 10, 0, 1);
+		createAccountButtons(null);
     }
 
     private static abstract class Login extends Widget {
@@ -185,8 +198,13 @@ public class LoginScreen extends Widget {
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
 	if(sender == btn) {
-	    if(cur.enter())
-		super.wdgmsg("login", cur.data());
+	    if(cur.enter()) {
+			if (cur instanceof Pwbox) {
+				Pwbox box = (Pwbox) cur;
+				addAccount(box.user.text, box.pass.text);
+			}
+			super.wdgmsg("login", cur.data());
+		}
 	    return;
 	} else if(sender == optbtn) {
 	    if(opts == null) {
@@ -254,9 +272,89 @@ public class LoginScreen extends Widget {
     public boolean type(char k, KeyEvent ev) {
 	if(k == 10) {
 	    if((cur != null) && cur.enter())
+			if (cur instanceof Pwbox) {
+				Pwbox box = (Pwbox) cur;
+				addAccount(box.user.text, box.pass.text);
+			}
 		wdgmsg("login", cur.data());
 	    return(true);
 	}
 	return(super.type(k, ev));
     }
+
+	private LinkedList<Widget> customWidgets = new LinkedList<>();
+
+	private HashMap<String, String> loadAccounts() {
+		HashMap<String, String> map = new HashMap<>();
+		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
+		if (!accountFile.exists()) return map;
+		try {
+			JsonReader jsonReader = new JsonReader(new FileReader(accountFile));
+			jsonReader.setLenient(true);
+			Gson gson = new Gson();
+			return gson.fromJson(jsonReader, map.getClass());
+		} catch (Exception ex) {
+			ALS.alDebugPrint("Cannot read account file:", ex.getMessage());
+		}
+		return map;
+	}
+
+	private void saveAccounts(HashMap<String, String> accounts) {
+		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
+		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Files.write(accountFile.toPath(), gson.toJson(accounts).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+		} catch (Exception ex) {
+			ALS.alDebugPrint("Cannot write account file:", ex.getMessage());
+		}
+	}
+
+	private void addAccount(String username, String password) {
+		// Load existing and merge new into it
+		HashMap<String, String> accounts = loadAccounts();
+		accounts.put(username, password);
+		saveAccounts(accounts);
+		createAccountButtons(accounts);
+	}
+
+	private void removeAccount(String username) {
+		HashMap<String, String> accounts = loadAccounts();
+		accounts.remove(username);
+		saveAccounts(accounts);
+		createAccountButtons(accounts);
+	}
+
+	private void createAccountButtons(HashMap<String, String> accounts) {
+		for (Widget widget : customWidgets) {
+			widget.destroy();
+		}
+		customWidgets.clear();
+
+		HashMap<String, String> accountData = accounts == null ? loadAccounts() : accounts;
+		List<String> accountNames = Collections.emptyList();
+		accountNames.addAll(accountData.keySet());
+		Collections.sort(accountNames, (o1, o2) -> o1.compareToIgnoreCase(o2));
+		int j = 0;
+		for (int i = 0; i < accountNames.size(); i++) {
+			if (j == 15) j = 0;
+			final String username = accountNames.get(i);
+			final String password = accountData.get(username);
+			Button btnAcc = new Button(100, username) {
+				@Override
+				public void click() {
+					parent.wdgmsg("forget");
+					parent.wdgmsg(parent, "login", new AuthClient.NativeCred(username, password), false);
+				}
+			};
+			add(btnAcc, new Coord(0 + 140 * (i / 20), j * 30));
+			Button btnDel = new Button(15, "X") {
+				public void click() {
+					removeAccount(username);
+				}
+			};
+			add(btnDel, new Coord(105 + 140 * (i/20), j * 30));
+			customWidgets.add(btnAcc);
+			customWidgets.add(btnDel);
+		}
+	}
 }
