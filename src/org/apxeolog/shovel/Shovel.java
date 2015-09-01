@@ -109,6 +109,6 @@ public class Shovel {
     }
 
     public static void main(String[] args) {
-        // Just for testing purposes
+
     }
 }

@@ -1270,7 +1270,7 @@ public class CharWnd extends Window {
 	resize(contentsz().add(15, 10));
     }
 
-    public void addchild(Widget child, Object... args) {
+	public void addchild(Widget child, Object... args) {
 	String place = (args[0] instanceof String)?(((String)args[0]).intern()):null;
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));

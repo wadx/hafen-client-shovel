@@ -34,7 +34,21 @@ public class Inventory extends Widget implements DTarget {
     Coord isz;
     Map<GItem, WItem> wmap = new HashMap<GItem, WItem>();
 
-    @RName("inv")
+	private boolean locked = false;
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+
+	public void toggleLocked() {
+		this.locked = !this.locked;
+	}
+
+	@RName("inv")
     public static class $_ implements Factory {
 	public Widget create(Widget parent, Object[] args) {
 	    return(new Inventory((Coord)args[0]));
@@ -93,6 +107,8 @@ public class Inventory extends Widget implements DTarget {
 
 	@Override
 	public void wdgmsg(Widget sender, String msg, Object... args) {
+		if (isLocked()) return;
+
 		if ("transfer_all".equals(msg)) {
 			String resName = args[0] != null ? (String) args[0] : "";
 			for (GItem item : wmap.keySet()) {
