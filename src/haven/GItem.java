@@ -79,6 +79,18 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	this(res, Message.nil);
     }
 
+	/**
+	 * Returns item tooltip name or null
+	 * @return
+	 */
+	public String getItemName() {
+		List<ItemInfo> infoList = info();
+		for (ItemInfo info : infoList) {
+			if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
+		}
+		return null;
+	}
+
     private Random rnd = null;
     public Random mkrandoom() {
 	if(rnd == null)
