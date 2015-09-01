@@ -74,6 +74,7 @@ public class BGL {
 
     public void run(GL2 gl) {
 	for(int i = 0; i < n; i++) {
+		if (i >= list.length) break;
 	    try {
 		list[i].run(gl);
 	    } catch(Exception exc) {
