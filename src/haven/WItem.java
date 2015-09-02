@@ -26,9 +26,15 @@
 
 package haven;
 
+import com.google.gson.Gson;
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.info.ItemQualityInfo;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
 import java.util.*;
 import static haven.ItemInfo.find;
 import static haven.Inventory.sqsz;
@@ -43,7 +49,7 @@ public class WItem extends Widget implements DTarget {
 	super(sqsz);
 	this.item = item;
     }
-    
+
     public void drawmain(GOut g, GSprite spr) {
 	spr.draw(g);
     }
@@ -180,36 +186,41 @@ public class WItem extends Widget implements DTarget {
     }
 
     public void draw(GOut g) {
-	GSprite spr = item.spr();
-	if(spr != null) {
-	    Coord sz = spr.sz();
-	    g.defstate();
-	    if(olcol.get() != null)
-		g.usestate(new ColorMask(olcol.get()));
-	    drawmain(g, spr);
-	    g.defstate();
-	    if(item.num >= 0) {
-		g.atext(Integer.toString(item.num), sz, 1, 1);
-	    } else if(itemnum.get() != null) {
-		g.aimage(itemnum.get(), sz, 1, 1);
-	    }
-	    if(item.meter > 0) {
-		double a = ((double)item.meter) / 100.0;
-		g.chcolor(255, 255, 255, 64);
-		Coord half = sz.div(2);
-		g.prect(half, half.inv(), half, a * Math.PI * 2);
-		g.chcolor();
-	    }
-	} else {
-	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
+		GSprite spr = item.spr();
+		if (spr != null) {
+			Coord sz = spr.sz();
+			g.defstate();
+			if (olcol.get() != null)
+				g.usestate(new ColorMask(olcol.get()));
+			drawmain(g, spr);
+			g.defstate();
+			if (item.num >= 0) {
+				g.atext(Integer.toString(item.num), sz, 0, 1);
+			} else if (itemnum.get() != null) {
+				g.aimage(itemnum.get(), sz, 1, 1);
+			}
+			if (item.meter > 0) {
+				double a = ((double) item.meter) / 100.0;
+				g.chcolor(255, 255, 255, 64);
+				Coord half = sz.div(2);
+				g.prect(half, half.inv(), half, a * Math.PI * 2);
+				g.chcolor();
+			}
+			if (Shovel.getSettings().showQuality) {
+				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
+				g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
+				g.chcolor();
+			}
+		} else {
+			g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
+		}
 	}
-    }
-    
+
     public boolean mousedown(Coord c, int btn) {
 	if(btn == 1) {
 	    if(ui.modshift)
 		item.wdgmsg("transfer", c);
-	    else if(ui.modctrl)
+		else if(ui.modctrl)
 		item.wdgmsg("drop", c);
 	    else
 		item.wdgmsg("take", c);

@@ -26,9 +26,13 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.info.ItemQualityInfo;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
@@ -122,6 +126,27 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	    info = ItemInfo.buildinfo(this, rawinfo);
 	return(info);
     }
+
+	private ItemQualityInfo itemQualityInfoCache = null;
+
+	public ItemQualityInfo getItemQualityInfo() {
+		if (itemQualityInfoCache == null) {
+			itemQualityInfoCache = new ItemQualityInfo();
+			for (ItemInfo info : info()) {
+				if (info.getClass().getSimpleName().equals("QBuff")) {
+					try {
+						String qname = (String) info.getClass().getDeclaredField("name").get(info);
+						Integer qval = (Integer) info.getClass().getDeclaredField("q").get(info);
+						itemQualityInfoCache.setByType(qname, qval);
+					} catch (Exception ex) {
+
+					}
+				}
+			}
+			itemQualityInfoCache.build();
+		}
+		return itemQualityInfoCache;
+	}
     
     public Resource resource() {
 	return(res.get());

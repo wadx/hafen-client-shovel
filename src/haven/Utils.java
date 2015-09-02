@@ -1154,6 +1154,29 @@ public class Utils {
 	}
     }
 
+	public static TexI renderOutlinedFont(Text.Foundry foundry, String text, Color textColor, Color outlineColor, int outW) {
+		Coord sz = foundry.strsize(text);
+		if (sz.x < 1)
+			sz = sz.add(1, 0);
+		sz.add(outW * 2, 0);
+		BufferedImage img = TexI.mkbuf(sz);
+		Graphics g = img.createGraphics();
+		if (foundry.aa)
+			Utils.AA(g);
+		g.setFont(foundry.font);
+		g.setColor(outlineColor);
+		for (int i = 1; i <= outW; i++) {
+			g.drawString(text, outW - i, foundry.m.getAscent());
+			g.drawString(text, outW + i, foundry.m.getAscent());
+			g.drawString(text, outW, foundry.m.getAscent() - i);
+			g.drawString(text, outW, foundry.m.getAscent() + i);
+		}
+		g.setColor(textColor);
+		g.drawString(text, outW, foundry.m.getAscent());
+		g.dispose();
+		return new TexI(img);
+	}
+
     static {
 	Console.setscmd("die", new Console.Command() {
 		public void run(Console cons, String[] args) {

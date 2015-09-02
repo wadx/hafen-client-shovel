@@ -102,7 +102,7 @@ public class Text {
     }
 
     public static class Foundry extends Furnace {
-	private FontMetrics m;
+	public FontMetrics m;
 	Font font;
 	Color defcol;
 	public boolean aa = false;
@@ -145,7 +145,7 @@ public class Text {
 	    return(m.getAscent() + m.getDescent());
 	}
 
-	private Coord strsize(String text) {
+	public Coord strsize(String text) {
 	    return(new Coord(m.stringWidth(text), height()));
 	}
                 

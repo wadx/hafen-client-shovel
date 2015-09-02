@@ -9,6 +9,7 @@ public class Settings {
     public boolean alwaysShowNickname = true;
     public boolean showFlavor = false;
     public boolean nightvision = true;
+    public boolean showQuality = true;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;
