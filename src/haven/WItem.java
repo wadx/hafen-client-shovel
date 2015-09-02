@@ -212,7 +212,7 @@ public class WItem extends Widget implements DTarget {
 					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
 					g.chcolor();
 				} catch (Exception ex) {
-					
+
 				}
 			}
 		} else {
