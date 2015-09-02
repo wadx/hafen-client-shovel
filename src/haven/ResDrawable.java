@@ -87,4 +87,14 @@ public class ResDrawable extends Drawable {
 	}
 	return(null);
     }
+
+	@Override
+	public String toString() {
+		try {
+			Resource resource = res.get();
+			return resource.name;
+		} catch (Exception ex) {
+			return super.toString();
+		}
+	}
 }
