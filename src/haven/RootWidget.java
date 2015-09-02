@@ -62,6 +62,8 @@ public class RootWidget extends ConsoleHost {
 	    } else if((code == KeyEvent.VK_N)&&ctrl) {
 			Shovel.getSettings().nightvision = !Shovel.getSettings().nightvision;
 			Shovel.saveSettings();
+		} else if((code == KeyEvent.VK_D)&&ctrl) {
+			Shovel.getSettings().debugMode = !Shovel.getSettings().debugMode;
 		} else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }

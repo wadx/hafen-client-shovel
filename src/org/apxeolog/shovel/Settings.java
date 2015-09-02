@@ -9,4 +9,5 @@ public class Settings {
     public boolean alwaysShowNickname = true;
     public boolean showFlavor = false;
     public boolean nightvision = true;
+    transient public boolean debugMode = false;
 }
