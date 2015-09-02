@@ -144,7 +144,8 @@ public class LocalMiniMap extends Widget {
 		ArrayList<Long> partyIds = new ArrayList<>(10);
 		synchronized(ui.sess.glob.party.memb) {
 			for (Party.Member m : ui.sess.glob.party.memb.values()) {
-				partyIds.add(m.getgob().id);
+				if (m.getgob() != null)
+					partyIds.add(m.getgob().id);
 			}
 		}
 	synchronized(oc) {
