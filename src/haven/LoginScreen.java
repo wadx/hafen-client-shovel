@@ -331,28 +331,26 @@ public class LoginScreen extends Widget {
 		customWidgets.clear();
 
 		HashMap<String, String> accountData = accounts == null ? loadAccounts() : accounts;
-		List<String> accountNames = Collections.emptyList();
+		List<String> accountNames = new LinkedList<>();
 		accountNames.addAll(accountData.keySet());
 		Collections.sort(accountNames, (o1, o2) -> o1.compareToIgnoreCase(o2));
-		int j = 0;
 		for (int i = 0; i < accountNames.size(); i++) {
-			if (j == 15) j = 0;
 			final String username = accountNames.get(i);
 			final String password = accountData.get(username);
-			Button btnAcc = new Button(100, username) {
+			Button btnAcc = new Button(150, username) {
 				@Override
 				public void click() {
 					parent.wdgmsg("forget");
 					parent.wdgmsg(parent, "login", new AuthClient.NativeCred(username, password), false);
 				}
 			};
-			add(btnAcc, new Coord(0 + 140 * (i / 20), j * 30));
+			add(btnAcc, new Coord(0, i * 30));
 			Button btnDel = new Button(15, "X") {
 				public void click() {
 					removeAccount(username);
 				}
 			};
-			add(btnDel, new Coord(105 + 140 * (i/20), j * 30));
+			add(btnDel, new Coord(150, i * 30 + 6));
 			customWidgets.add(btnAcc);
 			customWidgets.add(btnDel);
 		}
