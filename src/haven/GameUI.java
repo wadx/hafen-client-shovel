@@ -31,6 +31,8 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.image.WritableRaster;
 import static haven.Inventory.invsq;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class GameUI extends ConsoleHost implements Console.Directory {
     public static final Text.Foundry errfoundry = new Text.Foundry(Text.dfont, 14, new Color(192, 0, 0));
@@ -65,6 +67,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Belt beltwdg;
     public String polowner;
     public Bufflist buffs;
+    public static GameUI instance;
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -102,6 +105,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     }
     
     public GameUI(String chrid, long plid) {
+    instance = this;
 	this.chrid = chrid;
 	this.plid = plid;
 	setcanfocus(true);
@@ -848,6 +852,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	lasterr = errfoundry.render(msg);
 	syslog.append(msg, Color.RED);
 	Audio.play(errsfx);
+    }
+
+    public void error2(String msg) {
+        errtime = System.currentTimeMillis();
+        lasterr = errfoundry.render(msg);
+        syslog.append(LocalTime.now().format(DateTimeFormatter.ofPattern("k:m")) + "  " + msg, Color.RED);
     }
     
     public void act(String... args) {
