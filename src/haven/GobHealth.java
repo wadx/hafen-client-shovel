@@ -47,4 +47,9 @@ public class GobHealth extends GAttrib {
     public double asfloat() {
 	return(((double)hp) / 4.0);
     }
+
+    @Override
+    public String toString() {
+        return "HP: " + hp;
+    }
 }

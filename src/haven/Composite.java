@@ -167,4 +167,22 @@ public class Composite extends Drawable {
     public void chequ(List<ED> equ) {
 	nequ = equ;
     }
+
+	@Override
+	public String toString() {
+		try {
+			Resource baseResource = base.get();
+			return "Base: " + baseResource.name;
+		} catch (Exception ex) {
+			return super.toString();
+		}
+	}
+
+	public String getBaseName() {
+		try {
+			return base.get().name;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 }

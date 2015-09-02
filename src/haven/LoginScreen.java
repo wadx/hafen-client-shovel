@@ -61,6 +61,7 @@ public class LoginScreen extends Widget {
 	add(new Img(bg), Coord.z);
 	optbtn = adda(new Button(100, "Options"), 10, sz.y - 10, 0, 1);
 		createAccountButtons(null);
+		checkForNewReleases();
     }
 
     private static abstract class Login extends Widget {
@@ -289,10 +290,8 @@ public class LoginScreen extends Widget {
 		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
 		if (!accountFile.exists()) return map;
 		try {
-			JsonReader jsonReader = new JsonReader(new FileReader(accountFile));
-			jsonReader.setLenient(true);
 			Gson gson = new Gson();
-			return gson.fromJson(jsonReader, map.getClass());
+			return gson.fromJson(new FileReader(accountFile), map.getClass());
 		} catch (Exception ex) {
 			ALS.alDebugPrint("Cannot read account file:", ex.getMessage());
 		}
@@ -303,7 +302,7 @@ public class LoginScreen extends Widget {
 		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			Files.write(accountFile.toPath(), gson.toJson(accounts).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+			Files.write(accountFile.toPath(), gson.toJson(accounts).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception ex) {
 			ALS.alDebugPrint("Cannot write account file:", ex.getMessage());
 		}
@@ -331,30 +330,41 @@ public class LoginScreen extends Widget {
 		customWidgets.clear();
 
 		HashMap<String, String> accountData = accounts == null ? loadAccounts() : accounts;
-		List<String> accountNames = Collections.emptyList();
+		List<String> accountNames = new LinkedList<>();
 		accountNames.addAll(accountData.keySet());
 		Collections.sort(accountNames, (o1, o2) -> o1.compareToIgnoreCase(o2));
-		int j = 0;
 		for (int i = 0; i < accountNames.size(); i++) {
-			if (j == 15) j = 0;
 			final String username = accountNames.get(i);
 			final String password = accountData.get(username);
-			Button btnAcc = new Button(100, username) {
+			Button btnAcc = new Button(150, username) {
 				@Override
 				public void click() {
 					parent.wdgmsg("forget");
 					parent.wdgmsg(parent, "login", new AuthClient.NativeCred(username, password), false);
 				}
 			};
-			add(btnAcc, new Coord(0 + 140 * (i / 20), j * 30));
+			add(btnAcc, new Coord(0, i * 30));
 			Button btnDel = new Button(15, "X") {
 				public void click() {
 					removeAccount(username);
 				}
 			};
-			add(btnDel, new Coord(105 + 140 * (i/20), j * 30));
+			add(btnDel, new Coord(150, i * 30 + 6));
 			customWidgets.add(btnAcc);
 			customWidgets.add(btnDel);
+		}
+	}
+
+	private void checkForNewReleases() {
+		String result = Shovel.checkForNewReleases();
+		if (result != null) {
+			Window window = new Window(Coord.z, "Update");
+			RichTextBox textBox = new RichTextBox(new Coord(200, 200), "", HelpWnd.fnd);
+			textBox.settext(result);
+			textBox.pack();
+			window.add(textBox, Coord.z);
+			window.pack();
+			add(window, new Coord(550, 0));
 		}
 	}
 }
