@@ -171,7 +171,7 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
     }
 
     public MainFrame(Coord isz) {
-	super("H&H Shovel[" + Shovel.getVersion() + "]");
+	super("H&H Shovel [" + Shovel.getVersion() + "]");
 	Coord sz;
 	if(isz == null) {
 	    sz = Utils.getprefc("wndsz", new Coord(800, 600));
@@ -251,10 +251,10 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 			    Config.authck = null;
 			}
 			fun = bill;
-			setTitle("H&H Shovel[" + Shovel.getVersion() + "]");
+			setTitle("H&H Shovel [" + Shovel.getVersion() + "]");
 		    } else {
 			fun = new RemoteUI(sess);
-			setTitle("H&H Shovel[" + Shovel.getVersion() + "] -> " + sess.username);
+			setTitle("H&H Shovel [" + Shovel.getVersion() + "] -> " + sess.username);
 		    }
 		    sess = fun.run(p.newui(sess));
 		}
