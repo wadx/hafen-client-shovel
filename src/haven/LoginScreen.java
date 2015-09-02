@@ -61,6 +61,7 @@ public class LoginScreen extends Widget {
 	add(new Img(bg), Coord.z);
 	optbtn = adda(new Button(100, "Options"), 10, sz.y - 10, 0, 1);
 		createAccountButtons(null);
+		checkForNewReleases();
     }
 
     private static abstract class Login extends Widget {
@@ -351,6 +352,19 @@ public class LoginScreen extends Widget {
 			add(btnDel, new Coord(150, i * 30 + 6));
 			customWidgets.add(btnAcc);
 			customWidgets.add(btnDel);
+		}
+	}
+
+	private void checkForNewReleases() {
+		String result = Shovel.checkForNewReleases();
+		if (result != null) {
+			Window window = new Window(Coord.z, "Update");
+			RichTextBox textBox = new RichTextBox(new Coord(200, 200), "", HelpWnd.fnd);
+			textBox.settext(result);
+			textBox.pack();
+			window.add(textBox, Coord.z);
+			window.pack();
+			add(window, new Coord(550, 0));
 		}
 	}
 }

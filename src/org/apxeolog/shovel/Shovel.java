@@ -40,6 +40,14 @@ public class Shovel {
         }
     }
 
+    public static String checkForNewReleases() {
+        if (!getSettings().checkedForNewReleases) {
+            getSettings().checkedForNewReleases = true;
+            return VersionChecker.check();
+        }
+        return null;
+    }
+
     /**
      * Get Shovel settings
      * @return
