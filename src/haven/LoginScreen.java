@@ -289,10 +289,8 @@ public class LoginScreen extends Widget {
 		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
 		if (!accountFile.exists()) return map;
 		try {
-			JsonReader jsonReader = new JsonReader(new FileReader(accountFile));
-			jsonReader.setLenient(true);
 			Gson gson = new Gson();
-			return gson.fromJson(jsonReader, map.getClass());
+			return gson.fromJson(new FileReader(accountFile), map.getClass());
 		} catch (Exception ex) {
 			ALS.alDebugPrint("Cannot read account file:", ex.getMessage());
 		}
@@ -303,7 +301,7 @@ public class LoginScreen extends Widget {
 		File accountFile = new File(Shovel.getUserDirectory(), "accounts.json");
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			Files.write(accountFile.toPath(), gson.toJson(accounts).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+			Files.write(accountFile.toPath(), gson.toJson(accounts).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception ex) {
 			ALS.alDebugPrint("Cannot write account file:", ex.getMessage());
 		}

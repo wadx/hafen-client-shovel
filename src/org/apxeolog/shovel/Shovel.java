@@ -2,6 +2,7 @@ package org.apxeolog.shovel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 
 import java.io.File;
 import java.io.FileReader;
@@ -54,7 +55,8 @@ public class Shovel {
         File settingsFile = new File(workingDirectory, "settings.json");
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+            ALS.alDebugPrint(gson.toJson(settings));
+            Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
         }
