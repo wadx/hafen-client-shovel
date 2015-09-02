@@ -54,6 +54,8 @@ public class CharWnd extends Window {
     public final WoundList wounds;
     public Wound.Info wound;
     public int exp, enc;
+	public int oldexp = -1;
+	public StudyInfo studyInfo = null;
     private int scost;
     private final Tabs.Tab sattr, fgt;
 
@@ -601,6 +603,13 @@ public class CharWnd extends Window {
 	    add(new Label("Experience cost:"), 2, 32);
 	    add(new Label("Learning points:"), 2, sz.y - 32);
 	}
+
+		public void getCurioNames() {
+			for (GItem item : study.children(GItem.class)) {
+				//LinkedList<Resource.Layer> l = item.getres().layers;
+				//System.out.println(item.getres());
+			}
+		}
 
 	private void upd() {
 	    int texp = 0, tw = 0, tenc = 0;
@@ -1275,7 +1284,8 @@ public class CharWnd extends Window {
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+		studyInfo = new StudyInfo(new Coord(attrw - 150, child.sz.y), child);
+	    Widget inf = sattr.add(studyInfo, new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);
@@ -1308,13 +1318,17 @@ public class CharWnd extends Window {
     public void uimsg(String nm, Object... args) {
 	if(nm == "exp") {
 	    exp = ((Number)args[0]).intValue();
+		if (oldexp < 0)
+			oldexp = exp;
+		if (studyInfo != null)
+			studyInfo.getCurioNames();
+		//System.out.println(exp+"; "+oldexp);
 	}else if(nm == "enc") {
 	    enc = ((Number)args[0]).intValue();
 	} else if(nm == "food") {
 	    feps.update(args);
 	} else if(nm == "glut") {
 	    glut.update(args);
-	} else if(nm == "glut") {
 	} else if(nm == "ftrig") {
 	    feps.trig(ui.sess.getres((Integer)args[0]));
 	} else if(nm == "lvl") {
