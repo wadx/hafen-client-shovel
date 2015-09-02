@@ -32,6 +32,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
+
+import haven.glsl.Array;
 import haven.resutil.Ridges;
 
 public class LocalMiniMap extends Widget {
@@ -138,6 +140,13 @@ public class LocalMiniMap extends Widget {
 
     public void drawicons(GOut g) {
 	OCache oc = ui.sess.glob.oc;
+		// Cache party ids to remove them from render
+		ArrayList<Long> partyIds = new ArrayList<>(10);
+		synchronized(ui.sess.glob.party.memb) {
+			for (Party.Member m : ui.sess.glob.party.memb.values()) {
+				partyIds.add(m.getgob().id);
+			}
+		}
 	synchronized(oc) {
 	    for(Gob gob : oc) {
 		try {
@@ -147,14 +156,25 @@ public class LocalMiniMap extends Widget {
 			Tex tex = icon.tex();
 			g.image(tex, gc.sub(tex.sz().div(2)));
 		    } else {
-				KinInfo kinInfo = gob.getattr(KinInfo.class);
-				if (kinInfo != null) {
-					Coord dotPosition = p2c(gob.rc).sub(3, 3);
-					g.chcolor(Color.BLACK);
-					g.fellipse(dotPosition, new Coord(6, 6));
-					g.chcolor(BuddyWnd.gc[kinInfo.group]);
-					g.fellipse(dotPosition, new Coord(5, 5));
-					g.chcolor();
+				if (partyIds.contains(gob.id)) continue;
+				{
+					Composite composite = gob.getattr(Composite.class);
+					if (composite != null) {
+						if ("gfx/borka/body".equals(composite.getBaseName())) {
+							// Player
+							Color color = new Color(255, 0, 0);
+							KinInfo kinInfo = gob.getattr(KinInfo.class);
+							if (kinInfo != null) {
+								color = BuddyWnd.gc[kinInfo.group];
+							}
+							Coord dotPosition = p2c(gob.rc).sub(3, 3);
+							g.chcolor(Color.BLACK);
+							g.fellipse(dotPosition, new Coord(5, 5));
+							g.chcolor(color);
+							g.fellipse(dotPosition, new Coord(4, 4));
+							g.chcolor();
+						}
+					}
 				}
 			}
 		} catch(Loading l) {}

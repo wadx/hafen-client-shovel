@@ -177,4 +177,12 @@ public class Composite extends Drawable {
 			return super.toString();
 		}
 	}
+
+	public String getBaseName() {
+		try {
+			return base.get().name;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 }
