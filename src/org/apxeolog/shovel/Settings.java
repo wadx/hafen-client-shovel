@@ -10,6 +10,7 @@ public class Settings {
     public boolean showFlavor = false;
     public boolean nightvision = true;
     public boolean showQuality = true;
+    public boolean showFriendNotifications = true;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;

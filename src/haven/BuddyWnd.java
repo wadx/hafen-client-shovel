@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.Color;
 import java.util.*;
 import java.text.Collator;
@@ -426,7 +428,9 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	    int id = (Integer)args[0];
 	    int online = (Integer)args[1];
 	    find(id).online = online;
-		GameUI.instance.error2(find(id).name + " is "+((find(id).online>0)?"online":"offline")+" now");
+		if (Shovel.getSettings().showFriendNotifications) {
+			GameUI.instance.error2(find(id).name + " is " + ((find(id).online > 0) ? "online" : "offline") + " now");
+		}
 	} else if(msg == "upd") {
 	    int id = (Integer)args[0];
 	    String name = (String)args[1];
