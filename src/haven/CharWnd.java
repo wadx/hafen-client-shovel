@@ -54,8 +54,7 @@ public class CharWnd extends Window {
     public final WoundList wounds;
     public Wound.Info wound;
     public int exp, enc;
-	public int oldexp = -1;
-	public StudyInfo studyInfo = null;
+	private StudyInfo studyInfo = null;
     private int scost;
     private final Tabs.Tab sattr, fgt;
 
@@ -584,6 +583,8 @@ public class CharWnd extends Window {
     public class StudyInfo extends Widget {
 	public Widget study;
 	public int texp, tw, tenc;
+	private int oldExp = -1;
+	private HashSet<String> lastCurioList = new HashSet<String>();
 	private final Text.UText<?> texpt = new Text.UText<Integer>(Text.std) {
 	    public Integer value() {return(texp);}
 	    public String text(Integer v) {return(Utils.thformat(v));}
@@ -604,14 +605,34 @@ public class CharWnd extends Window {
 	    add(new Label("Learning points:"), 2, sz.y - 32);
 	}
 
-		public void getCurioNames() {
-			for (GItem item : study.children(GItem.class)) {
-				//LinkedList<Resource.Layer> l = item.getres().layers;
-				//System.out.println(item.getres());
+	private void upd() {
+		if (oldExp < 0)
+			oldExp = exp;
+
+		if (oldExp < exp) {
+			if (lastCurioList.size() > 0) {
+				for (GItem item : study.children(GItem.class))
+					lastCurioList.add(item.getItemName());
+			} else {
+				System.out.println("Old exp < exp & last curio not empty");
+				for (GItem item : study.children(GItem.class)) {
+					lastCurioList.remove(item.getItemName());
+				}
+
+				if (lastCurioList.size() > 0) {
+					Iterator<String> it = lastCurioList.iterator();
+					while (it.hasNext())
+						System.out.println("You have been studied "+it.next()+".");
+				}
+
+				lastCurioList.clear();
+				for (GItem item : study.children(GItem.class))
+					lastCurioList.add(item.getItemName());
 			}
+
+			oldExp = exp;
 		}
 
-	private void upd() {
 	    int texp = 0, tw = 0, tenc = 0;
 	    for(GItem item : study.children(GItem.class)) {
 		try {
@@ -624,6 +645,7 @@ public class CharWnd extends Window {
 		} catch(Loading l) {
 		}
 	    }
+
 	    this.texp = texp; this.tw = tw; this.tenc = tenc;
 	}
 
@@ -1318,11 +1340,8 @@ public class CharWnd extends Window {
     public void uimsg(String nm, Object... args) {
 	if(nm == "exp") {
 	    exp = ((Number)args[0]).intValue();
-		if (oldexp < 0)
-			oldexp = exp;
 		if (studyInfo != null)
-			studyInfo.getCurioNames();
-		//System.out.println(exp+"; "+oldexp);
+			studyInfo.upd();
 	}else if(nm == "enc") {
 	    enc = ((Number)args[0]).intValue();
 	} else if(nm == "food") {
