@@ -1495,13 +1495,17 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			if (lastInfo.gob != null) {
 				g.text("Gob ID: " + lastInfo.gob.id, new Coord(x, y += offsetY));
 				g.text("Gob RD: " + lastInfo.gob.getrc(), new Coord(x, y += offsetY));
-				g.text("Gob Attrs: " + lastInfo.gob.attr.size(), new Coord(x, y += offsetY));
-				for (Map.Entry<Class<? extends GAttrib>, GAttrib> entry : lastInfo.gob.attr.entrySet()) {
-					g.text(String.valueOf(entry.getValue().getClass()) + ": " + String.valueOf(entry.getValue()), new Coord(x + 30, y += offsetY));
+				if (lastInfo.gob.attr != null) {
+					g.text("Gob Attrs: " + lastInfo.gob.attr.size(), new Coord(x, y += offsetY));
+					for (Map.Entry<Class<? extends GAttrib>, GAttrib> entry : lastInfo.gob.attr.entrySet()) {
+						g.text(String.valueOf(entry.getValue().getClass()) + ": " + String.valueOf(entry.getValue()), new Coord(x + 30, y += offsetY));
+					}
 				}
-				g.text("Gob Overlays: " + lastInfo.gob.ols.size(), new Coord(x, y += offsetY));
-				for (Gob.Overlay overlay : lastInfo.gob.ols) {
-					g.text(String.valueOf(overlay), new Coord(x + 30, y += offsetY));
+				if (lastInfo.gob.ols != null) {
+					g.text("Gob Overlays: " + lastInfo.gob.ols.size(), new Coord(x, y += offsetY));
+					for (Gob.Overlay overlay : lastInfo.gob.ols) {
+						g.text(String.valueOf(overlay), new Coord(x + 30, y += offsetY));
+					}
 				}
 			}
 		}

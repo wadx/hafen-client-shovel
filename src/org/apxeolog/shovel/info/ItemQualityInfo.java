@@ -43,7 +43,7 @@ public class ItemQualityInfo {
         itemQualities.add(new ItemQuality("Substance", substance));
         itemQualities.add(new ItemQuality("Essence", essence));
         itemQualities.add(new ItemQuality("Vitality", vitality));
-        Collections.sort(itemQualities, (o1, o2) -> o1.quality - o2.quality);
+        Collections.sort(itemQualities, (o1, o2) -> o2.quality - o1.quality);
         ItemQuality maxQuality = itemQualities.get(0);
         maxValue = maxQuality.quality;
         switch (maxQuality.name) {
