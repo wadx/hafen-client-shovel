@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.widget.WidgetEvent;
+
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -153,6 +155,8 @@ public class UI {
 		throw(new UIException("Null parent widget " + parent + " for " + id, type, cargs));
 	    Widget wdg = pwdg.makechild(f, pargs, cargs);
 	    bind(wdg, id);
+		wdg.fireEvent(WidgetEvent.CREATE, wdg);
+		pwdg.fireEvent(WidgetEvent.ADD_CHILD, wdg);
 	}
     }
 
@@ -213,6 +217,8 @@ public class UI {
 	synchronized(this) {
 	    if(widgets.containsKey(id)) {
 		Widget wdg = widgets.get(id);
+			if (wdg.parent != null) wdg.parent.fireEvent(WidgetEvent.REMOVE_CHILD, wdg);
+			wdg.fireEvent(WidgetEvent.REMOVE, wdg);
 		destroy(wdg);
 	    }
 	}

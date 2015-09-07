@@ -26,6 +26,9 @@
 
 package haven;
 
+import org.apxeolog.shovel.widget.WidgetEvent;
+import org.apxeolog.shovel.widget.WidgetEventListener;
+
 import java.util.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
@@ -44,6 +47,35 @@ public class Widget {
     public Object tooltip = null;
     private Widget prevtt;
     static Map<String, Factory> types = new TreeMap<String, Factory>();
+
+	/* Event listener system for advanced hooks */
+
+	private HashMap<WidgetEvent, HashSet<WidgetEventListener>> eventHandlers = new HashMap<>();
+
+	public void addEventListener(WidgetEvent event, WidgetEventListener listener) {
+		HashSet<WidgetEventListener> buffer = eventHandlers.get(event);
+		if (buffer == null) {
+			buffer = new HashSet<>();
+			eventHandlers.put(event, buffer);
+		}
+		buffer.add(listener);
+	}
+
+	public void removeEventListener(WidgetEvent event, WidgetEventListener listener) {
+		HashSet<WidgetEventListener> buffer = eventHandlers.get(event);
+		if (buffer != null) {
+			buffer.remove(listener);
+		}
+	}
+
+	public void fireEvent(WidgetEvent event, Widget widget) {
+		HashSet<WidgetEventListener> buffer = eventHandlers.get(event);
+		if (buffer != null) {
+			for (WidgetEventListener listener : buffer) {
+				listener.call(widget);
+			}
+		}
+	}
 
     @dolda.jglob.Discoverable
     @Target(ElementType.TYPE)
