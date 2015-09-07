@@ -631,33 +631,6 @@ public class CharWnd extends Window {
 	}
 
 	private void upd() {
-		if (oldExp < 0)
-			oldExp = exp;
-
-		if (oldExp < exp) {
-			if (lastCurioList.size() > 0) {
-				for (GItem item : study.children(GItem.class))
-					lastCurioList.add(item.getItemName());
-			} else {
-				System.out.println("Old exp < exp & last curio not empty");
-				for (GItem item : study.children(GItem.class)) {
-					lastCurioList.remove(item.getItemName());
-				}
-
-				if (lastCurioList.size() > 0) {
-					Iterator<String> it = lastCurioList.iterator();
-					while (it.hasNext())
-						System.out.println("You have been studied "+it.next()+".");
-				}
-
-				lastCurioList.clear();
-				for (GItem item : study.children(GItem.class))
-					lastCurioList.add(item.getItemName());
-			}
-
-			oldExp = exp;
-		}
-
 	    int texp = 0, tw = 0, tenc = 0;
 	    for(GItem item : study.children(GItem.class)) {
 		try {
