@@ -54,7 +54,6 @@ public class CharWnd extends Window {
     public final WoundList wounds;
     public Wound.Info wound;
     public int exp, enc;
-	private StudyInfo studyInfo = null;
     private int scost;
     private final Tabs.Tab sattr, fgt;
 
@@ -583,8 +582,6 @@ public class CharWnd extends Window {
     public class StudyInfo extends Widget {
 	public Widget study;
 	public int texp, tw, tenc;
-	private int oldExp = -1;
-	private HashSet<String> lastCurioList = new HashSet<String>();
 	private final Text.UText<?> texpt = new Text.UText<Integer>(Text.std) {
 	    public Integer value() {return(texp);}
 	    public String text(Integer v) {return(Utils.thformat(v));}
@@ -606,33 +603,6 @@ public class CharWnd extends Window {
 	}
 
 	private void upd() {
-		if (oldExp < 0)
-			oldExp = exp;
-
-		if (oldExp < exp) {
-			if (lastCurioList.size() > 0) {
-				for (GItem item : study.children(GItem.class))
-					lastCurioList.add(item.getItemName());
-			} else {
-				System.out.println("Old exp < exp & last curio not empty");
-				for (GItem item : study.children(GItem.class)) {
-					lastCurioList.remove(item.getItemName());
-				}
-
-				if (lastCurioList.size() > 0) {
-					Iterator<String> it = lastCurioList.iterator();
-					while (it.hasNext())
-						System.out.println("You have been studied "+it.next()+".");
-				}
-
-				lastCurioList.clear();
-				for (GItem item : study.children(GItem.class))
-					lastCurioList.add(item.getItemName());
-			}
-
-			oldExp = exp;
-		}
-
 	    int texp = 0, tw = 0, tenc = 0;
 	    for(GItem item : study.children(GItem.class)) {
 		try {
@@ -1306,8 +1276,7 @@ public class CharWnd extends Window {
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-		studyInfo = new StudyInfo(new Coord(attrw - 150, child.sz.y), child);
-	    Widget inf = sattr.add(studyInfo, new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);
@@ -1340,8 +1309,6 @@ public class CharWnd extends Window {
     public void uimsg(String nm, Object... args) {
 	if(nm == "exp") {
 	    exp = ((Number)args[0]).intValue();
-		if (studyInfo != null)
-			studyInfo.upd();
 	}else if(nm == "enc") {
 	    enc = ((Number)args[0]).intValue();
 	} else if(nm == "food") {
