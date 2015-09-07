@@ -60,6 +60,9 @@ public class CharWnd extends Window {
     private int scost;
     private final Tabs.Tab sattr, fgt;
 
+	private int lastExp = -1;
+	private int expDelt = 0;
+
     public static class FoodMeter extends Widget {
 	public static final Tex frame = Resource.loadtex("gfx/hud/chr/foodm");
 	public static final Coord marg = new Coord(5, 5), trmg = new Coord(10, 10);
@@ -600,7 +603,7 @@ public class CharWnd extends Window {
 	private StudyInfo(Coord sz, Widget study) {
 	    super(sz);
 	    this.study = study;
-		this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
+		/*this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child Widget
@@ -610,15 +613,19 @@ public class CharWnd extends Window {
 						ALS.alDebugPrint("Received new GItem in study!", gItem.resource().name);
 				}
 			}
-		});
+		});*/
 		this.study.addEventListener(WidgetEvent.REMOVE_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child widget
 				if (widget instanceof GItem) {
 					GItem gItem = (GItem) widget;
-					if (gItem.ready())
-						ALS.alDebugPrint("Removing GItem from study!", gItem.resource().name);
+					if (gItem.ready()) {
+						Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
+						if (ci != null && expDelt >= ci.exp) {
+							GameUI.instance.error("You have been studied "+gItem.getItemName()+" for "+ci.exp+" LP.");
+						}
+					}
 				}
 			}
 		});
@@ -1334,6 +1341,11 @@ public class CharWnd extends Window {
     public void uimsg(String nm, Object... args) {
 	if(nm == "exp") {
 	    exp = ((Number)args[0]).intValue();
+		if (lastExp < 0)
+			lastExp = exp;
+
+		expDelt = exp - lastExp;
+		lastExp = exp;
 	}else if(nm == "enc") {
 	    enc = ((Number)args[0]).intValue();
 	} else if(nm == "food") {
