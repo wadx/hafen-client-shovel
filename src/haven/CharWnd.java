@@ -34,6 +34,9 @@ import java.util.*;
 import static haven.Window.wbox;
 import static haven.PUtils.*;
 import haven.resutil.FoodInfo;
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.widget.WidgetEvent;
+import org.apxeolog.shovel.widget.WidgetEventListener;
 
 public class CharWnd extends Window {
     public static final RichText.Foundry ifnd = new RichText.Foundry(Resource.remote(), java.awt.font.TextAttribute.FAMILY, "SansSerif", java.awt.font.TextAttribute.SIZE, 9).aa(true);
@@ -600,6 +603,26 @@ public class CharWnd extends Window {
 	private StudyInfo(Coord sz, Widget study) {
 	    super(sz);
 	    this.study = study;
+		this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
+			@Override
+			public void call(Widget widget) {
+				// Widget is child Widget
+				if (widget instanceof GItem) {
+					GItem gItem = (GItem) widget;
+					ALS.alDebugPrint("Received new GItem in study!", gItem.resource().name);
+				}
+			}
+		});
+		this.study.addEventListener(WidgetEvent.REMOVE_CHILD, new WidgetEventListener() {
+			@Override
+			public void call(Widget widget) {
+				// Widget is child widget
+				if (widget instanceof GItem) {
+					GItem gItem = (GItem) widget;
+					ALS.alDebugPrint("Removing GItem from study!", gItem.resource().name);
+				}
+			}
+		});
 	    add(new Label("Attention:"), 2, 2);
 	    add(new Label("Experience cost:"), 2, 32);
 	    add(new Label("Learning points:"), 2, sz.y - 32);
