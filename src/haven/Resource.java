@@ -58,6 +58,11 @@ public class Resource implements Serializable {
     public ResSource source;
     public final transient Pool pool;
     private boolean used = false;
+	private boolean ready = false;
+
+	public boolean ready() {
+		return ready;
+	}
 
     public abstract static class Named implements Indir<Resource> {
 	public final String name;
@@ -1587,6 +1592,7 @@ public class Resource implements Serializable {
 	for(Layer l : layers)
 	    l.init();
 	used = false;
+		ready = true;
     }
 
     private transient Named indir = null;

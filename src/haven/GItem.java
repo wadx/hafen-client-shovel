@@ -43,6 +43,14 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     private GSprite spr;
     private Object[] rawinfo;
     private List<ItemInfo> info = Collections.emptyList();
+
+	public boolean ready() {
+		try {
+			return spr != null && res.get().ready();
+		} catch (Loading ex) {
+			return false;
+		}
+	}
     
     @RName("item")
     public static class $_ implements Factory {

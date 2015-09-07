@@ -609,7 +609,8 @@ public class CharWnd extends Window {
 				// Widget is child Widget
 				if (widget instanceof GItem) {
 					GItem gItem = (GItem) widget;
-					ALS.alDebugPrint("Received new GItem in study!", gItem.resource().name);
+					if (gItem.ready())
+						ALS.alDebugPrint("Received new GItem in study!", gItem.resource().name);
 				}
 			}
 		});
@@ -619,7 +620,8 @@ public class CharWnd extends Window {
 				// Widget is child widget
 				if (widget instanceof GItem) {
 					GItem gItem = (GItem) widget;
-					ALS.alDebugPrint("Removing GItem from study!", gItem.resource().name);
+					if (gItem.ready())
+						ALS.alDebugPrint("Removing GItem from study!", gItem.resource().name);
 				}
 			}
 		});

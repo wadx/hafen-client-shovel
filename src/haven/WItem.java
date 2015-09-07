@@ -206,14 +206,10 @@ public class WItem extends Widget implements DTarget {
 				g.prect(half, half.inv(), half, a * Math.PI * 2);
 				g.chcolor();
 			}
-			if (Shovel.getSettings().showQuality) {
-				try {
-					ItemQualityInfo qualityInfo = item.getItemQualityInfo();
-					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
-					g.chcolor();
-				} catch (Exception ex) {
-
-				}
+			if (Shovel.getSettings().showQuality && item.ready()) {
+				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
+				g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Utils.contrast(qualityInfo.getMaxColor()), 1), sz, 1, 1);
+				g.chcolor();
 			}
 		} else {
 			g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
