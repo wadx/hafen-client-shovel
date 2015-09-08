@@ -26,6 +26,10 @@
 
 package haven;
 
+import org.apxeolog.shovel.widget.ConfigurationWnd;
+import org.apxeolog.shovel.widget.WidgetEvent;
+import org.apxeolog.shovel.widget.WidgetEventListener;
+
 import java.util.*;
 import java.awt.font.TextAttribute;
 
@@ -187,6 +191,8 @@ public class OptWnd extends Window {
 	}
     }
 
+	private ConfigurationWnd configurationWnd = null;
+
     public OptWnd(boolean gopts) {
 	super(Coord.z, "Options", true);
 	main = add(new Panel());
@@ -196,6 +202,23 @@ public class OptWnd extends Window {
 
 	main.add(new PButton(200, "Video settings", 'v', video), new Coord(0, 0));
 	main.add(new PButton(200, "Audio settings", 'a', audio), new Coord(0, 30));
+	main.add(new Button(200, "Shovel settings") {
+		@Override
+		public void click() {
+			if (configurationWnd == null) {
+				configurationWnd = new ConfigurationWnd();
+				configurationWnd.addEventListener(WidgetEvent.DESTROY, new WidgetEventListener() {
+					@Override
+					public void call(Widget widget) {
+						configurationWnd = null;
+					}
+				});
+				OptWnd.this.parent.add(configurationWnd, new Coord(OptWnd.this.parent.sz.x / 2 - 200, 0));
+			} else {
+				configurationWnd.destroy();
+			}
+		}
+	}, new Coord(0, 60));
 	if(gopts) {
 	    main.add(new Button(200, "Switch character") {
 		    public void click() {

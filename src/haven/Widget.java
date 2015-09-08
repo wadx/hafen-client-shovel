@@ -457,6 +457,7 @@ public class Widget {
 	    setcanfocus(false);
 	unlink();
 	parent.cdestroy(this);
+		fireEvent(WidgetEvent.DESTROY, this);
     }
     
     public void cdestroy(Widget w) {

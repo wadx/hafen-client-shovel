@@ -63,7 +63,6 @@ public class LoginScreen extends Widget {
 	optbtn = adda(new Button(100, "Options"), 10, sz.y - 10, 0, 1);
 		createAccountButtons(null);
 		checkForNewReleases();
-		add(new ConfigurationWnd(new Coord(400, 200)));
     }
 
     private static abstract class Login extends Widget {

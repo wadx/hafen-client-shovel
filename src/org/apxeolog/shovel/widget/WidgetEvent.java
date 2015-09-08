@@ -7,5 +7,6 @@ public enum WidgetEvent {
     CREATE,
     REMOVE,
     ADD_CHILD,
-    REMOVE_CHILD
+    REMOVE_CHILD,
+    DESTROY
 }

@@ -66,9 +66,10 @@ public class CheckBox extends Widget {
 	return(true);
     }
 
-    public void set(boolean a) {
+    public CheckBox set(boolean a) {
 	this.a = a;
 	changed(a);
+		return this;
     }
 
     public void draw(GOut g) {

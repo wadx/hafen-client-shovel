@@ -16,41 +16,41 @@ import java.awt.*;
  * Created by APXEOLOG on 31/08/2015.
  */
 public class ConfigurationWnd extends Window {
-    public ConfigurationWnd(Coord sz) {
+    public ConfigurationWnd() {
         super(new Coord(400, 450), "Shovel Settings");
 
         final Tabs tabs = new Tabs(new Coord(15, 50), Coord.z, this);
         Tabs.Tab generalSettings;
         {
-            generalSettings = tabs.add(); int y = 10;
-            generalSettings.add(new CheckBox("Always show nicknames", Shovel.getSettings().alwaysShowNickname) {
+            generalSettings = tabs.add();
+            generalSettings.add(new CheckBox("Always show nicknames", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().alwaysShowNickname = val;
                     Shovel.saveSettings();
                 }
-            }, new Coord(15, y));
-            generalSettings.add(new CheckBox("Save minimaps", Shovel.getSettings().dumpMinimaps) {
+            }.set(Shovel.getSettings().alwaysShowNickname), new Coord(15, 25));
+            generalSettings.add(new CheckBox("Save minimaps", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().dumpMinimaps = val;
                     Shovel.saveSettings();
                 }
-            }, new Coord(15, y += 30));
-            generalSettings.add(new CheckBox("Disable flavor objects", Shovel.getSettings().showFlavor) {
+            }.set(Shovel.getSettings().dumpMinimaps), new Coord(15, 50));
+            generalSettings.add(new CheckBox("Disable flavor objects", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showFlavor = val;
                     Shovel.saveSettings();
                 }
-            }, new Coord(15, y += 30));
-            generalSettings.add(new CheckBox("Enable friends notification", Shovel.getSettings().showFriendNotifications) {
+            }.set(Shovel.getSettings().showFlavor), new Coord(15, 75));
+            generalSettings.add(new CheckBox("Enable friends notification", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showFriendNotifications = val;
                     Shovel.saveSettings();
                 }
-            }, new Coord(15, y += 30));
+            }.set(Shovel.getSettings().showFriendNotifications), new Coord(15, 100));
         }
         Tabs.Tab highlightSettings;
         {
@@ -160,7 +160,9 @@ public class ConfigurationWnd extends Window {
 
     @Override
     public void wdgmsg(Widget sender, String msg, Object... args) {
-
+        if (sender == cbtn) {
+            destroy();
+        }
     }
 
     public static class HighlightGroupList extends Listbox<HighlightGroup> {
