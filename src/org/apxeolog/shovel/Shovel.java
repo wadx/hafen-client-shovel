@@ -3,6 +3,7 @@ package org.apxeolog.shovel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import org.apxeolog.shovel.highlight.HighlightManager;
 
 import java.io.File;
 import java.io.FileReader;
@@ -108,6 +109,14 @@ public class Shovel {
     }
 
     /**
+     * Get working directory
+     * @return
+     */
+    public static File getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    /**
      * Directory for custom resources
      * @return
      */
@@ -118,6 +127,6 @@ public class Shovel {
     }
 
     public static void main(String[] args) {
-
+        ALS.alDebugPrint(HighlightManager.loadHighlightData());
     }
 }
