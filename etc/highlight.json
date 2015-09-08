@@ -9,6 +9,24 @@
         "equalMatch": false
       },
       {
+        "name": "Galena",
+        "resource": "gfx/terobjs/bumlings/galena",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Hornsilver",
+        "resource": "gfx/terobjs/bumlings/hornsilver",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Petzite",
+        "resource": "gfx/terobjs/bumlings/petzite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
         "name": "Cassiterite",
         "resource": "gfx/terobjs/bumlings/cassiterite",
         "color": "rgba(0, 0, 255, 255)",
