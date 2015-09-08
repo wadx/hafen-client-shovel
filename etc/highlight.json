@@ -1,0 +1,46 @@
+[
+	{
+		"name": "Stones",
+		"options": [
+			{
+				"name": "DATSTONE",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"name": "Bushes",
+		"options": [
+			{
+				"name": "MINI B 1",
+				"icon": ""
+			},
+			{
+				"name": "MINI B 2",
+				"icon": ""
+			},
+			{
+				"name": "MINI B 3",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"name": "Animals",
+		"options": [
+			{
+				"name": "RACOON KACOON",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"name": "Pickable",
+		"options": [
+			{
+				"name": "Shovel",
+				"icon": ""
+			}
+		]
+	}
+]
