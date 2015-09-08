@@ -26,14 +26,12 @@
 
 package haven;
 
-import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.info.ItemQualityInfo;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
     public Indir<Resource> res;
@@ -46,7 +44,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
 	public boolean ready() {
 		try {
-			return spr != null && res.get().ready();
+			return spr != null && res.get().ready() && info() != null;
 		} catch (Loading ex) {
 			return false;
 		}

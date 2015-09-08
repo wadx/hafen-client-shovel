@@ -26,14 +26,19 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
+
 import javax.media.opengl.*;
 import java.nio.*;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BGL {
     private static abstract class Command {
+		public long commandId;
+
 	public abstract void run(GL2 gl);
     }
 
@@ -73,15 +78,25 @@ public class BGL {
     public BGL() {this(128);}
 
     public void run(GL2 gl) {
-	for(int i = 0; i < n; i++) {
-		if (i >= list.length) break;
-	    try {
-		list[i].run(gl);
-	    } catch(Exception exc) {
-		throw(new BGLException(this, list[i], exc));
-	    }
+		for (int i = 0; i < n; i++) {
+			try {
+				list[i].run(gl);
+			} catch (Exception exc) {
+				ALS.alDebugPrint("Another BGL Exception! Check error.log for details");
+				BGLException bglException = new BGLException(this, list[i], exc);
+				try {
+					PrintWriter printWriter = new PrintWriter(new File("error.log"));
+					printWriter.append("=========== BGL ERROR ===========");
+					exc.printStackTrace(printWriter);
+					printWriter.append("=========== DUMP ================");
+					printWriter.append(bglException.dump.toString());
+					printWriter.append("=================================");
+				} catch (Exception ex) {
+					ALS.alDebugPrint("Cannot save error.log", ex);
+				}
+			}
+		}
 	}
-    }
 
     private void add(Command cmd) {
 	if(n >= list.length)
@@ -90,13 +105,13 @@ public class BGL {
     }
 
     public static class BGLException extends RuntimeException {
-	public final Dump dump;
+		public final Dump dump;
 
-	public BGLException(BGL buf, Command mark, Throwable cause) {
-	    super(cause);
-	    dump = new Dump(buf, mark);
+		public BGLException(BGL buf, Command mark, Throwable cause) {
+			super(cause);
+			dump = new Dump(buf, mark);
+		}
 	}
-    }
 
     public void bglCheckErr() {
 	final Throwable place = null;
