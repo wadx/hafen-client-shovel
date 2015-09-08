@@ -88,6 +88,14 @@ public class ResDrawable extends Drawable {
 	return(null);
     }
 
+	public String getBaseName() {
+		try {
+			return res.get().name;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
 	@Override
 	public String toString() {
 		try {

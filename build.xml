@@ -42,6 +42,7 @@
     <copy todir="build/classes/haven" file="etc/res-preload" />
     <copy todir="build/classes/haven" file="etc/res-bgload" />
     <copy todir="build/classes/haven" file="etc/icon.png" />
+    <copy todir="build/classes/haven" file="etc/highlight.json" />
   </target>
   
   <target name="appletview" depends="build-env">

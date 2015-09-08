@@ -6,6 +6,8 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -97,6 +99,40 @@ public class Shovel {
             userDirectory = new File("");
         }
         loadSettings();
+    }
+
+    /**
+     * Log errors to file
+     * @param throwable
+     * @param additional
+     */
+    public static void logErrorToFile(Throwable throwable, String... additional) {
+        File errorLog = new File(workingDirectory, "error.log");
+        try {
+            StringWriter stringWriter = new StringWriter();
+            stringWriter.append("=====================================\r\n");
+            throwable.printStackTrace(new PrintWriter(stringWriter));
+            stringWriter.append("\r\n");
+            if (additional.length > 0) {
+                stringWriter.append("======== ADDITIONAL\r\n");
+                for (int i = 0; i < additional.length; i++) {
+                    stringWriter.append(additional[i]);
+                    stringWriter.append("\r\n");
+                }
+                stringWriter.append("=====================================\r\n");
+            }
+            Files.write(errorLog.toPath(), stringWriter.toString().getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        } catch (Exception ex) {
+            ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
+        }
+    }
+
+    /**
+     * Get working directory
+     * @return
+     */
+    public static File getWorkingDirectory() {
+        return workingDirectory;
     }
 
     /**

@@ -1,10 +1,16 @@
 package org.apxeolog.shovel.widget;
 
 import haven.*;
+import haven.Button;
+import haven.Label;
+import haven.Window;
+import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.highlight.HighlightGroup;
 import org.apxeolog.shovel.highlight.HighlightManager;
 import org.apxeolog.shovel.highlight.HighlightOption;
+
+import java.awt.*;
 
 /**
  * Created by APXEOLOG on 31/08/2015.
@@ -50,17 +56,17 @@ public class ConfigurationWnd extends Window {
         {
             highlightSettings = tabs.add();
             highlightSettings.add(new Label("Select group"), new Coord(10, 0));
-            highlightSettings.add(new Label("Enable or disable icon"), new Coord(140, 0));
-            HighlightGroup[] highlightGroups = HighlightManager.loadHighlightData();
-            HighlightOptionList highlightOptionList = new HighlightOptionList(200, 10) {
+            highlightSettings.add(new Label("Enable or disable icon (dblclick works too)"), new Coord(140, 0));
+            TextEntry colorPicker = new TextEntry(130, "");
+            HighlightGroup[] highlightGroups = HighlightManager.getHighlightGroups();
+            HighlightOptionList highlightOptionList = new HighlightOptionList(210, 10) {
                 @Override
                 public void change(HighlightOption item) {
+                    if (item != null) {
+                        colorPicker.settext(HighlightManager.formatColor(
+                                item.color != null ? item.color : Color.BLACK));
+                    }
                     super.change(item);
-                }
-
-                @Override
-                protected void itemclick(HighlightOption item, int button) {
-                    super.itemclick(item, button);
                 }
             };
             highlightSettings.add(highlightOptionList, new Coord(130, 20));
@@ -70,6 +76,7 @@ public class ConfigurationWnd extends Window {
                     if (item != null) {
                         highlightOptionList.setHighlightOptions(item.options);
                         highlightOptionList.setActiveItem(0);
+                        highlightOptionList.sb.val = 0;
                     }
                     super.change(item);
                 }
@@ -84,9 +91,10 @@ public class ConfigurationWnd extends Window {
                         for (int i = 0; i < highlightGroup.options.length; i++) {
                             highlightGroup.options[i].enabled = true;
                         }
+                        HighlightManager.saveHighlightGroups();
                     }
                 }
-            }, new Coord(0, 330));
+            }, new Coord(10, 330));
             highlightSettings.add(new Button(100, "Disable Group") {
                 @Override
                 public void click() {
@@ -95,18 +103,45 @@ public class ConfigurationWnd extends Window {
                         for (int i = 0; i < highlightGroup.options.length; i++) {
                             highlightGroup.options[i].enabled = false;
                         }
+                        HighlightManager.saveHighlightGroups();
                     }
                 }
-            }, new Coord(110, 330));
+            }, new Coord(120, 330));
             highlightSettings.add(new Button(100, "Toggle Item") {
                 @Override
                 public void click() {
                     HighlightOption highlightOption = highlightOptionList.getCurrentItem();
                     if (highlightOption != null) {
                         highlightOption.enabled = !highlightOption.enabled;
+                        HighlightManager.saveHighlightGroups();
                     }
                 }
-            }, new Coord(220, 330));
+            }, new Coord(230, 330));
+            highlightSettings.add(colorPicker, new Coord(0, 370));
+            highlightSettings.add(new Button(100, "Set for Group") {
+                @Override
+                public void click() {
+                    HighlightGroup highlightGroup = highlightGroupList.getCurrentItem();
+                    if (highlightGroup != null) {
+                        Color parsed = HighlightManager.parseColor(colorPicker.text);
+                        for (int i = 0; i < highlightGroup.options.length; i++) {
+                            highlightGroup.options[i].color = parsed;
+                        }
+                        HighlightManager.saveHighlightGroups();
+                    }
+                }
+            }, new Coord(140, 360));
+            highlightSettings.add(new Button(100, "Set for Current") {
+                @Override
+                public void click() {
+                    HighlightOption highlightOption = highlightOptionList.getCurrentItem();
+                    if (highlightOption != null) {
+                        Color parsed = HighlightManager.parseColor(colorPicker.text);
+                        highlightOption.color = parsed;
+                        HighlightManager.saveHighlightGroups();
+                    }
+                }
+            }, new Coord(250, 360));
         }
         tabs.pack();
         add(new Button(100, "General") {
@@ -148,6 +183,7 @@ public class ConfigurationWnd extends Window {
         }
 
         public void setActiveItem(int index) {
+            if (index >= highlightGroups.length) return;
             currentItem = highlightGroups[index];
             change(currentItem);
         }
@@ -196,6 +232,7 @@ public class ConfigurationWnd extends Window {
         }
 
         public void setActiveItem(int index) {
+            if (index >= highlightOptions.length) return;
             currentItem = highlightOptions[index];
             change(currentItem);
         }
@@ -211,18 +248,24 @@ public class ConfigurationWnd extends Window {
 
         @Override
         protected void drawitem(GOut g, HighlightOption item, int i) {
-            Tex icon = null;
-            try {
-                icon = Resource.loadtex(item.icon);
-            } catch (Exception ex) {
-                icon = WItem.missing.layer(Resource.imgc).tex();
-            }
             if (currentItem == item) {
                 g.chcolor(64, 64, 64, 255);
                 g.frect(Coord.z, new Coord(sz.x, 30));
                 g.chcolor();
             }
-            g.image(icon, new Coord(6, 1), new Coord(28, 28));
+            if (item.color != null) {
+                g.chcolor(item.color);
+                g.fellipse(new Coord(20, 15), new Coord(6, 6));
+                g.chcolor();
+            } else if (item.icon != null) {
+                Tex icon = null;
+                try {
+                    icon = Resource.loadtex(item.icon);
+                } catch (Exception ex) {
+                    icon = WItem.missing.layer(Resource.imgc).tex();
+                }
+                g.image(icon, new Coord(6, 1), new Coord(28, 28));
+            }
             if (item.enabled)
                 g.chcolor(0, 102, 0, 255);
             g.image(CharWnd.attrf.render(item.name).tex(), new Coord(40, 3));

@@ -26,7 +26,7 @@
 
 package haven;
 
-import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Shovel;
 
 import javax.media.opengl.*;
 import java.nio.*;
@@ -82,18 +82,8 @@ public class BGL {
 			try {
 				list[i].run(gl);
 			} catch (Exception exc) {
-				ALS.alDebugPrint("Another BGL Exception! Check error.log for details");
 				BGLException bglException = new BGLException(this, list[i], exc);
-				try {
-					PrintWriter printWriter = new PrintWriter(new File("error.log"));
-					printWriter.append("=========== BGL ERROR ===========");
-					exc.printStackTrace(printWriter);
-					printWriter.append("=========== DUMP ================");
-					printWriter.append(bglException.dump.toString());
-					printWriter.append("=================================");
-				} catch (Exception ex) {
-					ALS.alDebugPrint("Cannot save error.log", ex);
-				}
+				Shovel.logErrorToFile(bglException, bglException.dump.toString());
 			}
 		}
 	}

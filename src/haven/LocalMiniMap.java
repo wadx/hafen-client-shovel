@@ -29,12 +29,12 @@ package haven;
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-import haven.glsl.Array;
 import haven.resutil.Ridges;
+import org.apxeolog.shovel.highlight.HighlightManager;
+import org.apxeolog.shovel.highlight.HighlightOption;
 
 public class LocalMiniMap extends Widget {
     public final MapView mv;
@@ -139,30 +139,39 @@ public class LocalMiniMap extends Widget {
     }
 
     public void drawicons(GOut g) {
-	OCache oc = ui.sess.glob.oc;
+		OCache oc = ui.sess.glob.oc;
 		// Cache party ids to remove them from render
 		ArrayList<Long> partyIds = new ArrayList<>(10);
-		synchronized(ui.sess.glob.party.memb) {
+		synchronized (ui.sess.glob.party.memb) {
 			for (Party.Member m : ui.sess.glob.party.memb.values()) {
 				if (m.getgob() != null)
 					partyIds.add(m.getgob().id);
 			}
 		}
-	synchronized(oc) {
-	    for(Gob gob : oc) {
-		try {
-		    GobIcon icon = gob.getattr(GobIcon.class);
-		    if(icon != null) {
-			Coord gc = p2c(gob.rc);
-			Tex tex = icon.tex();
-			g.image(tex, gc.sub(tex.sz().div(2)));
-		    } else {
-				if (partyIds.contains(gob.id)) continue;
-				{
-					Composite composite = gob.getattr(Composite.class);
-					if (composite != null) {
-						if ("gfx/borka/body".equals(composite.getBaseName())) {
-							// Player
+		ArrayList<HighlightOption> highlightOptions = HighlightManager.getFinalHighlightData();
+		synchronized (oc) {
+			for (Gob gob : oc) {
+				try {
+					GobIcon icon = gob.getattr(GobIcon.class);
+					if (icon != null) {
+						Coord gc = p2c(gob.rc);
+						Tex tex = icon.tex();
+						g.image(tex, gc.sub(tex.sz().div(2)));
+					} else {
+						if (partyIds.contains(gob.id)) continue;
+						String resourceName = null;
+						ResDrawable resDrawable = gob.getattr(ResDrawable.class);
+						if (resDrawable != null) {
+							resourceName = resDrawable.getBaseName();
+						} else {
+							Composite composite = gob.getattr(Composite.class);
+							if (composite != null) {
+								resourceName = composite.getBaseName();
+							}
+						}
+						if (resourceName == null) continue;
+						if ("gfx/borka/body".equals(resourceName)) {
+							// Players
 							Color color = new Color(255, 0, 0);
 							KinInfo kinInfo = gob.getattr(KinInfo.class);
 							if (kinInfo != null) {
@@ -174,14 +183,34 @@ public class LocalMiniMap extends Widget {
 							g.chcolor(color);
 							g.fellipse(dotPosition, new Coord(4, 4));
 							g.chcolor();
+						} else {
+							// Highlight list
+							for (HighlightOption option : highlightOptions) {
+								if (option.match(resourceName)) {
+									if (option.color != null) {
+										Coord dotPosition = p2c(gob.rc).sub(3, 3);
+										g.chcolor(Color.BLACK);
+										g.fellipse(dotPosition, new Coord(5, 5));
+										g.chcolor(option.color);
+										g.fellipse(dotPosition, new Coord(4, 4));
+										g.chcolor();
+									} else if (option.icon != null) {
+										Coord dotPosition = p2c(gob.rc);
+										try {
+											g.aimage(Resource.loadtex(option.icon), dotPosition, 0.5, 0.5);
+										} catch (Exception ex) {
+										}
+									}
+									break;
+								}
+							}
 						}
 					}
+				} catch (Loading l) {
 				}
 			}
-		} catch(Loading l) {}
-	    }
+		}
 	}
-    }
 
     public Gob findicongob(Coord c) {
 	OCache oc = ui.sess.glob.oc;

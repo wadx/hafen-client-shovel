@@ -1,46 +1,557 @@
 [
-	{
-		"name": "Stones",
-		"options": [
-			{
-				"name": "DATSTONE",
-				"icon": ""
-			}
-		]
-	},
-	{
-		"name": "Bushes",
-		"options": [
-			{
-				"name": "MINI B 1",
-				"icon": ""
-			},
-			{
-				"name": "MINI B 2",
-				"icon": ""
-			},
-			{
-				"name": "MINI B 3",
-				"icon": ""
-			}
-		]
-	},
-	{
-		"name": "Animals",
-		"options": [
-			{
-				"name": "RACOON KACOON",
-				"icon": ""
-			}
-		]
-	},
-	{
-		"name": "Pickable",
-		"options": [
-			{
-				"name": "Shovel",
-				"icon": ""
-			}
-		]
-	}
+  {
+    "name": "Stones",
+    "options": [
+      {
+        "name": "Black Coal",
+        "resource": "gfx/terobjs/bumlings/blackcoal",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Cassiterite",
+        "resource": "gfx/terobjs/bumlings/cassiterite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Chalcopyrite",
+        "resource": "gfx/terobjs/bumlings/chalcopyrite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Cinnabar",
+        "resource": "gfx/terobjs/bumlings/cinnabar",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Feldspar",
+        "resource": "gfx/terobjs/bumlings/feldspar",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Flint",
+        "resource": "gfx/terobjs/bumlings/flint",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Hematite",
+        "resource": "gfx/terobjs/bumlings/hematite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Marble",
+        "resource": "gfx/terobjs/bumlings/marble",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Nagyagite",
+        "resource": "gfx/terobjs/bumlings/nagyagite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Basalt",
+        "resource": "gfx/terobjs/bumlings/basalt",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Stone",
+        "resource": "gfx/terobjs/bumlings/bumling",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Dolomite",
+        "resource": "gfx/terobjs/bumlings/dolomite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Gneiss",
+        "resource": "gfx/terobjs/bumlings/gneiss",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Granite",
+        "resource": "gfx/terobjs/bumlings/granite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Hematite",
+        "resource": "gfx/terobjs/bumlings/hematite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Ilmenite",
+        "resource": "gfx/terobjs/bumlings/ilmenite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Limestone",
+        "resource": "gfx/terobjs/bumlings/limestone",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Limonite",
+        "resource": "gfx/terobjs/bumlings/limonite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Magnetite",
+        "resource": "gfx/terobjs/bumlings/magnetite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Malachite",
+        "resource": "gfx/terobjs/bumlings/malachite",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Porphyry",
+        "resource": "gfx/terobjs/bumlings/porphyry",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Quartz",
+        "resource": "gfx/terobjs/bumlings/quartz",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Sandstone",
+        "resource": "gfx/terobjs/bumlings/sandstone",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      },
+      {
+        "name": "Schist",
+        "resource": "gfx/terobjs/bumlings/schist",
+        "color": "rgba(0, 0, 255, 255)",
+        "equalMatch": false
+      }
+    ]
+  },
+  {
+    "name": "Bushes",
+    "options": [
+      {
+        "name": "Arrowwood",
+        "resource": "gfx/terobjs/bushes/arrowwood",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Blackberry",
+        "resource": "gfx/terobjs/bushes/blackberrybush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Blackcurrant",
+        "resource": "gfx/terobjs/bushes/blackcurrant",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Blackthorn",
+        "resource": "gfx/terobjs/bushes/blackthorn",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Bogmyrtle",
+        "resource": "gfx/terobjs/bushes/bogmyrtle",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Boxwood",
+        "resource": "gfx/terobjs/bushes/boxwood",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Nightshade",
+        "resource": "gfx/terobjs/bushes/bsnightshade",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Caprifole",
+        "resource": "gfx/terobjs/bushes/caprifole",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Crampbark",
+        "resource": "gfx/terobjs/bushes/crampbark",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Dogrose",
+        "resource": "gfx/terobjs/bushes/dogrose",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Elderberry",
+        "resource": "gfx/terobjs/bushes/elderberrybush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Gooseberry",
+        "resource": "gfx/terobjs/bushes/gooseberrybush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Hawthorn",
+        "resource": "gfx/terobjs/bushes/hawthorn",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Holly",
+        "resource": "gfx/terobjs/bushes/holly",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Raspberry",
+        "resource": "gfx/terobjs/bushes/raspberrybush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Redcurrant",
+        "resource": "gfx/terobjs/bushes/redcurrant",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Sandthorn",
+        "resource": "gfx/terobjs/bushes/sandthorn",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Spindle",
+        "resource": "gfx/terobjs/bushes/spindlebush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Tea",
+        "resource": "gfx/terobjs/bushes/teabush",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Tibast",
+        "resource": "gfx/terobjs/bushes/tibast",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Tundra Rose",
+        "resource": "gfx/terobjs/bushes/tundrarose",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Woodbine",
+        "resource": "gfx/terobjs/bushes/woodbine",
+        "color": "rgba(0, 255, 255, 255)",
+        "equalMatch": true
+      }
+    ]
+  },
+  {
+    "name": "Trees",
+    "options": [
+      {
+        "name": "Alder",
+        "resource": "gfx/terobjs/trees/alder",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Apple",
+        "resource": "gfx/terobjs/trees/appletree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Ash",
+        "resource": "gfx/terobjs/trees/ash",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Aspen",
+        "resource": "gfx/terobjs/trees/aspen",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Baywillow",
+        "resource": "gfx/terobjs/trees/baywillow",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Beech",
+        "resource": "gfx/terobjs/trees/beech",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Birch",
+        "resource": "gfx/terobjs/trees/birch",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Birdcherry",
+        "resource": "gfx/terobjs/trees/birdcherrytree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Buckthorn",
+        "resource": "gfx/terobjs/trees/buckthorn",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Cedar",
+        "resource": "gfx/terobjs/trees/cedar",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Cherry",
+        "resource": "gfx/terobjs/trees/cherry",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Chestnut",
+        "resource": "gfx/terobjs/trees/chestnuttree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Conker",
+        "resource": "gfx/terobjs/trees/conkertree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Corkoak",
+        "resource": "gfx/terobjs/trees/corkoak",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Crabapple",
+        "resource": "gfx/terobjs/trees/crabappletree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Cypress",
+        "resource": "gfx/terobjs/trees/cypress",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Elm",
+        "resource": "gfx/terobjs/trees/elm",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Fir",
+        "resource": "gfx/terobjs/trees/fir",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Goldenchain",
+        "resource": "gfx/terobjs/trees/goldenchain",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Hazel",
+        "resource": "gfx/terobjs/trees/hazel",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Hornbeam",
+        "resource": "gfx/terobjs/trees/hornbeam",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Juniper",
+        "resource": "gfx/terobjs/trees/juniper",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "King's Oak",
+        "resource": "gfx/terobjs/trees/kingsoak",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Larch",
+        "resource": "gfx/terobjs/trees/larch",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Laurel",
+        "resource": "gfx/terobjs/trees/laurel",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Linden",
+        "resource": "gfx/terobjs/trees/linden",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Maple",
+        "resource": "gfx/terobjs/trees/maple",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Mirkwood",
+        "resource": "gfx/terobjs/trees/mirkwood",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Mulberry",
+        "resource": "gfx/terobjs/trees/mulberry",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Oak",
+        "resource": "gfx/terobjs/trees/oak",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Olive",
+        "resource": "gfx/terobjs/trees/olivetree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Pear",
+        "resource": "gfx/terobjs/trees/peartree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Pine",
+        "resource": "gfx/terobjs/trees/pine",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Plane",
+        "resource": "gfx/terobjs/trees/planetree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Plum",
+        "resource": "gfx/terobjs/trees/plumtree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Poplar",
+        "resource": "gfx/terobjs/trees/poplar",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Rowan",
+        "resource": "gfx/terobjs/trees/rowan",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Sallow",
+        "resource": "gfx/terobjs/trees/sallow",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Spruce",
+        "resource": "gfx/terobjs/trees/spruce",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Sweetgum",
+        "resource": "gfx/terobjs/trees/sweetgum",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Walnut",
+        "resource": "gfx/terobjs/trees/walnuttree",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Whitebeam",
+        "resource": "gfx/terobjs/trees/whitebeam",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Willow",
+        "resource": "gfx/terobjs/trees/willow",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      },
+      {
+        "name": "Yew",
+        "resource": "gfx/terobjs/trees/yew",
+        "color": "rgba(255, 255, 0, 255)",
+        "equalMatch": true
+      }
+    ]
+  }
 ]
