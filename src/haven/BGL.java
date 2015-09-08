@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import javax.media.opengl.*;
 import java.nio.*;
 import java.util.*;
@@ -78,7 +80,9 @@ public class BGL {
 	    try {
 		list[i].run(gl);
 	    } catch(Exception exc) {
-		throw(new BGLException(this, list[i], exc));
+			BGLException bglException = new BGLException(this, list[i], exc);
+			Shovel.logErrorToFile(bglException, bglException.dump.toString());
+			// throw(new BGLException(this, list[i], exc));
 	    }
 	}
     }
