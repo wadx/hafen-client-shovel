@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.widget.ConfigurationWnd;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -62,6 +63,7 @@ public class LoginScreen extends Widget {
 	optbtn = adda(new Button(100, "Options"), 10, sz.y - 10, 0, 1);
 		createAccountButtons(null);
 		checkForNewReleases();
+		add(new ConfigurationWnd(new Coord(400, 200)));
     }
 
     private static abstract class Login extends Widget {
