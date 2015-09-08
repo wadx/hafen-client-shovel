@@ -87,12 +87,6 @@
         "equalMatch": false
       },
       {
-        "name": "Hematite",
-        "resource": "gfx/terobjs/bumlings/hematite",
-        "color": "rgba(0, 0, 255, 255)",
-        "equalMatch": false
-      },
-      {
         "name": "Ilmenite",
         "resource": "gfx/terobjs/bumlings/ilmenite",
         "color": "rgba(0, 0, 255, 255)",
