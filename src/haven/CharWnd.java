@@ -57,9 +57,11 @@ public class CharWnd extends Window {
     public final WoundList wounds;
     public Wound.Info wound;
     public int exp, enc;
-	private StudyInfo studyInfo = null;
     private int scost;
     private final Tabs.Tab sattr, fgt;
+
+	private int lastExp = -1;
+	private int expDelt = 0;
 
     public static class FoodMeter extends Widget {
 	public static final Tex frame = Resource.loadtex("gfx/hud/chr/foodm");
@@ -586,8 +588,6 @@ public class CharWnd extends Window {
     public class StudyInfo extends Widget {
 	public Widget study;
 	public int texp, tw, tenc;
-	private int oldExp = -1;
-	private HashSet<String> lastCurioList = new HashSet<String>();
 	private final Text.UText<?> texpt = new Text.UText<Integer>(Text.std) {
 	    public Integer value() {return(texp);}
 	    public String text(Integer v) {return(Utils.thformat(v));}
@@ -603,7 +603,7 @@ public class CharWnd extends Window {
 	private StudyInfo(Coord sz, Widget study) {
 	    super(sz);
 	    this.study = study;
-		this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
+		/*this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child Widget
@@ -613,15 +613,19 @@ public class CharWnd extends Window {
 						ALS.alDebugPrint("Received new GItem in study!", gItem.resource().name);
 				}
 			}
-		});
+		});*/
 		this.study.addEventListener(WidgetEvent.REMOVE_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child widget
 				if (widget instanceof GItem) {
 					GItem gItem = (GItem) widget;
-					if (gItem.ready())
-						ALS.alDebugPrint("Removing GItem from study!", gItem.resource().name);
+					if (gItem.ready()) {
+						Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
+						if (ci != null && expDelt >= ci.exp) {
+							GameUI.instance.error("You have been studied "+gItem.getItemName()+" for "+ci.exp+" LP.");
+						}
+					}
 				}
 			}
 		});
@@ -1304,8 +1308,7 @@ public class CharWnd extends Window {
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-		studyInfo = new StudyInfo(new Coord(attrw - 150, child.sz.y), child);
-	    Widget inf = sattr.add(studyInfo, new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);
@@ -1338,8 +1341,11 @@ public class CharWnd extends Window {
     public void uimsg(String nm, Object... args) {
 	if(nm == "exp") {
 	    exp = ((Number)args[0]).intValue();
-		if (studyInfo != null)
-			studyInfo.upd();
+		if (lastExp < 0)
+			lastExp = exp;
+
+		expDelt = exp - lastExp;
+		lastExp = exp;
 	}else if(nm == "enc") {
 	    enc = ((Number)args[0]).intValue();
 	} else if(nm == "food") {
