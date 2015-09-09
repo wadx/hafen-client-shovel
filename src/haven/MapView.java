@@ -417,8 +417,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		for(o.y = -view; o.y <= view; o.y++) {
 		    for(o.x = -view; o.x <= view; o.x++) {
 			Coord pc = cc.add(o).mul(MCache.cutsz).mul(tilesz);
-			MapMesh cut = glob.map.getcut(cc.add(o));
-			rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
+				try {
+					MapMesh cut = glob.map.getcut(cc.add(o));
+					rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
+				} catch (Exception ex) {
+					// Ignore this defer exception, it seems to be not actually crititcal
+				}
 			Collection<Gob> fol;
 			try {
 			    fol = glob.map.getfo(cc.add(o));

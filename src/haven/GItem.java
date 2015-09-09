@@ -137,6 +137,13 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
 	public ItemQualityInfo getItemQualityInfo() {
 		if (itemQualityInfoCache == null) {
+			List<ItemInfo> itemInfoList = null;
+			try {
+				itemInfoList = info();
+			} catch (Exception ex) {
+				// Ignore this and return null
+				return null;
+			}
 			itemQualityInfoCache = new ItemQualityInfo();
 			for (ItemInfo info : info()) {
 				if (info.getClass().getSimpleName().equals("QBuff")) {
