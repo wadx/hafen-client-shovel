@@ -51,6 +51,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showFriendNotifications), new Coord(15, 100));
+            generalSettings.add(new CheckBox("Show items quality", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showQuality = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showQuality), new Coord(15, 125));
         }
         Tabs.Tab highlightSettings;
         {
