@@ -17,7 +17,7 @@ import java.nio.file.StandardOpenOption;
  * Main class to init startup data like configs etc
  */
 public class Shovel {
-    private static String version = "1.2.0";
+    private static String version = "1.2.1";
     private static Settings settings;
     private static File workingDirectory;
     private static File userDirectory;
