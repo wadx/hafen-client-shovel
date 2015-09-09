@@ -185,6 +185,11 @@ public class GOut {
 	image(tex, c.add((int)((double)sz.x * -ax), (int)((double)sz.y * -ay)));
     }
 
+	public void imageDock(Tex tex, Coord fieldSize, double dockX, double dockY) {
+		Coord imageSize = tex.sz();
+		image(tex, new Coord((int)(fieldSize.x * dockX - imageSize.x * dockX), (int)(fieldSize.y * dockY - imageSize.y * dockY)));
+	}
+
     /* Draw texture at c, scaling it to sz. */
     public void image(Tex tex, Coord c, Coord sz) {
 	if(tex == null)

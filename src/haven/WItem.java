@@ -100,38 +100,32 @@ public class WItem extends Widget implements DTarget {
     private ItemTip shorttip = null, longtip = null;
     private List<ItemInfo> ttinfo = null;
     public Object tooltip(Coord c, Widget prev) {
-	long now = System.currentTimeMillis();
-	if(prev == this) {
-	} else if(prev instanceof WItem) {
-	    long ps = ((WItem)prev).hoverstart;
-	    if(now - ps < 1000)
-		hoverstart = now;
-	    else
-		hoverstart = ps;
-	} else {
-	    hoverstart = now;
+		long now = System.currentTimeMillis();
+		if (prev == this) {
+		} else if (prev instanceof WItem) {
+			long ps = ((WItem) prev).hoverstart;
+			if (now - ps < 1000)
+				hoverstart = now;
+			else
+				hoverstart = ps;
+		} else {
+			hoverstart = now;
+		}
+		try {
+			List<ItemInfo> info = item.info();
+			if (info.size() < 1)
+				return (null);
+			if (info != ttinfo) {
+				shorttip = longtip = null;
+				ttinfo = info;
+			}
+			if (longtip == null)
+				longtip = new LongTip(info);
+			return (longtip);
+		} catch (Loading e) {
+			return ("...");
+		}
 	}
-	try {
-	    List<ItemInfo> info = item.info();
-	    if(info.size() < 1)
-		return(null);
-	    if(info != ttinfo) {
-		shorttip = longtip = null;
-		ttinfo = info;
-	    }
-	    if(now - hoverstart < 1000) {
-		if(shorttip == null)
-		    shorttip = new ShortTip(info);
-		return(shorttip);
-	    } else {
-		if(longtip == null)
-		    longtip = new LongTip(info);
-		return(longtip);
-	    }
-	} catch(Loading e) {
-	    return("...");
-	}
-    }
 
     public abstract class AttrCache<T> {
 	private List<ItemInfo> forinfo = null;
@@ -197,18 +191,20 @@ public class WItem extends Widget implements DTarget {
 			if (item.num >= 0) {
 				g.atext(Integer.toString(item.num), sz, 0, 1);
 			} else if (itemnum.get() != null) {
-				g.aimage(itemnum.get(), sz, 1, 1);
+				g.imageDock(itemnum.get(), sz, 0, 1);
 			}
 			if (item.meter > 0) {
-				int a = (int) Math.round(((double) item.meter) / 100.0);
-				g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(a) + "%", Color.WHITE, Color.BLACK, 1), sz, 0.5, 0.5);
+				g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(item.meter) + "%", Color.WHITE, Color.BLACK, 1), sz, 0.5, 0.5);
 			}
 			if (Shovel.getSettings().showQuality && item.ready()) {
 				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
 				if (qualityInfo != null) {
-					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.substance), qualityInfo.COLOR_SUBSTANCE, Color.BLACK, 1), sz, 0, 0);
-					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.essence), qualityInfo.COLOR_ESSENCE, Color.BLACK, 1), sz, 0.5, 0);
-					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.vitality), qualityInfo.COLOR_VITALITY, Color.BLACK, 1), sz, 1, 0);
+					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
+					/*
+					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.substance), qualityInfo.COLOR_SUBSTANCE, Color.BLACK, 1), sz, 0, 0);
+					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.essence), qualityInfo.COLOR_ESSENCE, Color.BLACK, 1), sz, 0.5, 0);
+					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.vitality), qualityInfo.COLOR_VITALITY, Color.BLACK, 1), sz, 1, 0);
+					*/
 				}
 			}
 		} else {
