@@ -66,11 +66,16 @@ public class CheckBox extends Widget {
 	return(true);
     }
 
-    public CheckBox set(boolean a) {
+    public CheckBox chainSet(boolean a) {
 	this.a = a;
 	changed(a);
 		return this;
     }
+
+	public void set(boolean a) {
+		this.a = a;
+		changed(a);
+	}
 
     public void draw(GOut g) {
 	g.image(lbl.tex(), loff.add(box.sz().x, box.sz().y - lbl.sz().y));

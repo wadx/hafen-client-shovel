@@ -29,28 +29,28 @@ public class ConfigurationWnd extends Window {
                     Shovel.getSettings().alwaysShowNickname = val;
                     Shovel.saveSettings();
                 }
-            }.set(Shovel.getSettings().alwaysShowNickname), new Coord(15, 25));
+            }.chainSet(Shovel.getSettings().alwaysShowNickname), new Coord(15, 25));
             generalSettings.add(new CheckBox("Save minimaps", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().dumpMinimaps = val;
                     Shovel.saveSettings();
                 }
-            }.set(Shovel.getSettings().dumpMinimaps), new Coord(15, 50));
+            }.chainSet(Shovel.getSettings().dumpMinimaps), new Coord(15, 50));
             generalSettings.add(new CheckBox("Disable flavor objects", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showFlavor = val;
                     Shovel.saveSettings();
                 }
-            }.set(Shovel.getSettings().showFlavor), new Coord(15, 75));
+            }.chainSet(Shovel.getSettings().showFlavor), new Coord(15, 75));
             generalSettings.add(new CheckBox("Enable friends notification", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showFriendNotifications = val;
                     Shovel.saveSettings();
                 }
-            }.set(Shovel.getSettings().showFriendNotifications), new Coord(15, 100));
+            }.chainSet(Shovel.getSettings().showFriendNotifications), new Coord(15, 100));
         }
         Tabs.Tab highlightSettings;
         {
