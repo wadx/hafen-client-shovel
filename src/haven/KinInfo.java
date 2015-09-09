@@ -26,7 +26,6 @@
 
 package haven;
 
-import org.apxeolog.shovel.Settings;
 import org.apxeolog.shovel.Shovel;
 
 import java.awt.Graphics;
@@ -34,66 +33,66 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 
 public class KinInfo extends GAttrib {
-    public static final BufferedImage vlg = Resource.loadimg("gfx/hud/vilind");
-    public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
-    public String name;
-    public int group, type;
-    public long seen = 0;
-    private Tex rnm = null;
-    
-    public KinInfo(Gob g, String name, int group, int type) {
-	super(g);
-	this.name = name;
-	this.group = group;
-	this.type = type;
-    }
-    
-    public void update(String name, int group, int type) {
-	this.name = name;
-	this.group = group;
-	this.type = type;
-	rnm = null;
-    }
-    
-    public Tex rendered() {
-	if(rnm == null) {
-	    boolean hv = (type & 2) != 0;
-	    BufferedImage nm = null;
-	    if(name.length() > 0)
-		nm = Utils.outline2(nfnd.render(name, BuddyWnd.gc[group]).img, Utils.contrast(BuddyWnd.gc[group]));
-	    int w = 0, h = 0;
-	    if(nm != null) {
-		w += nm.getWidth();
-		if(nm.getHeight() > h)
-		    h = nm.getHeight();
-	    }
-	    if(hv) {
-		w += vlg.getWidth() + 1;
-		if(vlg.getHeight() > h)
-		    h = vlg.getHeight();
-	    }
-	    if(w == 0) {
-		rnm = new TexIM(new Coord(1, 1));
-	    } else {
-		BufferedImage buf = TexI.mkbuf(new Coord(w, h));
-		Graphics g = buf.getGraphics();
-		int x = 0;
-		if(hv) {
-		    g.drawImage(vlg, x, (h / 2) - (vlg.getHeight() / 2), null);
-		    x += vlg.getWidth() + 1;
-		}
-		if(nm != null) {
-		    g.drawImage(nm, x, (h / 2) - (nm.getHeight() / 2), null);
-		    x += nm.getWidth();
-		}
-		g.dispose();
-		rnm = new TexI(buf);
-	    }
+	public static final BufferedImage vlg = Resource.loadimg("gfx/hud/vilind");
+	public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
+	public String name;
+	public int group, type;
+	public long seen = 0;
+	private Tex rnm = null;
+
+	public KinInfo(Gob g, String name, int group, int type) {
+		super(g);
+		this.name = name;
+		this.group = group;
+		this.type = type;
 	}
-	return(rnm);
-    }
-    
-    final PView.Draw2D fx = new PView.Draw2D() {
+
+	public void update(String name, int group, int type) {
+		this.name = name;
+		this.group = group;
+		this.type = type;
+		rnm = null;
+	}
+
+	public Tex rendered() {
+		if (rnm == null) {
+			boolean hv = (type & 2) != 0;
+			BufferedImage nm = null;
+			if (name.length() > 0)
+				nm = Utils.outline2(nfnd.render(name, BuddyWnd.gc[group]).img, Utils.contrast(BuddyWnd.gc[group]));
+			int w = 0, h = 0;
+			if (nm != null) {
+				w += nm.getWidth();
+				if (nm.getHeight() > h)
+					h = nm.getHeight();
+			}
+			if (hv) {
+				w += vlg.getWidth() + 1;
+				if (vlg.getHeight() > h)
+					h = vlg.getHeight();
+			}
+			if (w == 0) {
+				rnm = new TexIM(new Coord(1, 1));
+			} else {
+				BufferedImage buf = TexI.mkbuf(new Coord(w, h));
+				Graphics g = buf.getGraphics();
+				int x = 0;
+				if (hv) {
+					g.drawImage(vlg, x, (h / 2) - (vlg.getHeight() / 2), null);
+					x += vlg.getWidth() + 1;
+				}
+				if (nm != null) {
+					g.drawImage(nm, x, (h / 2) - (nm.getHeight() / 2), null);
+					x += nm.getWidth();
+				}
+				g.dispose();
+				rnm = new TexI(buf);
+			}
+		}
+		return (rnm);
+	}
+
+	final PView.Draw2D fx = new PView.Draw2D() {
 		public void draw2d(GOut g) {
 			if (gob.sc != null) {
 				Coord sc = gob.sc.add(new Coord(gob.sczu.mul(15)));
@@ -110,8 +109,14 @@ public class KinInfo extends GAttrib {
 						int tm = (int) (now - seen);
 						Color show = null;
 						boolean auto = (type & 1) == 0;
-						if (auto && (tm < 7500)) {
-							show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+						if (false) {
+							/* XXX: QQ, RIP in peace until constant
+							 * mouse-over checks can be had. */
+							if (auto && (tm < 7500)) {
+								show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+							}
+						} else {
+							show = Color.WHITE;
 						}
 						if (show != null) {
 							Tex t = rendered();
@@ -119,8 +124,6 @@ public class KinInfo extends GAttrib {
 							g.aimage(t, sc, 0.5, 1.0);
 							g.chcolor();
 						}
-					} else {
-						seen = 0;
 					}
 				}
 			}
