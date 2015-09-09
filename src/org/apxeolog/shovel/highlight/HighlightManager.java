@@ -16,6 +16,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,6 +119,9 @@ public class HighlightManager {
                     .registerTypeAdapter(Color.class, new ColorClassAdapter())
                     .create();
             highlightGroups = gson.fromJson(new FileReader(highlightFile), highlightGroups.getClass());
+            for (int i = 0; i < highlightGroups.length; i++) {
+                Arrays.sort(highlightGroups[i].options, ((o1, o2) -> o1.name != null ? o1.name.compareTo(o2.name) : -1));
+            }
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot load highlight data:", ex.getMessage());
         }
