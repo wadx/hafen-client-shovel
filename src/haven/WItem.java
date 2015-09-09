@@ -200,17 +200,15 @@ public class WItem extends Widget implements DTarget {
 				g.aimage(itemnum.get(), sz, 1, 1);
 			}
 			if (item.meter > 0) {
-				double a = ((double) item.meter) / 100.0;
-				g.chcolor(255, 255, 255, 64);
-				Coord half = sz.div(2);
-				g.prect(half, half.inv(), half, a * Math.PI * 2);
-				g.chcolor();
+				int a = (int) Math.round(((double) item.meter) / 100.0);
+				g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(a) + "%", Color.WHITE, Color.BLACK, 1), sz, 0.5, 0.5);
 			}
 			if (Shovel.getSettings().showQuality && item.ready()) {
 				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
 				if (qualityInfo != null) {
-					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
-					g.chcolor();
+					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.substance), qualityInfo.COLOR_SUBSTANCE, Color.BLACK, 1), sz, 0, 0);
+					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.essence), qualityInfo.COLOR_ESSENCE, Color.BLACK, 1), sz, 0.5, 0);
+					g.aimage(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.vitality), qualityInfo.COLOR_VITALITY, Color.BLACK, 1), sz, 1, 0);
 				}
 			}
 		} else {
