@@ -146,12 +146,21 @@ public class HighlightManager {
     public static Color parseColor(String string) {
         Matcher matcher = COLOR_PATTERN.matcher(string);
         if (matcher.find() && matcher.groupCount() == 4) {
-            return new Color(
-                    Integer.valueOf(matcher.group(1)),
-                    Integer.valueOf(matcher.group(2)),
-                    Integer.valueOf(matcher.group(3)),
-                    Integer.valueOf(matcher.group(4))
-            );
+            int r  = Integer.valueOf(matcher.group(1));
+            int g  = Integer.valueOf(matcher.group(2));
+            int b  = Integer.valueOf(matcher.group(3));
+            int a  = Integer.valueOf(matcher.group(4));
+            if (r >= 0 && r <= 255
+                    && g >= 0 && g <= 255
+                    && b >= 0 && b <= 255
+                    && a >= 0 && a <= 255) {
+                return new Color(
+                        Integer.valueOf(matcher.group(1)),
+                        Integer.valueOf(matcher.group(2)),
+                        Integer.valueOf(matcher.group(3)),
+                        Integer.valueOf(matcher.group(4))
+                );
+            }
         }
         return null;
     }
