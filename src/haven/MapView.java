@@ -963,33 +963,29 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    undelay(delayed, g);
 	    super.draw(g);
 	    undelay(delayed2, g);
-	    poldraw(g);
-	    partydraw(g);
-		drawDebugInformation(g);
-		float zoom = camera.zoom();
-		int y = (int)(100 * (120.0 / zoom));
 		synchronized (glob.oc) {
 			try {
 				for (Gob gob : glob.oc) {
-					CustomAttrib.DriedHideAttrib attrib = gob.getattr(CustomAttrib.DriedHideAttrib.class);
-					if (attrib != null) {
-						g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -y), 0.5, 1);
-					}
-					/*ResDrawable drawable = gob.getattr(ResDrawable.class);
-					if (drawable != null && "gfx/terobjs/dframe".equals(drawable.getBaseName())) {
-						if (gob.ols.size() > 0) {
-							Gob.Overlay overlay = gob.ols.iterator().next();
-							String olName = overlay.getBaseName();
-
-							if (olName != null && !olName.endsWith("-blood")) {
-							}
+					if (Shovel.getSettings().showReadyHideAndLeather) {
+						CustomAttrib.DriedHideAttrib attrib = gob.getattr(CustomAttrib.DriedHideAttrib.class);
+						if (attrib != null) {
+							g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (100 * (120.0 / camera.zoom()))), 0.5, 1);
 						}
-					}*/
+					}
+					if (Shovel.getSettings().showObjectsHealth) {
+						GobHealth gobHealth = gob.getattr(GobHealth.class);
+						if (gobHealth != null && gobHealth.hp < 4) {
+							g.aimage(Utils.renderOutlinedFont(Text.std, (gobHealth.hp * 25) + "%", new Color(153, 0, 0, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (80 * (120.0 / camera.zoom()))), 0.5, 1);
+						}
+					}
 				}
 			} catch (Exception ex) {
 
 			}
 		}
+	    poldraw(g);
+	    partydraw(g);
+		drawDebugInformation(g);
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
 	} catch(Loading e) {

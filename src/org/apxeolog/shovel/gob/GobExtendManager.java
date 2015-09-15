@@ -1,6 +1,7 @@
 package org.apxeolog.shovel.gob;
 
 import haven.Gob;
+import haven.MessageBuf;
 import haven.Resource;
 
 import java.lang.ref.WeakReference;
@@ -10,7 +11,7 @@ import java.lang.ref.WeakReference;
  * Collection of methods for extending Gob with custom attributes
  */
 public class GobExtendManager {
-    public static void initResDrawable(Gob gob, Resource resource) {
+    public static void initResDrawable(Gob gob, Resource resource, MessageBuf sdt) {
         // Drying frame notification
         if ("gfx/terobjs/dframe".equals(resource.name)) {
             gob.addOverlayListener(new OverlayListener() {
@@ -37,6 +38,12 @@ public class GobExtendManager {
                     }
                 }
             });
+        }
+        // Tanning tube
+        if ("gfx/terobjs/ttub".equals(resource.name)) {
+            if (sdt.rbuf.length > 0 && (sdt.rbuf[0] == 8 || sdt.rbuf[0] == 10)) {
+
+            }
         }
     }
 }

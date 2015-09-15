@@ -12,6 +12,8 @@ public class Settings {
     public boolean showQuality = true;
     public boolean showFriendNotifications = true;
     public boolean enableGroupHotkeys = true;
+    public boolean showReadyHideAndLeather = true;
+    public boolean showObjectsHealth = true;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;

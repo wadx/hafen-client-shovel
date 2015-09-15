@@ -28,7 +28,7 @@ package haven;
 
 import org.apxeolog.shovel.gob.GobExtendManager;
 
-import java.awt.Color;
+import java.util.Arrays;
 
 public class ResDrawable extends Drawable {
     public final Indir<Resource> res;
@@ -54,7 +54,7 @@ public class ResDrawable extends Drawable {
 			return;
 		Resource baseResource = res.get();
 		spr = Sprite.create(gob, baseResource, sdt.clone());
-		GobExtendManager.initResDrawable(gob, baseResource);
+		GobExtendManager.initResDrawable(gob, baseResource, sdt);
 	}
 	
     public void setup(RenderList rl) {
@@ -104,7 +104,7 @@ public class ResDrawable extends Drawable {
 	public String toString() {
 		try {
 			Resource resource = res.get();
-			return resource.name;
+			return "RES: " + resource.name + " SDT: " + Arrays.toString(sdt.rbuf);
 		} catch (Exception ex) {
 			return super.toString();
 		}
