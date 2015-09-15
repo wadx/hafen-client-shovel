@@ -31,6 +31,7 @@ import static haven.MCache.tilesz;
 import haven.Resource.Tile;
 import haven.GLProgram.VarID;
 import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.gob.CustomAttrib;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -101,6 +102,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	
 	public abstract float angle();
 	public abstract void tick(double dt);
+
+		public float zoom() {
+			return 100.0f;
+		}
     }
     
     public class FollowCam extends Camera {
@@ -204,7 +209,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	public String toString() {
 	    return(String.format("%f %f %f", elev, dist(elev), field(elev)));
 	}
-    }
+	}
     static {camtypes.put("follow", FollowCam.class);}
 
     public class FreeCam extends Camera {
@@ -246,7 +251,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    dist = d;
 	    return(true);
 	}
-    }
+
+		@Override
+		public float zoom() {
+			return dist;
+		}
+	}
     static {camtypes.put("bad", FreeCam.class);}
     
     public class OrthoCam extends Camera {
@@ -316,7 +326,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private float tfield = field;
 	private final float pi2 = (float)(Math.PI * 2);
 
-	public SOrthoCam(boolean exact) {
+		@Override
+		public float zoom() {
+			return tfield;
+		}
+
+		public SOrthoCam(boolean exact) {
 	    super(exact);
 	}
 
@@ -951,6 +966,30 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    poldraw(g);
 	    partydraw(g);
 		drawDebugInformation(g);
+		float zoom = camera.zoom();
+		int y = (int)(100 * (120.0 / zoom));
+		synchronized (glob.oc) {
+			try {
+				for (Gob gob : glob.oc) {
+					CustomAttrib.DriedHideAttrib attrib = gob.getattr(CustomAttrib.DriedHideAttrib.class);
+					if (attrib != null) {
+						g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -y), 0.5, 1);
+					}
+					/*ResDrawable drawable = gob.getattr(ResDrawable.class);
+					if (drawable != null && "gfx/terobjs/dframe".equals(drawable.getBaseName())) {
+						if (gob.ols.size() > 0) {
+							Gob.Overlay overlay = gob.ols.iterator().next();
+							String olName = overlay.getBaseName();
+
+							if (olName != null && !olName.endsWith("-blood")) {
+							}
+						}
+					}*/
+				}
+			} catch (Exception ex) {
+
+			}
+		}
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
 	} catch(Loading e) {
@@ -1518,35 +1557,42 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
 	private void drawDebugInformation(GOut g) {
 		if (!Shovel.getSettings().debugMode) return;
-		Gob playerGob = player();
-		int x = 100, y = 100, offsetY = 15;
-		if (playerGob != null) {
-			g.text("Player ID: " + playerGob.id, new Coord(x, y += offsetY));
-			g.text("Player RC: " + playerGob.getrc(), new Coord(x, y += offsetY));
-		}
-		if (lastPC != null) {
-			g.text("Click PC: " + String.valueOf(lastPC), new Coord(x, y += offsetY));
-		}
-		if (lastMC != null) {
-			g.text("Click MC: " + String.valueOf(lastMC), new Coord(x, y += offsetY));
-		}
-		if (lastInfo != null) {
-			if (lastInfo.gob != null) {
-				g.text("Gob ID: " + lastInfo.gob.id, new Coord(x, y += offsetY));
-				g.text("Gob RD: " + lastInfo.gob.getrc(), new Coord(x, y += offsetY));
-				if (lastInfo.gob.attr != null) {
-					g.text("Gob Attrs: " + lastInfo.gob.attr.size(), new Coord(x, y += offsetY));
-					for (Map.Entry<Class<? extends GAttrib>, GAttrib> entry : lastInfo.gob.attr.entrySet()) {
-						g.text(String.valueOf(entry.getValue().getClass()) + ": " + String.valueOf(entry.getValue()), new Coord(x + 30, y += offsetY));
+		try {
+			Gob playerGob = player();
+			int x = 100, y = 100, offsetY = 15;
+			if (camera instanceof SOrthoCam) {
+				g.text("Zoom: " + camera.zoom(), new Coord(x, y += offsetY));
+			}
+			if (playerGob != null) {
+				g.text("Player ID: " + playerGob.id, new Coord(x, y += offsetY));
+				g.text("Player RC: " + playerGob.getrc(), new Coord(x, y += offsetY));
+			}
+			if (lastPC != null) {
+				g.text("Click PC: " + String.valueOf(lastPC), new Coord(x, y += offsetY));
+			}
+			if (lastMC != null) {
+				g.text("Click MC: " + String.valueOf(lastMC), new Coord(x, y += offsetY));
+			}
+			if (lastInfo != null) {
+				if (lastInfo.gob != null) {
+					g.text("Gob ID: " + lastInfo.gob.id, new Coord(x, y += offsetY));
+					g.text("Gob RD: " + lastInfo.gob.getrc(), new Coord(x, y += offsetY));
+					if (lastInfo.gob.attr != null) {
+						g.text("Gob Attrs: " + lastInfo.gob.attr.size(), new Coord(x, y += offsetY));
+						for (Map.Entry<Class<? extends GAttrib>, GAttrib> entry : lastInfo.gob.attr.entrySet()) {
+							g.text(String.valueOf(entry.getValue().getClass()) + ": " + String.valueOf(entry.getValue()), new Coord(x + 30, y += offsetY));
+						}
 					}
-				}
-				if (lastInfo.gob.ols != null) {
-					g.text("Gob Overlays: " + lastInfo.gob.ols.size(), new Coord(x, y += offsetY));
-					for (Gob.Overlay overlay : lastInfo.gob.ols) {
-						g.text(String.valueOf(overlay), new Coord(x + 30, y += offsetY));
+					if (lastInfo.gob.ols != null) {
+						g.text("Gob Overlays: " + lastInfo.gob.ols.size(), new Coord(x, y += offsetY));
+						for (Gob.Overlay overlay : lastInfo.gob.ols) {
+							g.text(String.valueOf(overlay), new Coord(x + 30, y += offsetY));
+						}
 					}
 				}
 			}
+		} catch (Exception ex) {
+
 		}
 	}
 }

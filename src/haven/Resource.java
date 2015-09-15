@@ -774,6 +774,8 @@ public class Resource implements Serializable {
 	public T layerid();
     }
 
+	public int lc = 0;
+
     @LayerName("image")
     public class Image extends Layer implements Comparable<Image>, IDLayer<Integer> {
 	public transient BufferedImage img;
@@ -801,6 +803,17 @@ public class Resource implements Serializable {
 	    if(img == null)
 		throw(new LoadException("Invalid image data in " + name, Resource.this));
 	    sz = Utils.imgsz(img);
+		/*try {
+			//File f = new File("outres/", Resource.this.name.substring(0, Resource.this.name.lastIndexOf('.')));
+			//f.mkdirs();//
+			File f = new File("outres/", Resource.this.name + "_" + (lc++) + ".png");
+			File dir = new File(f.getParent());
+			dir.mkdirs();
+			f.createNewFile();
+			ImageIO.write(img, "PNG", f);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}*/
 	}
 		
 	public synchronized Tex tex() {

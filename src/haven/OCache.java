@@ -267,28 +267,30 @@ public class OCache implements Iterable<Gob> {
     }
 	
     public synchronized void overlay(Gob g, int olid, boolean prs, Indir<Resource> resid, Message sdt) {
-	Gob.Overlay ol = g.findol(olid);
-	if(resid != null) {
-	    sdt = new MessageBuf(sdt);
-	    if(ol == null) {
-		g.ols.add(ol = new Gob.Overlay(olid, resid, sdt));
-	    } else if(!ol.sdt.equals(sdt)) {
-		if(ol.spr instanceof Gob.Overlay.CUpd) {
-		    ol.sdt = new MessageBuf(sdt);
-		    ((Gob.Overlay.CUpd)ol.spr).update(ol.sdt);
+		Gob.Overlay ol = g.findol(olid);
+		if (resid != null) {
+			sdt = new MessageBuf(sdt);
+			if (ol == null) {
+				ol = new Gob.Overlay(olid, resid, sdt);
+				g.addOverlay(ol);
+			} else if (!ol.sdt.equals(sdt)) {
+				if (ol.spr instanceof Gob.Overlay.CUpd) {
+					ol.sdt = new MessageBuf(sdt);
+					g.updateOverlay(ol);
+				} else {
+					g.removeOverlay(ol);
+					ol = new Gob.Overlay(olid, resid, sdt);
+					g.addOverlay(ol);
+				}
+			}
+			ol.delign = prs;
 		} else {
-		    g.ols.remove(ol);
-		    g.ols.add(ol = new Gob.Overlay(olid, resid, sdt));
+			if ((ol != null) && (ol.spr instanceof Gob.Overlay.CDel))
+				g.deleteOverlay(ol);
+			else
+				g.removeOverlay(ol);
 		}
-	    }
-	    ol.delign = prs;
-	} else {
-	    if((ol != null) && (ol.spr instanceof Gob.Overlay.CDel))
-		((Gob.Overlay.CDel)ol.spr).delete();
-	    else
-		g.ols.remove(ol);
 	}
-    }
 
     public synchronized void health(Gob g, int hp) {
 	g.setattr(new GobHealth(g, hp));

@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.gob.OverlayListener;
+
 import java.util.*;
 
 public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
@@ -39,6 +41,34 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public final Glob glob;
     Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
     public Collection<Overlay> ols = new LinkedList<Overlay>();
+
+	private ArrayList<OverlayListener> overlayListeners = new ArrayList<>();
+
+	public void addOverlayListener(OverlayListener overlayListener) {
+		overlayListeners.add(overlayListener);
+	}
+
+	public void addOverlay(Overlay overlay) {
+		ols.add(overlay);
+		for (OverlayListener overlayListener : overlayListeners)
+			overlayListener.add(this, overlay);
+	}
+
+	public void removeOverlay(Overlay overlay) {
+		ols.remove(overlay);
+		for (OverlayListener overlayListener : overlayListeners)
+			overlayListener.remove(this, overlay);
+	}
+
+	public void updateOverlay(Overlay overlay) {
+		((Overlay.CUpd) overlay.spr).update(overlay.sdt);
+		for (OverlayListener overlayListener : overlayListeners)
+			overlayListener.update(this, overlay);
+	}
+
+	public void deleteOverlay(Overlay overlay) {
+		((Overlay.CDel) overlay.spr).delete();
+	}
 	
     public static class Overlay implements Rendered {
 	public Indir<Resource> res;
@@ -53,6 +83,14 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	    this.sdt = new MessageBuf(sdt);
 	    spr = null;
 	}
+
+		public String getBaseName() {
+			try {
+				return res.get().name;
+			} catch (Exception ex) {
+				return null;
+			}
+		}
 	
 	public Overlay(Sprite spr) {
 	    this.id = -1;
@@ -80,7 +118,16 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 		rl.add(spr, null);
 	    return(false);
 	}
-    }
+
+		@Override
+		public String toString() {
+			try {
+				return String.format("[RES: %s, SPR: %s]", res.get().name, spr.res.name);
+			} catch (Exception ex) {
+				return super.toString();
+			}
+		}
+	}
     
     public Gob(Glob glob, Coord c, long id, int frame) {
 	this.glob = glob;
@@ -99,23 +146,29 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     }
 	
     public void ctick(int dt) {
-	for(GAttrib a : attr.values())
-	    a.ctick(dt);
-	for(Iterator<Overlay> i = ols.iterator(); i.hasNext();) {
-	    Overlay ol = i.next();
-	    if(ol.spr == null) {
-		try {
-		    ol.spr = Sprite.create(this, ol.res.get(), ol.sdt.clone());
-		} catch(Loading e) {}
-	    } else {
-		boolean done = ol.spr.tick(dt);
-		if((!ol.delign || (ol.spr instanceof Overlay.CDel)) && done)
-		    i.remove();
-	    }
+		for (GAttrib a : attr.values())
+			a.ctick(dt);
+		for (Iterator<Overlay> i = ols.iterator(); i.hasNext(); ) {
+			Overlay ol = i.next();
+			if (ol.spr == null) {
+				try {
+					ol.spr = Sprite.create(this, ol.res.get(), ol.sdt.clone());
+					for (OverlayListener overlayListener : overlayListeners)
+						overlayListener.init(this, ol);
+				} catch (Loading e) {
+				}
+			} else {
+				boolean done = ol.spr.tick(dt);
+				if ((!ol.delign || (ol.spr instanceof Overlay.CDel)) && done) {
+					i.remove();
+					for (OverlayListener overlayListener : overlayListeners)
+						overlayListener.remove(this, ol);
+				}
+			}
+		}
+		if (virtual && ols.isEmpty())
+			glob.oc.remove(id);
 	}
-	if(virtual && ols.isEmpty())
-	    glob.oc.remove(id);
-    }
 	
     public Overlay findol(int id) {
 	for(Overlay ol : ols) {
