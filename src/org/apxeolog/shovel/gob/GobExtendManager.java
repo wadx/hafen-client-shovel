@@ -24,7 +24,7 @@ public class GobExtendManager {
                         if (resName != null && resName.contains("hide") && !resName.endsWith("-blood")) {
                             // Add Attrib
                             overlayWeakReference = new WeakReference<Gob.Overlay>(overlay);
-                            gob.setattr(new CustomAttrib.DriedHideAttrib(gob));
+                            gob.setattr(new CustomAttrib.ReadyHideOrTubeAttrib(gob));
                         }
                     } catch (Exception ex) {
 
@@ -34,7 +34,7 @@ public class GobExtendManager {
                 @Override
                 public void remove(Gob gob, Gob.Overlay overlay) {
                     if (overlayWeakReference.get() == overlay) {
-                        gob.delattr(CustomAttrib.DriedHideAttrib.class);
+                        gob.delattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
                     }
                 }
             });
@@ -42,7 +42,9 @@ public class GobExtendManager {
         // Tanning tube
         if ("gfx/terobjs/ttub".equals(resource.name)) {
             if (sdt.rbuf.length > 0 && (sdt.rbuf[0] == 8 || sdt.rbuf[0] == 10)) {
-
+                gob.setattr(new CustomAttrib.ReadyHideOrTubeAttrib(gob, 60));
+            } else {
+                gob.delattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
             }
         }
     }

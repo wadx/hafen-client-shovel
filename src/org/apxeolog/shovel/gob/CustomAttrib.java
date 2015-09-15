@@ -11,10 +11,16 @@ public class CustomAttrib extends GAttrib {
         super(gob);
     }
 
-    public static class DriedHideAttrib extends CustomAttrib {
+    public static class ReadyHideOrTubeAttrib extends CustomAttrib {
+        public int height = 0;
 
-        public DriedHideAttrib(Gob gob) {
+        public ReadyHideOrTubeAttrib(Gob gob) {
+            this(gob, 100);
+        }
+
+        public ReadyHideOrTubeAttrib(Gob gob, int val) {
             super(gob);
+            height = val;
         }
     }
 }

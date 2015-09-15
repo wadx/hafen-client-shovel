@@ -26,9 +26,8 @@
 
 package haven;
 
-import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
-import haven.Resource.Tile;
+
 import haven.GLProgram.VarID;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.gob.CustomAttrib;
@@ -967,9 +966,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			try {
 				for (Gob gob : glob.oc) {
 					if (Shovel.getSettings().showReadyHideAndLeather) {
-						CustomAttrib.DriedHideAttrib attrib = gob.getattr(CustomAttrib.DriedHideAttrib.class);
+						CustomAttrib.ReadyHideOrTubeAttrib attrib = gob.getattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
 						if (attrib != null) {
-							g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (100 * (120.0 / camera.zoom()))), 0.5, 1);
+							g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (attrib.height * (120.0 / camera.zoom()))), 0.5, 1);
 						}
 					}
 					if (Shovel.getSettings().showObjectsHealth) {
