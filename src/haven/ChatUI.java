@@ -26,6 +26,9 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Shovel;
+
 import java.util.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -53,7 +56,7 @@ public class ChatUI extends Widget {
     };
     public Channel sel = null;
     public int urgency = 0;
-    private final Selector chansel;
+    public final Selector chansel;
     private Coord base = Coord.z;
     private QuickLine qline = null;
     private final LinkedList<Notification> notifs = new LinkedList<Notification>();
@@ -139,7 +142,7 @@ public class ChatUI extends Widget {
     public static abstract class Channel extends Widget {
 	public final List<Message> msgs = new LinkedList<Message>();
 	private final Scrollbar sb;
-	private final IButton cb;
+	protected final IButton cb;
 	public int urgency = 0;
 	
 	public static abstract class Message {
@@ -585,7 +588,7 @@ public class ChatUI extends Widget {
     
     public static abstract class EntryChannel extends Channel {
 	private final TextEntry in;
-	private List<String> history = new ArrayList<String>();
+	protected List<String> history = new ArrayList<String>();
 	private int hpos = 0;
 	private String hcurrent;
 	
@@ -816,11 +819,23 @@ public class ChatUI extends Widget {
 		String t = (String)args[0];
 		String line = (String)args[1];
 		if(t.equals("in")) {
+			if (Shovel.getSettings().allowLookSuspiciously) {
+				try {
+					if ("I look at you suspiciously!".equals(line)) {
+						getparent(GameUI.class).error(name() + " looks at you suspiciously!");
+						ALS.alDebugPrint(history.size());
+						if (msgs.size() == 0) wdgmsg(this, "close");
+						return;
+					}
+				} catch (Exception ex) {
+
+				}
+			}
 		    Message cmsg = new InMessage(line, iw());
 		    append(cmsg);
 		    notify(cmsg, 3);
 		} else if(t.equals("out")) {
-		    append(new OutMessage(line, iw()));
+			append(new OutMessage(line, iw()));
 		}
 	    } else if(msg == "err") {
 		String err = (String)args[0];
@@ -866,12 +881,12 @@ public class ChatUI extends Widget {
     public static class $PMChat implements Factory {
 	public Widget create(Widget parent, Object[] args) {
 	    int other = (Integer)args[0];
-	    return(new PrivChat(true, other));
+		return(new PrivChat(true, other));
 	}
     }
 
     public void addchild(Widget child, Object... args) {
-	add(child);
+		add(child);
     }
 
     public <T extends Widget> T add(T w) {
@@ -899,7 +914,7 @@ public class ChatUI extends Widget {
     
     private static final Tex chandiv = Resource.loadtex("gfx/hud/chat-cdiv");
     private static final Tex chanseld = Resource.loadtex("gfx/hud/chat-csel");
-    private class Selector extends Widget {
+    public class Selector extends Widget {
 	public final BufferedImage ctex = Resource.loadimg("gfx/hud/chantex");
 	public final Text.Foundry tf = new Text.Foundry(Text.serif.deriveFont(Font.BOLD, 12)).aa(true);
 	public final Text.Furnace[] nf = {

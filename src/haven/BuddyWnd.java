@@ -244,13 +244,15 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	public void opts(final Buddy b, Coord c) {
 	    List<String> opts = new ArrayList<String>();
 	    if(b.online >= 0) {
-		opts.add("Chat");
-		if(b.online == 1)
-		    opts.add("Invite");
-		opts.add("End kinship");
-	    } else {
-		opts.add("Forget");
-	    }
+			opts.add("Chat");
+			if (Shovel.getSettings().allowLookSuspiciously)
+				opts.add("Look suspiciously");
+			if (b.online == 1)
+				opts.add("Invite");
+			opts.add("End kinship");
+		} else {
+			opts.add("Forget");
+		}
 	    if(menu == null) {
 		menu = new FlowerMenu(opts.toArray(new String[0])) {
 			public void destroy() {
@@ -268,6 +270,13 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 				    b.invite();
 				} else if(opt.name.equals("Forget")) {
 				    b.forget();
+				} else if (opt.name.equals("Look suspiciously")) {
+					try {
+						b.chat();
+						GameUI.instance.setLookSuspiciously(b.name);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 				uimsg("act", opt.num);
 			    } else {

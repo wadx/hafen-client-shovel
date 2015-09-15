@@ -26,6 +26,11 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.widget.WidgetEvent;
+import org.apxeolog.shovel.widget.WidgetEventListener;
+
 import java.util.*;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -148,7 +153,49 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	opts.hide();
 	zerg = add(new Zergwnd(), 187, 50);
 	zerg.hide();
+		addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
+			@Override
+			public void call(Widget widget) {
+				try {
+					if (Shovel.getSettings().allowLookSuspiciously) {
+						if (widget instanceof ChatUI.PrivChat) {
+							ChatUI.PrivChat chat = (ChatUI.PrivChat) widget;
+							if (chat.name().equals(lookSuspiciouslyWaitingForName)) {
+								chat.send("I look at you suspiciously!");
+								lookSuspiciouslyWaitingForName = null;
+								if (chat.history.size() == 1) chat.wdgmsg(chat, "close");
+							}
+						}
+					}
+				} catch (Exception ex) {
+
+				}
+			}
+		});
     }
+
+	private String lookSuspiciouslyWaitingForName = null;
+
+	public void setLookSuspiciously(String buddyName) {
+		if (Shovel.getSettings().allowLookSuspiciously) {
+			try {
+				for (Widget wdg = chat.child; wdg != null; wdg = wdg.next) {
+					if (wdg instanceof ChatUI.PrivChat) {
+						ChatUI.PrivChat chat = (ChatUI.PrivChat) wdg;
+						if (chat.name().equals(buddyName)) {
+							chat.send("I look at you suspiciously!");
+							lookSuspiciouslyWaitingForName = null;
+							if (chat.msgs.size() == 1) chat.wdgmsg(chat, "close");
+							return;
+						}
+					}
+				}
+				lookSuspiciouslyWaitingForName = buddyName;
+			} catch (Exception ex) {
+
+			}
+		}
+	}
 
     private void mapbuttons() {
 	blpanel.add(new IButton("gfx/hud/lbtn-vil", "", "-d", "-h") {

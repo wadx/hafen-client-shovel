@@ -14,6 +14,7 @@ public class Settings {
     public boolean enableGroupHotkeys = true;
     public boolean showReadyHideAndLeather = true;
     public boolean showObjectsHealth = true;
+    public boolean allowLookSuspiciously = true;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;
