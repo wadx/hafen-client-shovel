@@ -34,6 +34,8 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
     public Indir<Resource> res;
@@ -43,6 +45,11 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     private GSprite spr;
     private Object[] rawinfo;
     private List<ItemInfo> info = Collections.emptyList();
+
+	private long lastTickTime = -1;
+	private int tickDiff = 0;
+	private int lastMeter = 0;
+	private int remainingSeconds = 0;
 
 	public boolean ready() {
 		try {
@@ -101,6 +108,35 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
 		}
 		return null;
+	}
+
+	private  String formattedTime(int seconds) {
+		String ret = new String();
+
+		int hours = 0;
+		int minutes = 0;
+		int secs = 0;
+		int tmp = 0;
+
+		if (seconds > 3600) {
+			hours = seconds / 3600;
+			tmp = seconds % 3600;
+		} else tmp = seconds;
+
+		if (tmp > 60) {
+			minutes = tmp / 60;
+			tmp = tmp % 60;
+		}
+
+		secs = tmp;
+
+		if (hours > 0)
+			ret += (hours > 9 ? hours : "0"+hours) + ":";
+
+		ret += (minutes > 9 ? minutes : "0"+minutes) + ":";
+		ret += (secs > 9 ? secs : "0"+secs);
+
+		return ret;
 	}
 
     private Random rnd = null;
@@ -191,8 +227,49 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	} else if(name == "tt") {
 	    info = null;
 	    rawinfo = args;
+
+		if (tickDiff != 0) {
+			boolean f = false;
+			for (int idx = 0; idx < rawinfo.length; ++idx) {
+				Object obj = rawinfo[idx];
+				if (obj instanceof String) {
+					String st = (String)obj;
+					if (st.startsWith("Remaining time:")) {
+						f = true;
+						rawinfo[idx] = new String("Remaining time: ~" + formattedTime(remainingSeconds));
+						break;
+					}
+				}
+			}
+			if (f != true) {
+				ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(rawinfo));
+				temp.add(new String("Remaining time: ~" + formattedTime(remainingSeconds)));
+				rawinfo = temp.toArray();
+			}
+		}
 	} else if(name == "meter") {
 	    meter = (Integer)args[0];
+
+		if (lastMeter == 0)
+			lastMeter = meter;
+
+		if (lastTickTime < 0) {
+			lastTickTime = System.currentTimeMillis();
+		} else {
+			int meterDiff = meter - lastMeter;
+			if (meterDiff > 0) {
+				long ct = System.currentTimeMillis();
+				tickDiff = (int) ((ct - lastTickTime) / 1000); //seconds
+				lastTickTime = ct;
+
+				if (tickDiff > 0) {
+					remainingSeconds = ((100 - meter) / meterDiff) * tickDiff;
+					this.uimsg("tt", rawinfo);
+				}
+
+				lastMeter = meter;
+			}
+		}
 	}
     }
 }
