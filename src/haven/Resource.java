@@ -26,11 +26,16 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
 
+import java.awt.image.BufferedImageFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -186,6 +191,27 @@ public class Resource implements Serializable {
 	    return("filesystem res source (" + base + ")");
 	}
     }
+
+	public static class RawImageSource implements ResSource, Serializable {
+		File base;
+
+		public RawImageSource(File base) {
+			this.base = base;
+		}
+
+		public InputStream get(String name) throws FileNotFoundException {
+			File cur = base;
+			String[] parts = name.split("/");
+			for(int i = 0; i < parts.length - 1; i++)
+				cur = new File(cur, parts[i]);
+			cur = new File(cur, parts[parts.length - 1] + ".png");
+			return(new FileInputStream(cur));
+		}
+
+		public String toString() {
+			return("Raw image res source (" + base + ")");
+		}
+	}
 
     public static class JarSource implements ResSource, Serializable {
 	public InputStream get(String name) throws FileNotFoundException {
@@ -786,6 +812,16 @@ public class Resource implements Serializable {
 	private int gay = -1;
 	public Coord sz;
 	public Coord o;
+
+		public Image(BufferedImage bufferedImage) {
+			img = bufferedImage;
+			z = 0;
+			subz = 0;
+			nooff = false;
+			id = -1;
+			o = Coord.z;
+			sz = Utils.imgsz(bufferedImage);
+		}
 		
 	public Image(Message buf) {
 	    z = buf.int16();
@@ -803,18 +839,11 @@ public class Resource implements Serializable {
 	    if(img == null)
 		throw(new LoadException("Invalid image data in " + name, Resource.this));
 	    sz = Utils.imgsz(img);
-		/*try {
-			//File f = new File("outres/", Resource.this.name.substring(0, Resource.this.name.lastIndexOf('.')));
-			//f.mkdirs();//
-			File f = new File("outres/", Resource.this.name + "_" + (lc++) + ".png");
-			File dir = new File(f.getParent());
-			dir.mkdirs();
-			f.createNewFile();
-			ImageIO.write(img, "PNG", f);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}*/
 	}
+
+		public void dump() {
+			ALS.alDebugPrint("Z:", z, "SubZ:", subz, "NoOFF:", nooff, "ID:", id, "O:", o);
+		}
 		
 	public synchronized Tex tex() {
 	    if(tex != null)
@@ -1184,6 +1213,8 @@ public class Resource implements Serializable {
 	    public Object make(Class<?> cl) throws InstantiationException, IllegalAccessException;
 	}
     }
+
+	int lv = 0;
 
     @LayerName("code")
     public class Code extends Layer {
@@ -1666,9 +1697,9 @@ public class Resource implements Serializable {
 	List<Resource> sorted = new ArrayList<Resource>(list);
 	Collections.sort(sorted, new Comparator<Resource>() {
 		public int compare(Resource a, Resource b) {
-		    return(a.name.compareTo(b.name));
+			return (a.name.compareTo(b.name));
 		}
-	    });
+	});
 	for(Resource res : sorted)
 	    out.println(res.name + ":" + res.ver);
     }
@@ -1715,6 +1746,18 @@ public class Resource implements Serializable {
 	    w.close();
 	}
     }
+
+	public static Resource loadRawImage(String name) {
+		Resource resource = new Resource(local(), name, -1);
+		try {
+			FileInputStream fileInputStream = new FileInputStream(new File(Shovel.getCustomResourceDir(), name + ".png"));
+			BufferedImage image = ImageIO.read(fileInputStream);
+			resource.layers.add(resource.new Image(image));
+		} catch (Exception ex) {
+			ALS.alDebugPrint("Raw image loading error:", ex.getMessage());
+		}
+		return resource;
+	}
 
     public static void main(String[] args) throws Exception {
 	String cmd = args[0].intern();

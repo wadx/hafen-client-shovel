@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.ALS;
+
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.util.*;

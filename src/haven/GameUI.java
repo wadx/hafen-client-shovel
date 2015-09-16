@@ -135,7 +135,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			return(new Coord(GameUI.this.sz.x, Math.min(brpanel.c.y - 79, GameUI.this.sz.y - menupanel.sz.y)));
 		    }
 		}, new Coord(1, 0)));
-	blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 9);
+	// blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 9);
 	blpanel.add(new Img(Resource.loadtex("gfx/hud/lbtn-bg")), 0, 0);
 	menu = brpanel.add(new MenuGrid(), 20, 34);
 	brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), 0, 0);
@@ -521,8 +521,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    map.lower();
 	    if(mmap != null)
 		ui.destroy(mmap);
-	    mmap = blpanel.add(new LocalMiniMap(new Coord(133, 133), map), 4, 34 + 9);
-	    mmap.lower();
+	    mmap = add(new LocalMiniMap(new Coord(133, 133), map), 4, 34 + 9);
+	    // mmap.lower();
 	} else if(place == "fight") {
 	    fv = urpanel.add((Fightview)child, 0, 0);
 	} else if(place == "fsess") {

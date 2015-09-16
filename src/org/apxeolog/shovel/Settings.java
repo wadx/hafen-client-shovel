@@ -15,6 +15,9 @@ public class Settings {
     public boolean showReadyHideAndLeather = true;
     public boolean showObjectsHealth = true;
     public boolean allowLookSuspiciously = true;
+    public boolean drawMinimapGrid = true;
+    public boolean drawMinimapFOV = true;
+    public boolean enableSimpleCrops = true;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;

@@ -38,6 +38,7 @@ import java.lang.ref.*;
 import haven.Resource.Tileset;
 import haven.Resource.Tile;
 import haven.resutil.Ridges;
+import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
 
 import javax.imageio.ImageIO;
@@ -110,6 +111,16 @@ public class MCache {
 	public final Coord gc, ul;
 	public long id;
 	String mnm;
+		public BufferedImage gridImage = null;
+
+		public BufferedImage getGridImage() {
+			if (gridImage != null) return gridImage;
+			try {
+				gridImage = drawmap(this);
+			} catch (Exception ex) {
+			}
+			return gridImage;
+		}
 
 	private class Cut {
 	    MapMesh mesh;
@@ -285,17 +296,17 @@ public class MCache {
 
 	public void dispose() {
 	    for(Cut cut : cuts) {
-		if(cut.dmesh != null)
-		    cut.dmesh.cancel();
-		if(cut.mesh != null)
-		    cut.mesh.dispose();
-		if(cut.ols != null) {
-		    for(Rendered r : cut.ols) {
-			if(r instanceof Disposable)
-			    ((Disposable)r).dispose();
-		    }
+			if (cut.dmesh != null)
+				cut.dmesh.cancel();
+			if (cut.mesh != null)
+				cut.mesh.dispose();
+			if (cut.ols != null) {
+				for (Rendered r : cut.ols) {
+					if (r instanceof Disposable)
+						((Disposable) r).dispose();
+				}
+			}
 		}
-	    }
 	}
 
 	public void fill(Message msg) {
@@ -501,6 +512,17 @@ public class MCache {
 	}
     }
 
+	public boolean areTilesetsReady(int[] tiles) {
+		synchronized (sets) {
+			for (int i = 0; i < tiles.length; i++) {
+				if ((sets[i] == null) ? null : sets[i].get() == null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
     public Resource tilesetr(int i) {
 	synchronized(sets) {
 	    Resource res = (sets[i] == null)?null:(sets[i].get());
@@ -531,6 +553,15 @@ public class MCache {
 	    return(cset);
 	}
     }
+
+	public boolean areTilesReady(int[] tileTypes) {
+		synchronized (tiles) {
+			for (int i = 0; i < tileTypes.length; i++) {
+				if (tiles[i] == null || tiles[i].get() == null) return false;
+			}
+		}
+		return true;
+	}
 
     public Tiler tiler(int i) {
 	synchronized(tiles) {

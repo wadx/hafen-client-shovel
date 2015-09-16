@@ -54,6 +54,7 @@ public class LoginScreen extends Widget {
     static {
 	textf = new Text.Foundry(Text.sans, 16).aa(true);
 	textfs = new Text.Foundry(Text.sans, 14).aa(true);
+
     }
 
     public LoginScreen() {
