@@ -36,6 +36,7 @@ import java.util.*;
 import haven.resutil.Ridges;
 import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.gob.CustomAttrib;
 import org.apxeolog.shovel.highlight.HighlightManager;
 import org.apxeolog.shovel.highlight.HighlightOption;
 
@@ -100,7 +101,7 @@ public class LocalMiniMap extends Window {
     public Coord c2p(Coord c) {
         return (c.sub(asz.div(2)).add(playerCoordinates).mul(tilesz).add(tilesz.div(2)));
     }
-    double maxdist = 0;
+
     public void drawicons(GOut g) {
         OCache oc = ui.sess.glob.oc;
         // Cache party ids to remove them from render
@@ -121,8 +122,6 @@ public class LocalMiniMap extends Window {
                 }
             }
         }
-        ArrayList<HighlightOption> highlightOptions = HighlightManager.getFinalHighlightData();
-
         synchronized (oc) {
             for (Gob gob : oc) {
                 try {
@@ -133,50 +132,41 @@ public class LocalMiniMap extends Window {
                         g.image(tex, gc.sub(tex.sz().div(2)));
                     } else {
                         if (partyIds.contains(gob.id)) continue;
-                        String resourceName = null;
-                        ResDrawable resDrawable = gob.getattr(ResDrawable.class);
-                        if (resDrawable != null) {
-                            resourceName = resDrawable.getBaseName();
-                        } else {
-                            Composite composite = gob.getattr(Composite.class);
-                            if (composite != null) {
-                                resourceName = composite.getBaseName();
+                        CustomAttrib.HighlightAttrib highlightAttrib = gob.getattr(CustomAttrib.HighlightAttrib.class);
+                        if (highlightAttrib != null) {
+                            if (highlightAttrib.highlightOption.enabled) {
+                                if (highlightAttrib.highlightOption.color != null) {
+                                    Coord dotPosition = p2c(gob.rc).sub(3, 3);
+                                    g.chcolor(Color.BLACK);
+                                    g.fellipse(dotPosition, new Coord(5, 5));
+                                    g.chcolor(highlightAttrib.highlightOption.color);
+                                    g.fellipse(dotPosition, new Coord(4, 4));
+                                    g.chcolor();
+                                } else if (highlightAttrib.highlightOption.icon != null) {
+                                    Coord dotPosition = p2c(gob.rc);
+                                    try {
+                                        g.aimage(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition, 0.5, 0.5);
+                                    } catch (Exception ex) {
+                                    }
+                                }
                             }
                         }
-                        if (resourceName == null) continue;
-                        if ("gfx/borka/body".equals(resourceName)) {
-                            // Players
-                            Color color = new Color(255, 0, 0);
-                            KinInfo kinInfo = gob.getattr(KinInfo.class);
-                            if (kinInfo != null) {
-                                color = BuddyWnd.gc[kinInfo.group];
-                            }
-                            Coord dotPosition = p2c(gob.rc).sub(3, 3);
-                            g.chcolor(Color.BLACK);
-                            g.fellipse(dotPosition, new Coord(5, 5));
-                            g.chcolor(color);
-                            g.fellipse(dotPosition, new Coord(4, 4));
-                            g.chcolor();
-                        } else {
-                            // Highlight list
-                            for (HighlightOption option : highlightOptions) {
-                                if (option.match(resourceName)) {
-                                    if (option.color != null) {
-                                        Coord dotPosition = p2c(gob.rc).sub(3, 3);
-                                        g.chcolor(Color.BLACK);
-                                        g.fellipse(dotPosition, new Coord(5, 5));
-                                        g.chcolor(option.color);
-                                        g.fellipse(dotPosition, new Coord(4, 4));
-                                        g.chcolor();
-                                    } else if (option.icon != null) {
-                                        Coord dotPosition = p2c(gob.rc);
-                                        try {
-                                            g.aimage(Resource.loadtex(option.icon), dotPosition, 0.5, 0.5);
-                                        } catch (Exception ex) {
-                                        }
-                                    }
-                                    break;
+                        Composite composite = gob.getattr(Composite.class);
+                        if (composite != null) {
+                            String resourceName = composite.getBaseName();
+                            if ("gfx/borka/body".equals(resourceName)) {
+                                // Players
+                                Color color = new Color(255, 0, 0);
+                                KinInfo kinInfo = gob.getattr(KinInfo.class);
+                                if (kinInfo != null) {
+                                    color = BuddyWnd.gc[kinInfo.group];
                                 }
+                                Coord dotPosition = p2c(gob.rc).sub(3, 3);
+                                g.chcolor(Color.BLACK);
+                                g.fellipse(dotPosition, new Coord(5, 5));
+                                g.chcolor(color);
+                                g.fellipse(dotPosition, new Coord(4, 4));
+                                g.chcolor();
                             }
                         }
                     }

@@ -58,9 +58,7 @@ public class HighlightManager {
         HighlightGroup[] groups = getHighlightGroups();
         for (int i = 0; i < groups.length; i++) {
             for (int j = 0; j < groups[i].options.length; j++) {
-                if (groups[i].options[j].enabled) {
-                    highlightDataCache.add(groups[i].options[j]);
-                }
+                highlightDataCache.add(groups[i].options[j]);
             }
         }
     }

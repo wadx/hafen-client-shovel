@@ -974,7 +974,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 					if (Shovel.getSettings().showObjectsHealth) {
 						GobHealth gobHealth = gob.getattr(GobHealth.class);
 						if (gobHealth != null && gobHealth.hp < 4) {
-							g.aimage(Utils.renderOutlinedFont(Text.std, (gobHealth.hp * 25) + "%", new Color(153, 0, 0, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (80 * (120.0 / camera.zoom()))), 0.5, 1);
+							g.aimage(Utils.renderOutlinedFont(Text.std, (gobHealth.hp * 25) + "%", new Color(255, 0, 0, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (80 * (120.0 / camera.zoom()))), 0.5, 1);
 						}
 					}
 				}

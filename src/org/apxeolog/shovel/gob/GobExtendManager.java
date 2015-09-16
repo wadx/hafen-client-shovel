@@ -3,8 +3,11 @@ package org.apxeolog.shovel.gob;
 import haven.Gob;
 import haven.MessageBuf;
 import haven.Resource;
+import org.apxeolog.shovel.highlight.HighlightManager;
+import org.apxeolog.shovel.highlight.HighlightOption;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by APXEOLOG on 15.09.2015.
@@ -45,6 +48,14 @@ public class GobExtendManager {
                 gob.setattr(new CustomAttrib.ReadyHideOrTubeAttrib(gob, 60));
             } else {
                 gob.delattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
+            }
+        }
+        // Highlight manager
+        ArrayList<HighlightOption> options = HighlightManager.getFinalHighlightData();
+        for (HighlightOption option : options) {
+            if (option.match(resource.name)) {
+                gob.setattr(new CustomAttrib.HighlightAttrib(gob, option));
+                break;
             }
         }
     }

@@ -58,6 +58,55 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showQuality), new Coord(15, 125));
+            generalSettings.add(new CheckBox("Enable group hotkeys", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().enableGroupHotkeys = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().enableGroupHotkeys), new Coord(15, 150));
+            generalSettings.add(new CheckBox("Show dried hide and leather", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showReadyHideAndLeather = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showReadyHideAndLeather), new Coord(15, 175));
+            generalSettings.add(new CheckBox("Show objects health", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showObjectsHealth = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showObjectsHealth), new Coord(15, 200));
+            generalSettings.add(new CheckBox("Allow look suspiciously :D", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().allowLookSuspiciously = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().allowLookSuspiciously), new Coord(15, 225));
+            generalSettings.add(new CheckBox("Enable simple crops (need restart)", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().enableSimpleCrops = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().enableSimpleCrops), new Coord(15, 250));
+            generalSettings.add(new CheckBox("Draw minimap grid", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().drawMinimapGrid = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().drawMinimapGrid), new Coord(15, 275));
+            generalSettings.add(new CheckBox("Draw minimap FOV", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().drawMinimapFOV = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().drawMinimapFOV), new Coord(15, 300));
         }
         Tabs.Tab highlightSettings;
         {
@@ -287,6 +336,7 @@ public class ConfigurationWnd extends Window {
         private void dblclick(HighlightOption item) {
             if (currentItem != null) {
                 currentItem.enabled = !currentItem.enabled;
+                HighlightManager.saveHighlightGroups();
             }
         }
 
