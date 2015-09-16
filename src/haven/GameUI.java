@@ -523,7 +523,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    if(mmap != null)
 		ui.destroy(mmap);
 		Settings.WindowData data = Shovel.getSettings().windows.get("Minimap");
-		if (data != null) {
+		if (data != null && data.position != null && data.size != null) {
 			Coord position = new Coord(data.position);
 			mmap = add(new LocalMiniMap(data.size, map), position);
 		} else {

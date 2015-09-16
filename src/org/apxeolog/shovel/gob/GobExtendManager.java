@@ -37,7 +37,7 @@ public class GobExtendManager {
 
                 @Override
                 public void remove(Gob gob, Gob.Overlay overlay) {
-                    if (overlayWeakReference.get() == overlay) {
+                    if (overlayWeakReference != null && overlayWeakReference.get() == overlay) {
                         gob.delattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
                     }
                 }

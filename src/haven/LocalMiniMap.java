@@ -110,7 +110,7 @@ public class LocalMiniMap extends Window {
     @Override
     public void dragEnd() {
         super.dragEnd();
-        Shovel.getSettings().setWindowData("Minimap", c, null);
+        Shovel.getSettings().setWindowData("Minimap", c, asz);
         Shovel.saveSettings();
     }
 
