@@ -46,6 +46,11 @@ public class LocalMiniMap extends Window {
     private Coord playerCoordinates = null;
     private BufferedImage gridCellImage = null;
 
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        if (!"close".equals(msg)) super.wdgmsg(sender, msg, args);
+    }
+
     public LocalMiniMap(Coord sz, MapView mv) {
         super(sz, "Minimap");
         this.mv = mv;
