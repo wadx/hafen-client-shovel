@@ -112,14 +112,14 @@ public class Inventory extends Widget implements DTarget {
 		if ("transfer_all".equals(msg)) {
 			String resName = args[0] != null ? (String) args[0] : "";
 			for (GItem item : wmap.keySet()) {
-				if (resName.equals(item.resource().name)) {
+				if (resName.equals(item.getItemName())) {
 					item.wdgmsg("transfer", Coord.z);
 				}
 			}
 		} else if ("drop_all".equals(msg)) {
 			String resName = args[0] != null ? (String) args[0] : "";
 			for (GItem item : wmap.keySet()) {
-				if (resName.equals(item.resource().name)) {
+				if (resName.equals(item.getItemName())) {
 					item.wdgmsg("drop", Coord.z);
 				}
 			}

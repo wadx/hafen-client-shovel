@@ -27,13 +27,15 @@
 package haven.resutil;
 
 import haven.*;
+import haven.res.lib.tree.Tree;
+
 import java.util.*;
 
 public class CSprite extends Sprite {
     private final Coord3f cc;
     private final List<Rendered> parts = new ArrayList<Rendered>();
     private final Random rnd;
-    
+
     public CSprite(Owner owner, Resource res) {
 	super(owner, res);
 	rnd = owner.mkrandoom();
@@ -53,9 +55,9 @@ public class CSprite extends Sprite {
     }
 
     public boolean setup(RenderList rl) {
-	rl.prepc(Location.goback("gobx"));
-	for(Rendered p : parts)
-	    rl.add(p, null);
-	return(false);
-    }
+		rl.prepc(Location.goback("gobx"));
+		for (Rendered p : parts)
+			rl.add(p, null);
+		return (false);
+	}
 }

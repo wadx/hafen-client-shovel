@@ -2,12 +2,15 @@ package org.apxeolog.shovel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+import haven.Coord;
+import org.apxeolog.shovel.highlight.HighlightManager;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.awt.*;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -17,7 +20,7 @@ import java.nio.file.StandardOpenOption;
  * Main class to init startup data like configs etc
  */
 public class Shovel {
-    private static String version = "1.2.2";
+    private static String version = "1.3.0";
     private static Settings settings;
     private static File workingDirectory;
     private static File userDirectory;
@@ -29,7 +32,9 @@ public class Shovel {
         File settingsFile = new File(workingDirectory, "settings.json");
         try {
             if (settingsFile.exists()) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Coord.class, new CoordClassAdapter())
+                        .create();
                 settings = gson.fromJson(new FileReader(settingsFile), Settings.class);
             } else {
                 settings = new Settings();
@@ -64,7 +69,10 @@ public class Shovel {
     public static void saveSettings() {
         File settingsFile = new File(workingDirectory, "settings.json");
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Coord.class, new CoordClassAdapter())
+                    .setPrettyPrinting()
+                    .create();
             Files.write(settingsFile.toPath(), gson.toJson(settings).getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception ex) {
             ALS.alDebugPrint("Cannot save settings file:", ex.getMessage());
@@ -151,6 +159,25 @@ public class Shovel {
         File customResDir = new File(workingDirectory, "res");
         if (!customResDir.exists()) customResDir.mkdir();
         return customResDir;
+    }
+
+    protected static class CoordClassAdapter extends TypeAdapter<Coord> {
+        @Override
+        public void write(JsonWriter jsonWriter, Coord coord) throws IOException {
+            if (coord == null)
+                jsonWriter.value((String) null);
+            else
+                jsonWriter.value(coord.toString());
+        }
+
+        @Override
+        public Coord read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            return new Coord(jsonReader.nextString());
+        }
     }
 
     public static void main(String[] args) {

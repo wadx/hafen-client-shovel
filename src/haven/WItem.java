@@ -26,17 +26,13 @@
 
 package haven;
 
-import com.google.gson.Gson;
-import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.info.ItemQualityInfo;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
-import java.util.*;
-import static haven.ItemInfo.find;
+import java.util.List;
+
 import static haven.Inventory.sqsz;
 
 public class WItem extends Widget implements DTarget {
@@ -199,12 +195,7 @@ public class WItem extends Widget implements DTarget {
 			if (Shovel.getSettings().showQuality && item.ready()) {
 				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
 				if (qualityInfo != null) {
-					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.getMaxValue()), qualityInfo.getMaxColor(), Color.BLACK, 1), sz, 1, 1);
-					/*
-					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.substance), qualityInfo.COLOR_SUBSTANCE, Color.BLACK, 1), sz, 0, 0);
-					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.essence), qualityInfo.COLOR_ESSENCE, Color.BLACK, 1), sz, 0.5, 0);
-					g.imageDock(Utils.renderOutlinedFont(Text.std, Integer.toString(qualityInfo.vitality), qualityInfo.COLOR_VITALITY, Color.BLACK, 1), sz, 1, 0);
-					*/
+					g.imageDock(qualityInfo.textCache, sz, 1, 1);
 				}
 			}
 		} else {
@@ -224,9 +215,9 @@ public class WItem extends Widget implements DTarget {
 	} else if(btn == 3) {
 		if (Shovel.getSettings().enableGroupHotkeys) {
 			if (ui.modshift) {
-				wdgmsg("transfer_all", item.resource().name);
+				wdgmsg("transfer_all", item.getItemName());
 			} else if (ui.modctrl) {
-				wdgmsg("drop_all", item.resource().name);
+				wdgmsg("drop_all", item.getItemName());
 			} else
 				item.wdgmsg("iact", c, ui.modflags());
 		} else

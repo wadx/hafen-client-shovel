@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class GobExtendManager {
     public static void initResDrawable(Gob gob, Resource resource, MessageBuf sdt) {
+        if (resource.name == null) return;
         // Drying frame notification
         if ("gfx/terobjs/dframe".equals(resource.name)) {
             gob.addOverlayListener(new OverlayListener() {
@@ -56,6 +57,19 @@ public class GobExtendManager {
             if (option.match(resource.name)) {
                 gob.setattr(new CustomAttrib.HighlightAttrib(gob, option));
                 break;
+            }
+        }
+        // Crops stages
+        if (resource.name.startsWith("gfx/terobjs/plants")
+                && !resource.name.equals("gfx/terobjs/plants/trellis")) {
+            if (sdt.rbuf.length > 0) {
+                gob.setattr(new CustomAttrib.CropStageAttrib(gob, sdt.rbuf[0]));
+            }
+        }
+        // Tree stages
+        if (resource.name.startsWith("gfx/terobjs/trees")) {
+            if (sdt.rbuf.length > 0 && sdt.rbuf[0] < 100) {
+                gob.setattr(new CustomAttrib.CropStageAttrib(gob, sdt.rbuf[0]));
             }
         }
     }

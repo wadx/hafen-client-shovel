@@ -35,6 +35,7 @@ import java.util.*;
 
 import haven.resutil.Ridges;
 import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Settings;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.gob.CustomAttrib;
 import org.apxeolog.shovel.highlight.HighlightManager;
@@ -93,6 +94,22 @@ public class LocalMiniMap extends Window {
         };
         add(btn, sz);
     }
+
+    @Override
+    public void resize(Coord s) {
+        super.resize(s);
+        Shovel.getSettings().setWindowData("Minimap", null, asz);
+        Shovel.saveSettings();
+    }
+
+    @Override
+    public void dragEnd() {
+        super.dragEnd();
+        Shovel.getSettings().setWindowData("Minimap", c, null);
+        Shovel.saveSettings();
+    }
+
+
 
     public Coord p2c(Coord pc) {
         return (pc.div(tilesz).sub(playerCoordinates).add(asz.div(2)));
@@ -226,7 +243,7 @@ public class LocalMiniMap extends Window {
         }
         if (Shovel.getSettings().drawMinimapFOV) {
             g.chcolor(255, 255, 255, 64);
-            g.frect(asz.div(2).sub(42, 42), new Coord(84, 84));
+            g.frect(asz.div(2).sub(44, 44), new Coord(88, 88));
             g.chcolor();
         }
         drawicons(g);

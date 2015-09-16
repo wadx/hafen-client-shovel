@@ -27,6 +27,7 @@
 package haven;
 
 import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Settings;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.widget.WidgetEvent;
 import org.apxeolog.shovel.widget.WidgetEventListener;
@@ -521,7 +522,14 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    map.lower();
 	    if(mmap != null)
 		ui.destroy(mmap);
-	    mmap = add(new LocalMiniMap(new Coord(133, 133), map), 4, 34 + 9);
+		Settings.WindowData data = Shovel.getSettings().windows.get("Minimap");
+		if (data != null) {
+			Coord position = new Coord(data.position);
+			mmap = add(new LocalMiniMap(data.size, map), position);
+		} else {
+			mmap = add(new LocalMiniMap(new Coord(133, 133), map), 4, 34 + 9);
+			Shovel.getSettings().setWindowData("Minimap", new Coord(133, 133), new Coord(0, 0));
+		}
 	    // mmap.lower();
 	} else if(place == "fight") {
 	    fv = urpanel.add((Fightview)child, 0, 0);

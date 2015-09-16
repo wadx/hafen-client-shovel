@@ -26,15 +26,15 @@
 
 package haven;
 
-import java.awt.RenderingHints;
+import org.apxeolog.shovel.ALS;
+
+import java.awt.*;
 import java.io.*;
 import java.nio.*;
 import java.net.URL;
 import java.lang.reflect.*;
 import java.util.prefs.*;
 import java.util.*;
-import java.awt.Graphics;
-import java.awt.Color;
 import java.awt.image.*;
 
 public class Utils {
@@ -1153,6 +1153,16 @@ public class Utils {
 	    throw(new RuntimeException(e));
 	}
     }
+
+	public static TexI renderTextPatch(Text.Foundry foundry, String text, Color textColor, Coord size) {
+		Text.Line line = foundry.render(text, textColor);
+		BufferedImage image = TexI.mkbuf(size);
+		Graphics2D g = image.createGraphics();
+		g.setColor(Color.BLACK);
+		g.fillOval(0, 0, image.getWidth(), image.getHeight());
+		g.drawImage(line.img, size.x / 2 - line.img.getWidth() / 2, size.y / 2 - line.img.getHeight() / 2, null);
+		return new TexI(image);
+	}
 
 	public static TexI renderOutlinedFont(Text.Foundry foundry, String text, Color textColor, Color outlineColor, int outW) {
 		Coord sz = foundry.strsize(text);

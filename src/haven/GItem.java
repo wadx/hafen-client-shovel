@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.res.lib.Meat;
+import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.info.ItemQualityInfo;
 
 import java.awt.*;
@@ -128,10 +130,16 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     }
 
     public List<ItemInfo> info() {
-	if(info == null)
-	    info = ItemInfo.buildinfo(this, rawinfo);
-	return(info);
-    }
+		if (info == null) {
+			info = ItemInfo.buildinfo(this, rawinfo);
+			try {
+				info.add(new ItemInfo.AdHoc(this, "Res: " + getres().name));
+			} catch (Exception ex) {
+
+			}
+		}
+		return (info);
+	}
 
 	private ItemQualityInfo itemQualityInfoCache = null;
 

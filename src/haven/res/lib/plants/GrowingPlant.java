@@ -42,7 +42,6 @@ public class GrowingPlant implements Factory {
         } else {
             Random var10 = var1.mkrandoom();
             CSprite var11 = new CSprite(var1, var2);
-
             for(int var8 = 0; var8 < this.num; ++var8) {
                 MeshRes var9 = (MeshRes)var5.get(var10.nextInt(var5.size()));
                 if(this.num > 1) {

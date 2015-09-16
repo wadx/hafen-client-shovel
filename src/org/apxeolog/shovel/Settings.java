@@ -1,5 +1,9 @@
 package org.apxeolog.shovel;
 
+import haven.Coord;
+
+import java.util.HashMap;
+
 /**
  * Created by APXEOLOG on 31/08/2015.
  * Settings class
@@ -18,8 +22,33 @@ public class Settings {
     public boolean drawMinimapGrid = true;
     public boolean drawMinimapFOV = true;
     public boolean enableSimpleCrops = true;
+    public boolean showCropStages = true;
+
+    // Window position and size
+    public HashMap<String, WindowData> windows;
 
     // Runtime options, don't save them
     transient public boolean debugMode = false;
     transient public boolean checkedForNewReleases = false;
+
+    public static class WindowData {
+        public Coord position;
+        public Coord size;
+    }
+
+    public void setWindowData(String name, Coord position, Coord size) {
+        WindowData data = windows.get(name);
+        if (data == null) {
+            data = new WindowData();
+            windows.put(name, data);
+        }
+        if (position != null)
+            data.position = position;
+        if (size != null)
+            data.size = size;
+    }
+
+    public Settings() {
+        windows = new HashMap<>();
+    }
 }

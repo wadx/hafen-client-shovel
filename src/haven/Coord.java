@@ -26,9 +26,14 @@
 
 package haven;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static java.lang.Math.PI;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable {
+	private static final Pattern PATTERN = Pattern.compile("\\((\\d+), (\\d+)\\)", Pattern.CASE_INSENSITIVE);
+
     public int x, y;
     public static Coord z = new Coord(0, 0);
 	
@@ -36,6 +41,14 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
 	this.x = x;
 	this.y = y;
     }
+
+	public Coord(String str) {
+		Matcher matcher = PATTERN.matcher(str);
+		if (matcher.matches()) {
+			this.x = Integer.valueOf(matcher.group(1));
+			this.y = Integer.valueOf(matcher.group(2));
+		}
+	}
 	
     public Coord(Coord c) {
 	this(c.x, c.y);

@@ -968,13 +968,19 @@ public class MapView extends PView implements DTarget, Console.Directory {
 					if (Shovel.getSettings().showReadyHideAndLeather) {
 						CustomAttrib.ReadyHideOrTubeAttrib attrib = gob.getattr(CustomAttrib.ReadyHideOrTubeAttrib.class);
 						if (attrib != null) {
-							g.aimage(Utils.renderOutlinedFont(Text.std, "100%", new Color(0, 153, 153, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (attrib.height * (120.0 / camera.zoom()))), 0.5, 1);
+							attrib.draw(g, gob.sc.add(0, -(int) (attrib.height * (120.0 / camera.zoom()))));
 						}
 					}
 					if (Shovel.getSettings().showObjectsHealth) {
 						GobHealth gobHealth = gob.getattr(GobHealth.class);
 						if (gobHealth != null && gobHealth.hp < 4) {
 							g.aimage(Utils.renderOutlinedFont(Text.std, (gobHealth.hp * 25) + "%", new Color(255, 0, 0, 255), Color.BLACK, 2), gob.sc.add(0, -(int) (80 * (120.0 / camera.zoom()))), 0.5, 1);
+						}
+					}
+					if (Shovel.getSettings().showCropStages) {
+						CustomAttrib.CropStageAttrib cropStageAttrib = gob.getattr(CustomAttrib.CropStageAttrib.class);
+						if (cropStageAttrib != null) {
+							cropStageAttrib.draw(g, gob.sc.add(0, -(int) (40 * (120.0 / camera.zoom()))));
 						}
 					}
 				}

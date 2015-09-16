@@ -263,11 +263,16 @@ public class Window extends Widget implements DTarget {
 	if(dm != null) {
 	    dm.remove();
 	    dm = null;
+		dragEnd();
 	} else {
 	    super.mouseup(c, button);
 	}
 	return(true);
     }
+
+	public void dragEnd() {
+
+	}
 
     public void mousemove(Coord c) {
 	if(dm != null) {

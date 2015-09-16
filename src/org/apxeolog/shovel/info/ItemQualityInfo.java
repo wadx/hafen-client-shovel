@@ -1,6 +1,12 @@
 package org.apxeolog.shovel.info;
 
+import haven.Buff;
+import haven.TexI;
+import haven.Text;
+import haven.Utils;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -30,6 +36,8 @@ public class ItemQualityInfo {
     private int maxValue;
     private Color maxColor;
 
+    public TexI textCache;
+
     public void setByType(String name, int quality) {
         switch (name) {
             case "Substance": substance = quality; break;
@@ -51,6 +59,7 @@ public class ItemQualityInfo {
             case "Essence": maxColor = COLOR_ESSENCE; break;
             case "Vitality": maxColor = COLOR_VITALITY; break;
         }
+        textCache = Utils.renderOutlinedFont(Text.std, Integer.toString(getMaxValue()), getMaxColor(), Color.BLACK, 1);
     }
 
     public Color getMaxColor() {

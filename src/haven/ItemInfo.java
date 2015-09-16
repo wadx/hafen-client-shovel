@@ -255,23 +255,23 @@ public abstract class ItemInfo {
     }
 
     public static List<ItemInfo> buildinfo(Owner owner, Object[] rawinfo) {
-	List<ItemInfo> ret = new ArrayList<ItemInfo>();
-	for(Object o : rawinfo) {
-	    if(o instanceof Object[]) {
-		Object[] a = (Object[])o;
-		Resource ttres = owner.glob().sess.getres((Integer)a[0]).get();
-		InfoFactory f = ttres.getcode(InfoFactory.class, true);
-		ItemInfo inf = f.build(owner, a);
-		if(inf != null)
-		    ret.add(inf);
-	    } else if(o instanceof String) {
-		ret.add(new AdHoc(owner, (String)o));
-	    } else {
-		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
-	    }
+		List<ItemInfo> ret = new ArrayList<ItemInfo>();
+		for (Object o : rawinfo) {
+			if (o instanceof Object[]) {
+				Object[] a = (Object[]) o;
+				Resource ttres = owner.glob().sess.getres((Integer) a[0]).get();
+				InfoFactory f = ttres.getcode(InfoFactory.class, true);
+				ItemInfo inf = f.build(owner, a);
+				if (inf != null)
+					ret.add(inf);
+			} else if (o instanceof String) {
+				ret.add(new AdHoc(owner, (String) o));
+			} else {
+				throw (new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
+			}
+		}
+		return (ret);
 	}
-	return(ret);
-    }
     
     private static String dump(Object arg) {
 	if(arg instanceof Object[]) {
