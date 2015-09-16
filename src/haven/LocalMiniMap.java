@@ -114,8 +114,6 @@ public class LocalMiniMap extends Window {
         Shovel.saveSettings();
     }
 
-
-
     public Coord p2c(Coord pc) {
         return (pc.div(tilesz).sub(playerCoordinates).add(asz.div(2)));
     }
