@@ -133,7 +133,7 @@ public class LocalMiniMap extends Window {
                     try {
                         Coord ptc = m.getc();
                         ptc = p2c(ptc);
-                        g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
+                        g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 200);
                         g.image(MiniMap.plx.layer(Resource.imgc).tex(), ptc.add(MiniMap.plx.layer(Resource.negc).cc.inv()));
                         g.chcolor();
                     } catch (Exception ex) {
@@ -150,44 +150,48 @@ public class LocalMiniMap extends Window {
                         Coord gc = p2c(gob.rc);
                         Tex tex = icon.tex();
                         g.image(tex, gc.sub(tex.sz().div(2)));
-                    } else {
-                        if (partyIds.contains(gob.id)) continue;
-                        CustomAttrib.HighlightAttrib highlightAttrib = gob.getattr(CustomAttrib.HighlightAttrib.class);
-                        if (highlightAttrib != null) {
-                            if (highlightAttrib.highlightOption.enabled) {
-                                if (highlightAttrib.highlightOption.color != null) {
-                                    Coord dotPosition = p2c(gob.rc).sub(3, 3);
-                                    g.chcolor(Color.BLACK);
-                                    g.fellipse(dotPosition, new Coord(5, 5));
-                                    g.chcolor(highlightAttrib.highlightOption.color);
-                                    g.fellipse(dotPosition, new Coord(4, 4));
-                                    g.chcolor();
-                                } else if (highlightAttrib.highlightOption.icon != null) {
-                                    Coord dotPosition = p2c(gob.rc);
-                                    try {
-                                        g.aimage(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition, 0.5, 0.5);
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            }
-                        }
-                        Composite composite = gob.getattr(Composite.class);
-                        if (composite != null) {
-                            String resourceName = composite.getBaseName();
-                            if ("gfx/borka/body".equals(resourceName)) {
-                                // Players
-                                Color color = new Color(255, 0, 0);
-                                KinInfo kinInfo = gob.getattr(KinInfo.class);
-                                if (kinInfo != null) {
-                                    color = BuddyWnd.gc[kinInfo.group];
-                                }
+                    }
+                } catch (Loading l) {
+                }
+            }
+            for (Gob gob : oc) {
+                try {
+                    if (partyIds.contains(gob.id)) continue;
+                    CustomAttrib.HighlightAttrib highlightAttrib = gob.getattr(CustomAttrib.HighlightAttrib.class);
+                    if (highlightAttrib != null) {
+                        if (highlightAttrib.highlightOption.enabled) {
+                            if (highlightAttrib.highlightOption.color != null) {
                                 Coord dotPosition = p2c(gob.rc).sub(3, 3);
                                 g.chcolor(Color.BLACK);
                                 g.fellipse(dotPosition, new Coord(5, 5));
-                                g.chcolor(color);
+                                g.chcolor(highlightAttrib.highlightOption.color);
                                 g.fellipse(dotPosition, new Coord(4, 4));
                                 g.chcolor();
+                            } else if (highlightAttrib.highlightOption.icon != null) {
+                                Coord dotPosition = p2c(gob.rc);
+                                try {
+                                    g.aimage(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition, 0.5, 0.5);
+                                } catch (Exception ex) {
+                                }
                             }
+                        }
+                    }
+                    Composite composite = gob.getattr(Composite.class);
+                    if (composite != null) {
+                        String resourceName = composite.getBaseName();
+                        if ("gfx/borka/body".equals(resourceName)) {
+                            // Players
+                            Color color = new Color(255, 0, 0);
+                            KinInfo kinInfo = gob.getattr(KinInfo.class);
+                            if (kinInfo != null) {
+                                color = BuddyWnd.gc[kinInfo.group];
+                            }
+                            Coord dotPosition = p2c(gob.rc).sub(3, 3);
+                            g.chcolor(Color.BLACK);
+                            g.fellipse(dotPosition, new Coord(5, 5));
+                            g.chcolor(color);
+                            g.fellipse(dotPosition, new Coord(4, 4));
+                            g.chcolor();
                         }
                     }
                 } catch (Loading l) {
