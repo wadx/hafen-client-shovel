@@ -215,9 +215,15 @@ public class WItem extends Widget implements DTarget {
 	} else if(btn == 3) {
 		if (Shovel.getSettings().enableGroupHotkeys) {
 			if (ui.modshift) {
-				wdgmsg("transfer_all", item.getItemName());
+				if (ui.modmeta)
+					wdgmsg("transfer_all_asc", item.getItemName());
+				else
+					wdgmsg("transfer_all", item.getItemName());
 			} else if (ui.modctrl) {
-				wdgmsg("drop_all", item.getItemName());
+				if (ui.modmeta)
+					wdgmsg("drop_all_asc", item.getItemName());
+				else
+					wdgmsg("drop_all", item.getItemName());
 			} else
 				item.wdgmsg("iact", c, ui.modflags());
 		} else

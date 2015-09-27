@@ -26,6 +26,10 @@
 
 package haven;
 
+import org.apxeolog.shovel.Settings;
+import org.apxeolog.shovel.Shovel;
+import org.apxeolog.shovel.info.ItemQualityInfo;
+
 import java.util.*;
 
 public class Inventory extends Widget implements DTarget {
@@ -108,20 +112,45 @@ public class Inventory extends Widget implements DTarget {
 	@Override
 	public void wdgmsg(Widget sender, String msg, Object... args) {
 		if (isLocked()) return;
+		String itemMsg = null; Comparator<GItem> comparator = null;
+		switch (msg) {
+			case "transfer_all":
+				itemMsg = "transfer";
+				comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+						? ItemQualityInfo.MaxQualityComparatorDesc : ItemQualityInfo.AverageQualityComparatorDesc;
+				break;
+			case "transfer_all_asc":
+				itemMsg = "transfer";
+				comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+						? ItemQualityInfo.MaxQualityComparatorAsc : ItemQualityInfo.AverageQualityComparatorAsc;
+				break;
+			case "drop_all":
+				itemMsg = "drop";
+				comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+						? ItemQualityInfo.MaxQualityComparatorDesc : ItemQualityInfo.AverageQualityComparatorDesc;
+				break;
+			case "drop_all_asc":
+				itemMsg = "drop";
+				comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+						? ItemQualityInfo.MaxQualityComparatorAsc : ItemQualityInfo.AverageQualityComparatorAsc;
+				break;
+		}
+		if (itemMsg != null && comparator != null) {
+			try {
+				if (!(args[0] instanceof String)) return;
+				String resName = (String) args[0];
+				ArrayList<GItem> items = new ArrayList<>();
+				items.addAll(wmap.keySet());
+				items.sort(comparator);
+				Iterator<GItem> iterator = items.iterator();
+				while (iterator.hasNext()) {
+					GItem item = iterator.next();
+					if (resName.equals(item.getItemName())) {
+						item.wdgmsg(itemMsg, Coord.z);
+					}
+				}
+			} catch (Exception ex) {
 
-		if ("transfer_all".equals(msg)) {
-			String resName = args[0] != null ? (String) args[0] : "";
-			for (GItem item : wmap.keySet()) {
-				if (resName.equals(item.getItemName())) {
-					item.wdgmsg("transfer", Coord.z);
-				}
-			}
-		} else if ("drop_all".equals(msg)) {
-			String resName = args[0] != null ? (String) args[0] : "";
-			for (GItem item : wmap.keySet()) {
-				if (resName.equals(item.getItemName())) {
-					item.wdgmsg("drop", Coord.z);
-				}
 			}
 		} else super.wdgmsg(sender, msg, args);
 	}

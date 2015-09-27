@@ -1589,6 +1589,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			if (lastInfo != null) {
 				if (lastInfo.gob != null) {
 					g.text("Gob ID: " + lastInfo.gob.id, new Coord(x, y += offsetY));
+					g.text("Gob A: " + lastInfo.gob.a, new Coord(x, y += offsetY));
 					g.text("Gob RD: " + lastInfo.gob.getrc(), new Coord(x, y += offsetY));
 					if (lastInfo.gob.attr != null) {
 						g.text("Gob Attrs: " + lastInfo.gob.attr.size(), new Coord(x, y += offsetY));

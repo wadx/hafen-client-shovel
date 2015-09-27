@@ -26,12 +26,15 @@
 
 package haven;
 
+import java.util.ArrayList;
+
 public class CheckBox extends Widget {
     public static final Tex lbox = Resource.loadtex("gfx/hud/chkbox"), lmark = Resource.loadtex("gfx/hud/chkmark");
     public static final Tex sbox = Resource.loadtex("gfx/hud/chkboxs"), smark = Resource.loadtex("gfx/hud/chkmarks");
     public final Tex box, mark;
     public final Coord loff;
     public boolean a = false;
+	public ArrayList<CheckBox> linked;
     Text lbl;
 
     @RName("chk")
@@ -53,6 +56,7 @@ public class CheckBox extends Widget {
 	    loff = new Coord(5, 0);
 	}
 	sz = new Coord(box.sz().x + 5 + this.lbl.sz().x, Math.max(box.sz().y, this.lbl.sz().y));
+		linked = new ArrayList<>();
     }
 
     public CheckBox(String lbl) {

@@ -23,6 +23,7 @@ public class Settings {
     public boolean drawMinimapFOV = true;
     public boolean enableSimpleCrops = true;
     public boolean showCropStages = true;
+    public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
     public HashMap<String, WindowData> windows;
@@ -46,6 +47,10 @@ public class Settings {
             data.position = position;
         if (size != null)
             data.size = size;
+    }
+
+    public enum QualityDisplayType {
+        MAX, AVG
     }
 
     public Settings() {

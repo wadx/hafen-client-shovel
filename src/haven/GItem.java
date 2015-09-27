@@ -103,9 +103,12 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	 * @return
 	 */
 	public String getItemName() {
-		List<ItemInfo> infoList = info();
-		for (ItemInfo info : infoList) {
-			if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
+		try {
+			List<ItemInfo> infoList = info();
+			for (ItemInfo info : infoList) {
+				if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
+			}
+		} catch (Exception ex) {
 		}
 		return null;
 	}

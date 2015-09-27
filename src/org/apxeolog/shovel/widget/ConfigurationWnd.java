@@ -5,6 +5,7 @@ import haven.Button;
 import haven.Label;
 import haven.Window;
 import org.apxeolog.shovel.ALS;
+import org.apxeolog.shovel.Settings;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.highlight.HighlightGroup;
 import org.apxeolog.shovel.highlight.HighlightManager;
@@ -37,7 +38,7 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().dumpMinimaps), new Coord(15, 50));
-            generalSettings.add(new CheckBox("Disable flavor objects", false) {
+            generalSettings.add(new CheckBox("Enable flavor objects", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showFlavor = val;
@@ -114,6 +115,39 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showCropStages), new Coord(15, 325));
+
+            CheckBox chckQMax = new CheckBox("Show MAX quality", false) {
+                @Override
+                public void changed(boolean val) {
+                    if (val == true) {
+                        if (linked.size() > 0) linked.get(0).a = false;
+                        Shovel.getSettings().qualityDisplayType = Settings.QualityDisplayType.MAX;
+                        Shovel.saveSettings();
+                    } else {
+                        if (linked.size() > 0) linked.get(0).a = true;
+                        Shovel.getSettings().qualityDisplayType = Settings.QualityDisplayType.AVG;
+                        Shovel.saveSettings();
+                    }
+                }
+            }.chainSet(Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX);
+            generalSettings.add(chckQMax, new Coord(200, 25));
+            CheckBox chckQAvg = new CheckBox("Show AVG quality", false) {
+                @Override
+                public void changed(boolean val) {
+                    if (val == true) {
+                        if (linked.size() > 0) linked.get(0).a = false;
+                        Shovel.getSettings().qualityDisplayType = Settings.QualityDisplayType.AVG;
+                        Shovel.saveSettings();
+                    } else {
+                        if (linked.size() > 0) linked.get(0).a = true;
+                        Shovel.getSettings().qualityDisplayType = Settings.QualityDisplayType.MAX;
+                        Shovel.saveSettings();
+                    }
+                }
+            }.chainSet(Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.AVG);
+            generalSettings.add(chckQAvg, new Coord(200, 50));
+            chckQMax.linked.add(chckQAvg);
+            chckQAvg.linked.add(chckQMax);
         }
         Tabs.Tab highlightSettings;
         {
