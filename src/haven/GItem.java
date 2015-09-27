@@ -38,18 +38,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
-    public Indir<Resource> res;
-    public MessageBuf sdt;
-    public int meter = 0;
-    public int num = -1;
-    private GSprite spr;
-    private Object[] rawinfo;
-    private List<ItemInfo> info = Collections.emptyList();
+	public Indir<Resource> res;
+	public MessageBuf sdt;
+	public int meter = 0;
+	public int num = -1;
+	private GSprite spr;
+	private Object[] rawinfo;
+	private List<ItemInfo> info = Collections.emptyList();
 
 	private long lastTickTime = -1;
 	private int tickDiff = 0;
+	private int totalTime = 0;
 	private int lastMeter = 0;
 	private int remainingSeconds = 0;
+	private int tickCount = 0;
 
 	public boolean ready() {
 		try {
@@ -58,57 +60,54 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			return false;
 		}
 	}
-    
-    @RName("item")
-    public static class $_ implements Factory {
-	public Widget create(Widget parent, Object[] args) {
-	    int res = (Integer)args[0];
-	    Message sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):Message.nil;
-	    return(new GItem(parent.ui.sess.getres(res), sdt));
-	}
-    }
-    
-    public interface ColorInfo {
-	public Color olcol();
-    }
-    
-    public interface NumberInfo {
-	public int itemnum();
-    }
 
-    public class Amount extends ItemInfo implements NumberInfo {
-	private final int num;
-	
-	public Amount(int num) {
-	    super(GItem.this);
-	    this.num = num;
+	@RName("item")
+	public static class $_ implements Factory {
+		public Widget create(Widget parent, Object[] args) {
+			int res = (Integer)args[0];
+			Message sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):Message.nil;
+			return(new GItem(parent.ui.sess.getres(res), sdt));
+		}
 	}
-	
-	public int itemnum() {
-	    return(num);
-	}
-    }
-    
-    public GItem(Indir<Resource> res, Message sdt) {
-	this.res = res;
-	this.sdt = new MessageBuf(sdt);
-    }
 
-    public GItem(Indir<Resource> res) {
-	this(res, Message.nil);
-    }
+	public interface ColorInfo {
+		public Color olcol();
+	}
+
+	public interface NumberInfo {
+		public int itemnum();
+	}
+
+	public class Amount extends ItemInfo implements NumberInfo {
+		private final int num;
+
+		public Amount(int num) {
+			super(GItem.this);
+			this.num = num;
+		}
+
+		public int itemnum() {
+			return(num);
+		}
+	}
+
+	public GItem(Indir<Resource> res, Message sdt) {
+		this.res = res;
+		this.sdt = new MessageBuf(sdt);
+	}
+
+	public GItem(Indir<Resource> res) {
+		this(res, Message.nil);
+	}
 
 	/**
 	 * Returns item tooltip name or null
 	 * @return
 	 */
 	public String getItemName() {
-		try {
-			List<ItemInfo> infoList = info();
-			for (ItemInfo info : infoList) {
-				if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
-			}
-		} catch (Exception ex) {
+		List<ItemInfo> infoList = info();
+		for (ItemInfo info : infoList) {
+			if (info instanceof ItemInfo.Name) return ((ItemInfo.Name) info).str.text;
 		}
 		return null;
 	}
@@ -142,33 +141,33 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 		return ret;
 	}
 
-    private Random rnd = null;
-    public Random mkrandoom() {
-	if(rnd == null)
-	    rnd = new Random();
-	return(rnd);
-    }
-    public Resource getres() {return(res.get());}
-    public Glob glob() {return(ui.sess.glob);}
-
-    public GSprite spr() {
-	GSprite spr = this.spr;
-	if(spr == null) {
-	    try {
-		spr = this.spr = GSprite.create(this, res.get(), sdt.clone());
-	    } catch(Loading l) {
-	    }
+	private Random rnd = null;
+	public Random mkrandoom() {
+		if(rnd == null)
+			rnd = new Random();
+		return(rnd);
 	}
-	return(spr);
-    }
+	public Resource getres() {return(res.get());}
+	public Glob glob() {return(ui.sess.glob);}
 
-    public void tick(double dt) {
-	GSprite spr = spr();
-	if(spr != null)
-	    spr.tick(dt);
-    }
+	public GSprite spr() {
+		GSprite spr = this.spr;
+		if(spr == null) {
+			try {
+				spr = this.spr = GSprite.create(this, res.get(), sdt.clone());
+			} catch(Loading l) {
+			}
+		}
+		return(spr);
+	}
 
-    public List<ItemInfo> info() {
+	public void tick(double dt) {
+		GSprite spr = spr();
+		if(spr != null)
+			spr.tick(dt);
+	}
+
+	public List<ItemInfo> info() {
 		if (info == null) {
 			info = ItemInfo.buildinfo(this, rawinfo);
 			try {
@@ -207,72 +206,75 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 		}
 		return itemQualityInfoCache;
 	}
-    
-    public Resource resource() {
-	return(res.get());
-    }
 
-    public GSprite sprite() {
-	if(spr == null)
-	    throw(new Loading("Still waiting for sprite to be constructed"));
-	return(spr);
-    }
+	public Resource resource() {
+		return(res.get());
+	}
 
-    public void uimsg(String name, Object... args) {
-	if(name == "num") {
-	    num = (Integer)args[0];
-	} else if(name == "chres") {
-	    synchronized(this) {
-		res = ui.sess.getres((Integer)args[0]);
-		sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):MessageBuf.nil;
-		spr = null;
-	    }
-	} else if(name == "tt") {
-	    info = null;
-	    rawinfo = args;
+	public GSprite sprite() {
+		if(spr == null)
+			throw(new Loading("Still waiting for sprite to be constructed"));
+		return(spr);
+	}
 
-		if (tickDiff != 0) {
-			boolean f = false;
-			for (int idx = 0; idx < rawinfo.length; ++idx) {
-				Object obj = rawinfo[idx];
-				if (obj instanceof String) {
-					String st = (String)obj;
-					if (st.startsWith("Remaining time:")) {
-						f = true;
-						rawinfo[idx] = new String("Remaining time: ~" + formattedTime(remainingSeconds));
-						break;
+	public void uimsg(String name, Object... args) {
+		if(name == "num") {
+			num = (Integer)args[0];
+		} else if(name == "chres") {
+			synchronized(this) {
+				res = ui.sess.getres((Integer)args[0]);
+				sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):MessageBuf.nil;
+				spr = null;
+			}
+		} else if(name == "tt") {
+			info = null;
+			rawinfo = args;
+
+			if (tickDiff != 0 && tickCount > 1) {
+				boolean f = false;
+				for (int idx = 0; idx < rawinfo.length; ++idx) {
+					Object obj = rawinfo[idx];
+					if (obj instanceof String) {
+						String st = (String)obj;
+						if (st.startsWith("Rem. time:")) {
+							f = true;
+							rawinfo[idx] = new String("Rem. time: ~" + formattedTime(remainingSeconds) + " / " + formattedTime(totalTime));
+							break;
+						}
 					}
 				}
-			}
-			if (f != true) {
-				ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(rawinfo));
-				temp.add(new String("Remaining time: ~" + formattedTime(remainingSeconds)));
-				rawinfo = temp.toArray();
-			}
-		}
-	} else if(name == "meter") {
-	    meter = (Integer)args[0];
-
-		if (lastMeter == 0)
-			lastMeter = meter;
-
-		if (lastTickTime < 0) {
-			lastTickTime = System.currentTimeMillis();
-		} else {
-			int meterDiff = meter - lastMeter;
-			if (meterDiff > 0) {
-				long ct = System.currentTimeMillis();
-				tickDiff = (int) ((ct - lastTickTime) / 1000); //seconds
-				lastTickTime = ct;
-
-				if (tickDiff > 0) {
-					remainingSeconds = ((100 - meter) / meterDiff) * tickDiff;
-					this.uimsg("tt", rawinfo);
+				if (f != true) {
+					ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(rawinfo));
+					temp.add(new String("Rem. time: ~" + formattedTime(remainingSeconds) + " / " + formattedTime(totalTime)));
+					rawinfo = temp.toArray();
 				}
+			}
+		} else if(name == "meter") {
+			meter = (Integer)args[0];
 
+			if (lastMeter == 0) {
 				lastMeter = meter;
+			}
+
+			if (lastTickTime < 0) {
+				lastTickTime = System.currentTimeMillis();
+			} else {
+				int meterDiff = meter - lastMeter;
+				if (meterDiff > 0) {
+					++tickCount;
+					long ct = System.currentTimeMillis();
+					tickDiff = (int) ((ct - lastTickTime) / 1000); //seconds
+					totalTime = (tickDiff/meterDiff) * 100;
+					lastTickTime = ct;
+
+					if (tickDiff > 0 && tickCount > 1) {
+						remainingSeconds = ((100 - meter) / meterDiff) * tickDiff;
+						this.uimsg("tt", rawinfo);
+					}
+
+					lastMeter = meter;
+				}
 			}
 		}
 	}
-    }
 }
