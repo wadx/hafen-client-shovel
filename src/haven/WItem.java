@@ -26,6 +26,7 @@
 
 package haven;
 
+import org.apxeolog.shovel.Settings;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.info.ItemQualityInfo;
 
@@ -195,7 +196,11 @@ public class WItem extends Widget implements DTarget {
 			if (Shovel.getSettings().showQuality && item.ready()) {
 				ItemQualityInfo qualityInfo = item.getItemQualityInfo();
 				if (qualityInfo != null) {
-					g.imageDock(qualityInfo.textCache, sz, 1, 1);
+					if (Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX) {
+						g.imageDock(qualityInfo.textCache, sz, 1, 1);
+					} else {
+						g.imageDock(qualityInfo.averageTextCache, sz, 1, 1);
+					}
 				}
 			}
 		} else {
