@@ -424,7 +424,7 @@ public class CharWnd extends Window {
 	    this.attr = glob.cattr.get(attr);
 	    this.bg = bg;
 
-		this.attr.addObserver(new AttributeChaneObserver(tip));
+		this.attr.addObserver(new AttributeChangeObserver(tip));
 	}
 
 	public void tick(double dt) {
@@ -469,7 +469,7 @@ public class CharWnd extends Window {
 	public void lvlup() {
 	    lvlt = 1.0;
 	}
-		private class AttributeChaneObserver implements Observer {
+		private class AttributeChangeObserver implements Observer {
 			private String attrName;
 
 			public AttributeChaneObserver(String attrn) {
