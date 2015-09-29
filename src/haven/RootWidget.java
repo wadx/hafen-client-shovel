@@ -62,10 +62,13 @@ public class RootWidget extends ConsoleHost {
 	    } else if((code == KeyEvent.VK_N)&&ctrl) {
 			Shovel.getSettings().nightvision = !Shovel.getSettings().nightvision;
 			Shovel.saveSettings();
+		} else if ((code == KeyEvent.VK_F11) && ctrl) {
+			Shovel.getSettings().debugWidgets = !Shovel.getSettings().debugWidgets;
+			System.out.println("Widget creation debugging toggled. Press Ctrl+F11 to toggle widget debugging.");
 		} else if((code == KeyEvent.VK_D)&&ctrl) {
 			Shovel.getSettings().debugMode = !Shovel.getSettings().debugMode;
 		} else if(key != 0) {
-		wdgmsg("gk", (int)key);
+		wdgmsg("gk", (int) key);
 	    }
 	}
 	return(true);

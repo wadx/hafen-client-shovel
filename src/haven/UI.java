@@ -26,7 +26,9 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.widget.WidgetEvent;
+import org.apxeolog.shovel.Settings;
 
 import java.util.*;
 import java.awt.event.KeyEvent;
@@ -154,6 +156,9 @@ public class UI {
 	    if(pwdg == null)
 		throw(new UIException("Null parent widget " + parent + " for " + id, type, cargs));
 	    Widget wdg = pwdg.makechild(f, pargs, cargs);
+		if (Shovel.getSettings().debugWidgets) {
+			System.out.println("New widget: "+wdg);
+		}
 	    bind(wdg, id);
 		wdg.fireEvent(WidgetEvent.CREATE, wdg);
 		pwdg.fireEvent(WidgetEvent.ADD_CHILD, wdg);

@@ -23,6 +23,7 @@ public class Settings {
     public boolean drawMinimapFOV = true;
     public boolean enableSimpleCrops = true;
     public boolean showCropStages = true;
+    public boolean debugWidgets = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
