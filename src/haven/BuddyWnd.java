@@ -438,7 +438,7 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	    int online = (Integer)args[1];
 	    find(id).online = online;
 		if (Shovel.getSettings().showFriendNotifications) {
-			GameUI.instance.error2(find(id).name + " is " + ((find(id).online > 0) ? "online" : "offline") + " now");
+			GameUI.instance.msg(find(id).name + " is " + ((find(id).online > 0) ? "online" : "offline") + " now", Color.WHITE);
 		}
 	} else if(msg == "upd") {
 	    int id = (Integer)args[0];

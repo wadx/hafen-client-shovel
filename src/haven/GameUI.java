@@ -907,7 +907,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public void msg(String msg, Color color, Color logcol) {
 	msgtime = System.currentTimeMillis();
 	lastmsg = msgfoundry.render(msg, color);
-	syslog.append(msg, logcol);
+	syslog.append(LocalTime.now().format(DateTimeFormatter.ofPattern("k:m")) + "  " + msg, logcol);
     }
 
     public void msg(String msg, Color color) {

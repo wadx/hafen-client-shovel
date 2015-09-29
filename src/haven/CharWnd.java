@@ -639,7 +639,7 @@ public class CharWnd extends Window {
 					if (gItem.ready()) {
 						Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
 						if (ci != null && expDelt >= ci.exp) {
-							GameUI.instance.error("You have studied "+gItem.getItemName()+" for "+ci.exp+" LP.");
+							GameUI.instance.msg("You have studied "+gItem.getItemName()+" for "+ci.exp+" LP.", Color.YELLOW);
 						}
 					}
 				}
