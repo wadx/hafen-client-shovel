@@ -35,6 +35,8 @@ public class ISBox extends Widget implements DTarget {
         lf = new Text.Foundry(Text.serif, 22, java.awt.Color.WHITE);
         lf.aa = true;
     }
+
+    private int itemsRemaining = 0;
     
     @RName("isbox")
     public static class $_ implements Factory {
@@ -58,6 +60,7 @@ public class ISBox extends Widget implements DTarget {
     public ISBox(Indir<Resource> res, int rem, int av, int bi) {
         super(bg.sz());
         this.res = res;
+        itemsRemaining = (rem > 56 ? 56 : rem); //max possible inventory is 7*8 (hope so)
         setlabel(rem, av, bi);
     }
     
@@ -86,6 +89,12 @@ public class ISBox extends Widget implements DTarget {
             else
                 wdgmsg("click");
             return(true);
+        } else if (button == 3) {
+            if (ui.modshift) {
+                for (int i = 0; i < itemsRemaining; ++i)
+                    wdgmsg("xfer"); //TODO: check size of inventory and remove hardcoded 7*8 value
+            }
+            return true;
         }
         return(false);
     }
