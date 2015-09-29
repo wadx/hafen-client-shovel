@@ -418,9 +418,13 @@ public class CharWnd extends Window {
 	    Resource res = Resource.local().loadwait("gfx/hud/chr/" + attr);
 	    this.nm = attr;
 	    this.img = res.layer(Resource.imgc).tex();
-	    this.rnm = attrf.render(res.layer(Resource.tooltip).t);
+
+		String tip = res.layer(Resource.tooltip).t;
+	    this.rnm = attrf.render(tip);
 	    this.attr = glob.cattr.get(attr);
 	    this.bg = bg;
+
+		this.attr.addObserver(new AttributeChaneObserver(tip));
 	}
 
 	public void tick(double dt) {
@@ -465,6 +469,20 @@ public class CharWnd extends Window {
 	public void lvlup() {
 	    lvlt = 1.0;
 	}
+		private class AttributeChaneObserver implements Observer {
+			private String attrName;
+
+			public AttributeChaneObserver(String attrn) {
+				attrName = attrn;
+			}
+
+			@Override
+			public void update(Observable obs, Object attr) {
+				int adiff = (int)attr;
+				if (adiff > 0)
+					GameUI.instance.msg("You have raised your "+attrName+" by "+adiff+".", Color.GREEN);
+			}
+		}
     }
 
     public class SAttr extends Widget {

@@ -82,10 +82,10 @@ public class Glob {
 	public void update(int base, int comp) {
 	    if((base == this.base) && (comp == this.comp))
 		return;
-	    this.base = base;
 	    this.comp = comp;
-	    setChanged();
-	    notifyObservers(null);
+		setChanged();
+		notifyObservers(base - this.base);
+		this.base = base;
 	}
     }
     
