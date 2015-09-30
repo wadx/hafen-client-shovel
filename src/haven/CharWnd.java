@@ -443,9 +443,9 @@ public class CharWnd extends Window {
 		    tooltip = null;
 			isBuffed = false;
 		}
-		ct = attrf.render(Integer.toString(ccv), c);
+			baseValue = attrf.render(Integer.toString(attr.base), Color.WHITE);
 			if (isBuffed)
-				baseValue = attrf.render(Integer.toString(attr.base) + " / ", Color.WHITE);
+				ct = attrf.render(Integer.toString(ccv), c);
 	    }
 	    if((lvlt > 0.0) && ((lvlt -= dt) < 0))
 		lvlt = 0.0;
@@ -461,9 +461,9 @@ public class CharWnd extends Window {
 	    Coord cn = new Coord(0, sz.y / 2);
 	    g.aimage(img, cn.add(5, 0), 0, 0.5);
 	    g.aimage(rnm.tex(), cn.add(img.sz().x + 10, 1), 0, 0.5);
-	    g.aimage(ct.tex(), cn.add(sz.x - 7, 1), 1, 0.5);
+		g.aimage(baseValue.tex(), cn.add(sz.x - 7, 1), 1, 0.5);
 		if (isBuffed)
-			g.aimage(baseValue.tex(), cn.add(sz.x - (25 + 20*(ccv/100)), 1), 1, 0.5);
+			g.aimage(ct.tex(), cn.add(sz.x - 50, 1), 1, 0.5);
 	}
 
 	public void lvlup() {
@@ -472,7 +472,7 @@ public class CharWnd extends Window {
 		private class AttributeChangeObserver implements Observer {
 			private String attrName;
 
-			public AttributeChaneObserver(String attrn) {
+			public AttributeChangeObserver(String attrn) {
 				attrName = attrn;
 			}
 
