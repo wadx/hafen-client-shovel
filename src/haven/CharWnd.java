@@ -649,7 +649,7 @@ public class CharWnd extends Window {
 				}
 			}
 		});*/
-		this.study.addEventListener(WidgetEvent.REMOVE_CHILD, new WidgetEventListener() {
+		study.addEventListener(WidgetEvent.REMOVE_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child widget
@@ -671,7 +671,7 @@ public class CharWnd extends Window {
 
 	private void upd() {
 	    int texp = 0, tw = 0, tenc = 0;
-	    for(GItem item : study.children(GItem.class)) {
+	    for(GItem item : this.study.children(GItem.class)) {
 		try {
 		    Curiosity ci = ItemInfo.find(Curiosity.class, item.info());
 		    if(ci != null) {
@@ -1351,7 +1351,7 @@ public class CharWnd extends Window {
 	public void addchild(Widget child, Object... args) {
 	String place = (args[0] instanceof String)?(((String)args[0]).intern()):null;
 	if(place == "study") {
-	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
+	    //sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    //Frame.around(sattr, Collections.singletonList(child));
 	    /*Widget inf = */sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 	    //Frame.around(sattr, Collections.singletonList(inf));
