@@ -146,6 +146,13 @@ public class ConfigurationWnd extends Window {
                 }
             }.chainSet(Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.AVG);
             generalSettings.add(chckQAvg, new Coord(200, 50));
+            generalSettings.add(new CheckBox("Study at bottom left (need restart)", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().studyAtMinimap = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().studyAtMinimap), new Coord(200, 75));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

@@ -137,7 +137,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			return(new Coord(GameUI.this.sz.x, Math.min(brpanel.c.y - 79, GameUI.this.sz.y - menupanel.sz.y)));
 		    }
 		}, new Coord(1, 0)));
-	blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 1);
+	if (Shovel.getSettings().studyAtMinimap)
+		blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 1);
 	blpanel.add(new Img(Resource.loadtex("gfx/hud/lbtn-bg")), 0, -8);
 	menu = brpanel.add(new MenuGrid(), 20, 34);
 	brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), 0, 0);

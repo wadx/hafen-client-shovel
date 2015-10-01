@@ -24,6 +24,7 @@ public class Settings {
     public boolean enableSimpleCrops = true;
     public boolean showCropStages = true;
     public boolean debugWidgets = false;
+    public boolean studyAtMinimap = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
