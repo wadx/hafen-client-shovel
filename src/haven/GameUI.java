@@ -45,7 +45,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     private static final int blpw = 142, brpw = 142;
     public final String chrid;
     public final long plid;
-    private final Hidepanel ulpanel, urpanel, blpanel, brpanel, menupanel;
+    private final Hidepanel ulpanel, urpanel, /*blpanel,*/ brpanel, menupanel;
+	public final Hidepanel blpanel;
     public Avaview portrait;
     public MenuGrid menu;
     public MapView map;
@@ -136,8 +137,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			return(new Coord(GameUI.this.sz.x, Math.min(brpanel.c.y - 79, GameUI.this.sz.y - menupanel.sz.y)));
 		    }
 		}, new Coord(1, 0)));
-	// blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 9);
-	blpanel.add(new Img(Resource.loadtex("gfx/hud/lbtn-bg")), 0, 0);
+	blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 1);
+	blpanel.add(new Img(Resource.loadtex("gfx/hud/lbtn-bg")), 0, -8);
 	menu = brpanel.add(new MenuGrid(), 20, 34);
 	brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), 0, 0);
 	menupanel.add(new MainMenu(), 0, 0);
@@ -207,7 +208,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		    else
 			map.disol(0, 1);
 		}
-	    }, 0, 0);
+	    }, 0, -8);
 	blpanel.add(new IButton("gfx/hud/lbtn-claim", "", "-d", "-h") {
 		{tooltip = Text.render("Display village claims");}
 		public void click() {
@@ -216,7 +217,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		    else
 			map.disol(2, 3);
 		}
-	    }, 0, 0);
+	    }, 0, -8);
     }
 
     /* Ice cream */
@@ -300,7 +301,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		    this.c = new Coord(0, parent.sz.y - sz.y);
 		}
 	    };
-	blpanel.add(fold_bl[0], 0, 0);
+	blpanel.add(fold_bl[0], 0, -8);
 	adda(fold_bl[1], 0, 1);
 	fold_bl[1].lower();
 

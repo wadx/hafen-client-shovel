@@ -637,6 +637,7 @@ public class CharWnd extends Window {
 	private StudyInfo(Coord sz, Widget study) {
 	    super(sz);
 	    this.study = study;
+		GameUI.instance.blpanel.add(study, new Coord(4, 35));
 		/*this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {
@@ -657,7 +658,7 @@ public class CharWnd extends Window {
 					if (gItem.ready()) {
 						Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
 						if (ci != null && expDelt >= ci.exp) {
-							GameUI.instance.msg("You have studied "+gItem.getItemName()+" for "+ci.exp+" LP.", Color.YELLOW);
+							GameUI.instance.msg("You have studied " + gItem.getItemName() + " for " + ci.exp + " LP.", Color.YELLOW);
 						}
 					}
 				}
@@ -1351,9 +1352,9 @@ public class CharWnd extends Window {
 	String place = (args[0] instanceof String)?(((String)args[0]).intern()):null;
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
-	    Frame.around(sattr, Collections.singletonList(child));
-	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
-	    Frame.around(sattr, Collections.singletonList(inf));
+	    //Frame.around(sattr, Collections.singletonList(child));
+	    /*Widget inf = */sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+	    //Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);
 	} else if(place == "wound") {
