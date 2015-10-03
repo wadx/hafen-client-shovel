@@ -22,9 +22,9 @@ public class StudyInfoWidget extends Widget {
 
     public StudyInfoWidget (Coord sz) {
         super(sz);
-        add(new Label("Att:"), 2, 2);
-        add(new Label("Exp:"), 2, 17);
-        add(new Label("LP:"), 2, 32);
+        add(new Label("Att:"), 5, 2);
+        add(new Label("Exp:"), 5, 17);
+        add(new Label("LP:"), 5, 32);
     }
 
     private void recalc(Widget s) {
