@@ -639,7 +639,7 @@ public class CharWnd extends Window {
 	    super(sz);
 	    this.study = study;
 		if (Shovel.getSettings().studyAtMinimap)
-			GameUI.instance.blpanel.add(study, new Coord(4, 35));
+			GameUI.instance.addStudyWidget(study);
 		/*this.study.addEventListener(WidgetEvent.ADD_CHILD, new WidgetEventListener() {
 			@Override
 			public void call(Widget widget) {

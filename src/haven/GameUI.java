@@ -76,6 +76,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Bufflist buffs;
     public static GameUI instance;
 
+	public Widget studyWidget = null;
+
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
 	    super(sz);
@@ -516,6 +518,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
     }
 
+	public void addStudyWidget(Widget w) {
+		studyWidget = w;
+		blpanel.add(w,  new Coord(4, 35));
+		add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 22));
+	}
+
     public void addchild(Widget child, Object... args) {
 	String place = ((String)args[0]).intern();
 	if(place == "mapview") {
@@ -640,7 +648,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     }
 
     public void draw(GOut g) {
-	beltwdg.c = new Coord(chat.c.x, Math.min(chat.c.y - beltwdg.sz.y + 4, sz.y - beltwdg.sz.y));
+		int beltXOffset = 0;
+		if (Shovel.getSettings().studyAtMinimap)
+			beltXOffset += 100;
+	beltwdg.c = new Coord(chat.c.x + beltXOffset, Math.min(chat.c.y - beltwdg.sz.y + 4, sz.y - beltwdg.sz.y));
 	super.draw(g);
 	if(prog >= 0)
 	    drawprog(g, prog);
