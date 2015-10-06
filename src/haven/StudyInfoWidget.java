@@ -49,8 +49,11 @@ public class StudyInfoWidget extends Widget {
     public void draw(GOut g) {
         Widget s = GameUI.instance.studyWidget;
         if (s != null) {
-            g.image(backgrund, Coord.z);
             recalc(s);
+            g.chcolor(0, 0, 0, 170);
+            g.frect(Coord.z, sz);
+            g.chcolor(240, 230, 175, 255);
+            g.rect(Coord.z, sz);
             super.draw(g);
             g.chcolor(255, 192, 255, 255);
             g.aimage(attrTex.get().tex(), new Coord(sz.x - 4, 2), 1.0, 0.0);

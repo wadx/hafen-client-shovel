@@ -45,7 +45,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     private static final int blpw = 142, brpw = 142;
     public final String chrid;
     public final long plid;
-    private final Hidepanel ulpanel, urpanel, /*blpanel,*/ brpanel, menupanel;
+    private final Hidepanel ulpanel, urpanel, brpanel, menupanel;
 	public final Hidepanel blpanel;
     public Avaview portrait;
     public MenuGrid menu;
@@ -55,7 +55,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     private List<Widget> meters = new LinkedList<Widget>();
     private Text lastmsg;
     private long msgtime;
-    private Window invwnd, equwnd, makewnd;
+    private Window invwnd, makewnd;
+	public Window equwnd;
     public Inventory maininv;
     public CharWnd chrwdg;
     public BuddyWnd buddies;
@@ -77,6 +78,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public static GameUI instance;
 
 	public Widget studyWidget = null;
+	private Widget[] handsList = new Widget[2];
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -561,6 +563,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    equwnd.pack();
 	    equwnd.hide();
 	    add(equwnd, new Coord(400, 10));
+		//hands
+		handsList[0] = add(new EquipSlot(6), beltwdg.c.x + beltwdg.sz.x + 100, chat.c.y - 40);
+		handsList[1] = add(new EquipSlot(7), beltwdg.c.x + beltwdg.sz.x + 145, chat.c.y - 40);
 	} else if(place == "hand") {
 	    GItem g = add((GItem)child);
 	    Coord lc = (Coord)args[1];
@@ -1074,10 +1079,14 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			    chat.sresize(chat.savedh);
 			    setfocus(chat);
 			} else {
-			    chat.sresize(0);
+				chat.sresize(0);
 			}
-			Utils.setprefb("chatvis", chat.targeth != 0);
-		    }
+				Utils.setprefb("chatvis", chat.targeth != 0);
+//				if (handsList[0] != null && handsList[1] != null) {
+//					handsList[0].c.y = chat.c.y - 40;
+//					handsList[1].c.y = chat.c.y - 40;
+//				}
+			}
 
 		    public void draw(GOut g) {
 			super.draw(g);

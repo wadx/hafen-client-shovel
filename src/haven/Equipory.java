@@ -61,6 +61,8 @@ public class Equipory extends Widget implements DTarget {
 	}
     }
     Map<GItem, WItem[]> wmap = new HashMap<GItem, WItem[]>();
+
+	public WItem[] equipItems = new WItem[16];
 	
     @RName("epry")
     public static class $_ implements Factory {
@@ -105,6 +107,7 @@ public class Equipory extends Widget implements DTarget {
 	    for(int i = 0; i < args.length; i++) {
 		int ep = (Integer)args[i];
 		v[i] = add(new WItem(g), ecoords[ep].add(1, 1));
+			equipItems[ep] = v[i];
 	    }
 	    wmap.put(g, v);
 	} else {
@@ -116,8 +119,15 @@ public class Equipory extends Widget implements DTarget {
 	super.cdestroy(w);
 	if(w instanceof GItem) {
 	    GItem i = (GItem)w;
-	    for(WItem v : wmap.remove(i))
-		ui.destroy(v);
+	    for(WItem v : wmap.remove(i)) {
+			for (int idx = 0; idx < 16; ++idx) {
+				if (equipItems[idx] == v) {
+					equipItems[idx] = null;
+					break;
+				}
+			}
+			ui.destroy(v);
+		}
 	}
     }
     
