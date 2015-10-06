@@ -83,9 +83,10 @@ public class Glob {
 	    if((base == this.base) && (comp == this.comp))
 		return;
 	    this.comp = comp;
+		int diff = base - this.base;
 		setChanged();
-		notifyObservers(base - this.base);
 		this.base = base;
+		notifyObservers(diff);
 	}
     }
     
