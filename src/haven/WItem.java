@@ -208,6 +208,29 @@ public class WItem extends Widget implements DTarget {
 		}
 	}
 
+	private ISBox getStockpile() {
+		Window swnd = null;
+		for (Widget w = GameUI.instance.lchild; w != null; w = w.prev) {
+			if (w instanceof Window) {
+				Window tmpw = (Window)w;
+				if (tmpw.cap.text.equals("Stockpile")) {
+					swnd = tmpw;
+					break;
+				}
+			}
+		}
+
+		if (swnd == null)
+			return null;
+
+		for (Widget w = swnd.lchild; w != null; w = w.prev) {
+			if (w instanceof ISBox)
+				return (ISBox)w;
+		}
+
+		return null;
+	}
+
     public boolean mousedown(Coord c, int btn) {
 	if(btn == 1) {
 	    if(ui.modshift)
@@ -220,10 +243,17 @@ public class WItem extends Widget implements DTarget {
 	} else if(btn == 3) {
 		if (Shovel.getSettings().enableGroupHotkeys) {
 			if (ui.modshift) {
-				if (ui.modmeta)
+				if (ui.modmeta) {
 					wdgmsg("transfer_all_asc", item.getItemName());
-				else
-					wdgmsg("transfer_all", item.getItemName());
+				} else {
+					ISBox stockpile = getStockpile();
+					if (stockpile == null) {
+						wdgmsg("transfer_all", item.getItemName());
+					} else {
+						for (int  i = 0; i < 56; ++i)
+							stockpile.wdgmsg("xfer2", 1, 1);
+					}
+				}
 			} else if (ui.modctrl) {
 				if (ui.modmeta)
 					wdgmsg("drop_all_asc", item.getItemName());
