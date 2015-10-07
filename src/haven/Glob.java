@@ -55,6 +55,8 @@ public class Glob {
     public Indir<Resource> sky1 = null, sky2 = null;
     public double skyblend = 0.0;
     private Map<Indir<Resource>, Object> wmap = new HashMap<Indir<Resource>, Object>();
+
+	private long lastTime;
     
     public Glob(Session sess) {
 	this.sess = sess;
@@ -235,6 +237,18 @@ public class Glob {
 		epoch = System.currentTimeMillis();
 		if(!inc)
 		    lastrep = 0;
+
+		if (GameUI.instance != null && GameUI.instance.map != null) {
+			long tsec = globtime() / 1000;
+			if (tsec - lastTime > 60) {
+				lastTime = tsec;
+				long day = tsec / (60*60*24);
+				long secLeft = tsec % (60*60*24);
+				long min = (secLeft % 3600) / 60;
+				long hrs = secLeft / 3600;
+				GameUI.instance.map.setServerTimeText(String.format("Day %d, %02d:%02d", day, hrs, min));
+			}
+		}
 		break;
 	    case GMSG_LIGHT:
 		synchronized(this) {
