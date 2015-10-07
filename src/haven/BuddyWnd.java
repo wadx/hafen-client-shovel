@@ -116,6 +116,10 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	    wdgmsg("inv", id);
 	}
 	
+	public void describe() {
+	    wdgmsg("desc", id);
+	}
+	
 	public void chname(String name) {
 	    wdgmsg("nick", id, name);
 	}
@@ -244,15 +248,17 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	public void opts(final Buddy b, Coord c) {
 	    List<String> opts = new ArrayList<String>();
 	    if(b.online >= 0) {
-			opts.add("Chat");
+		opts.add("Chat");
 			if (Shovel.getSettings().allowLookSuspiciously)
 				opts.add("Look suspiciously");
-			if (b.online == 1)
-				opts.add("Invite");
-			opts.add("End kinship");
-		} else {
-			opts.add("Forget");
-		}
+		if(b.online == 1)
+		    opts.add("Invite");
+		opts.add("End kinship");
+	    } else {
+		opts.add("Forget");
+	    }
+		if(b.seen)
+			opts.add("Describe");
 	    if(menu == null) {
 		menu = new FlowerMenu(opts.toArray(new String[0])) {
 			public void destroy() {
@@ -277,6 +283,8 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+				} else if(opt.name.equals("Describe")) {
+				    b.describe();
 				}
 				uimsg("act", opt.num);
 			    } else {
