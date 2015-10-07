@@ -526,6 +526,21 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 22));
 	}
 
+	public Window findWindow (String name) {
+		if (name.isEmpty())
+			return null;
+
+		for (Widget w = lchild; w != null; w = w.prev) {
+			if (w instanceof Window) {
+				Window tmp = (Window)w;
+				if (tmp.cap.text.equals(name))
+					return tmp;
+			}
+		}
+
+		return null;
+	}
+
     public void addchild(Widget child, Object... args) {
 	String place = ((String)args[0]).intern();
 	if(place == "mapview") {

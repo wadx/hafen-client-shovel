@@ -209,16 +209,7 @@ public class WItem extends Widget implements DTarget {
 	}
 
 	private ISBox getStockpile() {
-		Window swnd = null;
-		for (Widget w = GameUI.instance.lchild; w != null; w = w.prev) {
-			if (w instanceof Window) {
-				Window tmpw = (Window)w;
-				if (tmpw.cap.text.equals("Stockpile")) {
-					swnd = tmpw;
-					break;
-				}
-			}
-		}
+		Window swnd = GameUI.instance.findWindow("Stockpile");
 
 		if (swnd == null)
 			return null;
