@@ -214,12 +214,8 @@ public class WItem extends Widget implements DTarget {
 		if (swnd == null)
 			return null;
 
-		for (Widget w = swnd.lchild; w != null; w = w.prev) {
-			if (w instanceof ISBox)
-				return (ISBox)w;
-		}
-
-		return null;
+		ISBox ret = swnd.findchild(ISBox.class);
+		return ret;
 	}
 
     public boolean mousedown(Coord c, int btn) {
