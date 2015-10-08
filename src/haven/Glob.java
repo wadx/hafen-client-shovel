@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.util.*;
 import java.awt.Color;
 
@@ -238,9 +240,9 @@ public class Glob {
 		if(!inc)
 		    lastrep = 0;
 
-		if (GameUI.instance != null && GameUI.instance.map != null) {
+		if (GameUI.instance != null && GameUI.instance.map != null && Shovel.getSettings().showServerTime) {
 			long tsec = globtime() / 1000;
-			if (tsec - lastTime > 60) {
+			if (tsec - lastTime > 20) { // 1/3 of minute
 				lastTime = tsec;
 				long day = tsec / (60*60*24);
 				long secLeft = tsec % (60*60*24);

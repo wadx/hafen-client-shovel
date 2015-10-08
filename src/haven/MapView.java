@@ -884,7 +884,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
 	private void drawServerTime(GOut g) {
 		if (serverTime != null) {
-			g.chcolor(255, 255, 255, 210);
+			g.chcolor(255, 255, 255, 255);
 			g.aimage(serverTime.tex(), new Coord(sz.x / 2, 10), 0.5, 0.5);
 			g.chcolor();
 		}
@@ -1003,7 +1003,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			}
 		}
 	    poldraw(g);
-		drawServerTime(g);
+		if (Shovel.getSettings().showServerTime)
+			drawServerTime(g);
 	    partydraw(g);
 		drawDebugInformation(g);
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),

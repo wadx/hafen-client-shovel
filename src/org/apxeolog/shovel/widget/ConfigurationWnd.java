@@ -153,6 +153,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().studyAtMinimap), new Coord(200, 75));
+            generalSettings.add(new CheckBox("Display ingame time", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showServerTime = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showServerTime), new Coord(200, 100));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }
