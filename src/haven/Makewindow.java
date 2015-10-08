@@ -147,6 +147,27 @@ public class Makewindow extends Widget {
 		    Tex t = qm.get().layer(Resource.imgc).tex();
 		    g.image(t, c);
 		    c = c.add(t.sz().x + 1, 0);
+
+			if (GameUI.instance != null && GameUI.instance.chrwdg != null) {
+				String name = qm.get().basename();
+				for (CharWnd.SAttr attr : GameUI.instance.chrwdg.skill) {
+					if (name.equals(attr.attr.nm)) {
+						Coord sz = attr.attr.comptex.sz();
+						g.image(attr.attr.comptex, c.add(3, t.sz().y / 2 - sz.y / 2));
+						c = c.add(sz.x + 8, 0);
+						break;
+					}
+				}
+
+				for (CharWnd.Attr attr : GameUI.instance.chrwdg.base) {
+					if (name.equals(attr.attr.nm)) {
+						Coord sz = attr.attr.comptex.sz();
+						g.image(attr.attr.comptex, c.add(3, t.sz().y / 2 - sz.y / 2));
+						c = c.add(sz.x + 8, 0);
+						break;
+					}
+				}
+			}
 		} catch(Loading l) {
 		}
 	    }
@@ -174,7 +195,7 @@ public class Makewindow extends Widget {
 		    Tex t = qm.get().layer(Resource.imgc).tex();
 		    if(mc.isect(c, t.sz()))
 			return(qm.get().layer(Resource.tooltip).t);
-		    c = c.add(t.sz().x + 1, 0);
+		    c = c.add(t.sz().x + 22, 0);
 		}
 	    } catch(Loading l) {
 	    }
