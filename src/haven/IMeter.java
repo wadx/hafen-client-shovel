@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
 import java.awt.Color;
 import java.util.*;
 
@@ -35,6 +37,10 @@ public class IMeter extends Widget {
     static Coord msz = new Coord(75, 10);
     Indir<Resource> bg;
     List<Meter> meters;
+
+	private List<String> knownMeters = Arrays.asList("Health", "Stamina", "Energy");
+	private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);//.aa(true);
+	public Tex tipTex;
     
     @RName("im")
     public static class $_ implements Factory {
@@ -75,6 +81,10 @@ public class IMeter extends Widget {
 		g.chcolor(m.c);
 		g.frect(off, new Coord(w, msz.y));
 	    }
+		if (tipTex != null && Shovel.getSettings().showMeterValues) {
+			g.chcolor();
+			g.image(tipTex, sz.div(2).sub(tipTex.sz().div(2)).add(10, -1));
+		}
 	    g.chcolor();
 	    g.image(bg, Coord.z);
 	} catch(Loading l) {
@@ -88,6 +98,13 @@ public class IMeter extends Widget {
 		meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
 	    this.meters = meters;
 	} else {
+		if (msg == "tip" && Shovel.getSettings().showMeterValues) {
+			String val = (String)args[0];
+			String[] p = val.split(":");
+			if (knownMeters.contains(p[0])) {
+				tipTex = Text.renderstroked(p[1].trim(), Color.WHITE, Color.BLACK, tipF).tex();
+			}
+		}
 	    super.uimsg(msg, args);
 	}
     }

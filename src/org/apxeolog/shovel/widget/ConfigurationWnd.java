@@ -160,6 +160,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showServerTime), new Coord(200, 100));
+            generalSettings.add(new CheckBox("Show meters values", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showMeterValues = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showMeterValues), new Coord(200, 125));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }
