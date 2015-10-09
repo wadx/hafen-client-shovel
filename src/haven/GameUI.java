@@ -589,6 +589,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	} else if(place == "chr") {
 	    chrwdg = add((CharWnd)child, new Coord(300, 50));
 	    chrwdg.hide();
+		ulpanel.add(new HungerMeter(chrwdg.glut), portrait.c.x + portrait.sz.x + 10, portrait.c.y + 55);
 	} else if(place == "craft") {
 	    final Widget mkwdg = child;
 	    makewnd = new Window(Coord.z, "Crafting", true) {
