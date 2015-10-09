@@ -55,6 +55,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public double shake = 0.0;
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
     Color clWhite = new Color(255, 255, 255);
+	private String gobTip;
     
     public interface Delayed {
 	public void run(GOut g);
@@ -1312,6 +1313,20 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if((placing.lastmc == null) || !placing.lastmc.equals(c)) {
 		delay(placing.new Adjust(c, ui.modflags()));
 	    }
+	} else if (ui.modctrl) {
+		delay(new Hittest(c) {
+			@Override
+			protected void hit(Coord pc, Coord mc, ClickInfo inf) {
+				if (inf != null && inf.gob != null) {
+					Resource r = inf.gob.getres();
+					if (r != null) {
+						gobTip = r.name;
+					}
+				} else {
+					gobTip = null;
+				}
+			}
+		});
 	}
     }
     
@@ -1375,6 +1390,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	if(selection != null) {
 	    if(selection.tt != null)
 		return(selection.tt);
+	} else if (ui.modctrl && gobTip != null) {
+		return gobTip;
 	}
 	return(super.tooltip(c, prev));
     }
