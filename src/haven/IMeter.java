@@ -38,7 +38,7 @@ public class IMeter extends Widget {
     Indir<Resource> bg;
     List<Meter> meters;
 
-	private List<String> knownMeters = Arrays.asList("Health", "Stamina", "Energy");
+	private List<String> knownMeters = Arrays.asList("Health", "Stamina", "Energy", "Pony Power");
 	private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);//.aa(true);
 	public Tex tipTex;
     
