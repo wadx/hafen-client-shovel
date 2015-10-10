@@ -167,6 +167,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showMeterValues), new Coord(200, 125));
+            generalSettings.add(new CheckBox("Show players paths", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showPlayersPaths = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().showPlayersPaths), new Coord(200, 150));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

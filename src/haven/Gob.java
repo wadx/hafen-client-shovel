@@ -26,6 +26,7 @@
 
 package haven;
 
+import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.gob.OverlayListener;
 
 import java.util.*;
@@ -41,6 +42,7 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public final Glob glob;
     Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
     public Collection<Overlay> ols = new LinkedList<Overlay>();
+	private Overlay gobpath = null;
 
 	private ArrayList<OverlayListener> overlayListeners = new ArrayList<>();
 
@@ -221,6 +223,22 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public void setattr(GAttrib a) {
 	Class<? extends GAttrib> ac = attrclass(a.getClass());
 	attr.put(ac, a);
+		if (Shovel.getSettings().showPlayersPaths) {
+			try {
+				Resource res = getres();
+				if (res != null && a.getClass() == LinMove.class) {
+					boolean isplayer = "body".equals(res.basename());
+					if (isplayer) {
+						if (gobpath == null) {
+							gobpath = new Overlay(new GobPath(this));
+							ols.add(gobpath);
+						}
+						((GobPath) gobpath.spr).lm = (LinMove) a;
+					}
+				}
+			} catch (Exception e) {
+			}
+		}
     }
 	
     public <C extends GAttrib> C getattr(Class<C> c) {
@@ -232,6 +250,10 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	
     public void delattr(Class<? extends GAttrib> c) {
 	attr.remove(attrclass(c));
+		if (attrclass(c) == Moving.class) {
+			ols.remove(gobpath);
+			gobpath = null;
+		}
     }
 	
     public void draw(GOut g) {}
@@ -335,4 +357,8 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	}
     }
     public final GobLocation loc = new GobLocation();
+
+	public boolean isplayer() {
+		return GameUI.instance.map.plgob == id;
+	}
 }

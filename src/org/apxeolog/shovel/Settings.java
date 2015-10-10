@@ -27,6 +27,7 @@ public class Settings {
     public boolean studyAtMinimap = false;
     public boolean showServerTime = false;
     public boolean showMeterValues = false;
+    public boolean showPlayersPaths = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
