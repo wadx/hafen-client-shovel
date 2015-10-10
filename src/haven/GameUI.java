@@ -79,6 +79,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 
 	public Widget studyWidget = null;
 	private Widget[] handsList = new Widget[2];
+	private StudyInfoWidget studyInfoWidget = null;
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -523,7 +524,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	public void addStudyWidget(Widget w) {
 		studyWidget = w;
 		blpanel.add(w,  new Coord(4, 35));
-		add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 22));
+		studyInfoWidget = add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 20));
 	}
 
 	public Window findWindow (String name) {
@@ -856,6 +857,23 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
     }
 
+	public void calcHandsPos() {
+		int addH;
+		if (chat.targeth != 0) {
+			if (sz.y - handsList[0].c.y + 40 < chat.savedh) {
+				addH = -chat.savedh;
+			} else {
+				addH = 0;
+			}
+		} else {
+			addH = chat.savedh;
+		}
+		Coord addC = new Coord(0, addH);
+		handsList[0].c = handsList[0].c.add(addC);
+		handsList[1].c = handsList[1].c.add(addC);
+		studyInfoWidget.c = studyInfoWidget.c.add(addC);
+	}
+
     public boolean globtype(char key, KeyEvent ev) {
 	if(key == ':') {
 	    entercmd();
@@ -874,6 +892,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		    chat.sresize(0);
 		}
 	    }
+		calcHandsPos();
 	    Utils.setprefb("chatvis", chat.targeth != 0);
 	} else if(key == 16) {
 	    /*
@@ -1098,11 +1117,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			} else {
 				chat.sresize(0);
 			}
+				calcHandsPos();
 				Utils.setprefb("chatvis", chat.targeth != 0);
-//				if (handsList[0] != null && handsList[1] != null) {
-//					handsList[0].c.y = chat.c.y - 40;
-//					handsList[1].c.y = chat.c.y - 40;
-//				}
 			}
 
 		    public void draw(GOut g) {
