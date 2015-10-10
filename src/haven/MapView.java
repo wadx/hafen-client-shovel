@@ -29,6 +29,7 @@ package haven;
 import static haven.MCache.tilesz;
 
 import haven.GLProgram.VarID;
+import haven.resutil.BPRadSprite;
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.gob.CustomAttrib;
 
@@ -56,6 +57,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
     Color clWhite = new Color(255, 255, 255);
 	private String gobTip;
+
+	private static final Map<String, Gob.Overlay> radmap = new HashMap<String, Gob.Overlay>(4) {{
+		put("gfx/terobjs/minesupport", new Gob.Overlay(new BPRadSprite(100.0F, 0)));
+		put("gfx/terobjs/column", new Gob.Overlay(new BPRadSprite(125.0F, 0)));
+		put("gfx/terobjs/trough", new Gob.Overlay(new BPRadSprite(200.0F, -10.0F)));
+		put("gfx/terobjs/beehive", new Gob.Overlay(new BPRadSprite(151.0F, -10.0F)));
+	}};
     
     public interface Delayed {
 	public void run(GOut g);
@@ -435,6 +443,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	this.glob = glob;
 	this.cc = cc;
 	this.plgob = plgob;
+		toggleradius(Shovel.getSettings().showRadiuses);
 	setcanfocus(true);
     }
     
@@ -1383,6 +1392,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
 
     public boolean globtype(char c, KeyEvent ev) {
+		if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_R) {
+			Shovel.getSettings().showRadiuses = !Shovel.getSettings().showRadiuses;
+			Shovel.saveSettings();
+			toggleradius(Shovel.getSettings().showRadiuses);
+			return true;
+		}
 	return(false);
     }
 
@@ -1395,6 +1410,23 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	return(super.tooltip(c, prev));
     }
+
+	private void toggleradius(boolean show) {
+		synchronized (glob.oc) {
+			for (Gob gob : glob.oc) {
+				try {
+					Resource res = gob.getres();
+					if (res != null && radmap.containsKey(res.name)) {
+						Gob.Overlay rovl = radmap.get(res.name);
+						if (Shovel.getSettings().showRadiuses)
+							gob.ols.add(rovl);
+						else
+							gob.ols.remove(rovl);
+					}
+				} catch (Loading l) {}
+			}
+		}
+	}
 
     public class GrabXL implements Grabber {
 	private final Grabber bk;

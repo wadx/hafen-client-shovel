@@ -28,6 +28,7 @@ public class Settings {
     public boolean showServerTime = false;
     public boolean showMeterValues = false;
     public boolean showPlayersPaths = false;
+    public boolean showRadiuses = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
