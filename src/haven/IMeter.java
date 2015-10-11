@@ -39,8 +39,8 @@ public class IMeter extends Widget {
     List<Meter> meters;
 
 	private List<String> knownMeters = Arrays.asList("Health", "Stamina", "Energy", "Pony Power");
-	private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);//.aa(true);
-	public Tex tipTex;
+	private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);
+	private Tex tipTex;
     
     @RName("im")
     public static class $_ implements Factory {

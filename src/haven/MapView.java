@@ -895,7 +895,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private void drawServerTime(GOut g) {
 		if (serverTime != null) {
 			g.chcolor(255, 255, 255, 255);
-			g.aimage(serverTime.tex(), new Coord(sz.x / 2, 10), 0.5, 0.5);
+			g.aimage(serverTime.tex(), new Coord(GameUI.instance.portrait.c.x + GameUI.instance.portrait.sz.x + 90 + 3 * IMeter.fsz.x, 20), 0.5, 0.5);
 			g.chcolor();
 		}
 	}

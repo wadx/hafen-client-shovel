@@ -25,7 +25,6 @@
  */
 
 package haven;
-
 import java.util.*;
 
 public class OCache implements Iterable<Gob> {

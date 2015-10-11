@@ -1,5 +1,9 @@
 package haven;
 
+import org.apxeolog.shovel.Shovel;
+
+import java.awt.*;
+
 /**
  * Created by Kerrigan on 09.10.2015.
  */
@@ -8,6 +12,9 @@ public class HungerMeter extends Widget {
     private static final Tex bg = Resource.loadtex("apxeolog/ui/hunger");
 
     private final CharWnd.GlutMeter glut;
+
+    private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);
+    private Tex valueTex;
 
     public HungerMeter(CharWnd.GlutMeter glut) {
         super(IMeter.fsz);
@@ -24,6 +31,12 @@ public class HungerMeter extends Widget {
         g.frect(off, isz);
         g.chcolor(glut.fg);
         g.frect(off, new Coord((int) Math.round(isz.x * (glut.glut - Math.floor(glut.glut))), isz.y));
+        if (Shovel.getSettings().showMeterValues) {
+            g.chcolor();
+            valueTex = Text.renderstroked(String.format("%d%%/%d%%", Math.round((glut.lglut) * 100), Math.round(glut.gmod * 100)),
+                    Color.WHITE, Color.BLACK, tipF).tex();
+            g.image(valueTex, sz.div(2).sub(valueTex.sz().div(2)).add(10, -1));
+        }
         g.chcolor();
         g.image(bg, Coord.z);
     }
