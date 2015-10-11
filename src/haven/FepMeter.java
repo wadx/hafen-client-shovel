@@ -16,6 +16,9 @@ public class FepMeter extends Widget {
     private static final Text.Foundry tipF = new Text.Foundry(Text.sans, 10);
     private Tex valueTex;
 
+    private double lastSum = -1;
+    private double lastCap = -1;
+
     public FepMeter(CharWnd.FoodMeter food) {
         super(IMeter.fsz);
         this.food = food;
@@ -27,7 +30,11 @@ public class FepMeter extends Widget {
         for(CharWnd.FoodMeter.El el : els) {
             sum += el.a;
         }
-        valueTex = Text.renderstroked(String.format("%s/%s", Utils.odformat2(sum, 2), Utils.odformat(food.cap, 2)), Color.WHITE, Color.BLACK, tipF).tex();
+        if (lastSum != sum || lastCap != food.cap) {
+            valueTex = Text.renderstroked(String.format("%s/%s", Utils.odformat2(sum, 2), Utils.odformat(food.cap, 2)), Color.WHITE, Color.BLACK, tipF).tex();
+            lastSum = sum;
+            lastCap = food.cap;
+        }
     }
 
     @Override
