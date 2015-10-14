@@ -104,6 +104,8 @@ public class IMeter extends Widget {
 			if (knownMeters.contains(p[0])) {
 				if (p[1].contains("Healing"))
 					p[1] = p[1].replace("(Healing)", "");
+				if (p[1].contains("Starving"))
+					p[1] = p[1].replace("(Starving)", "");
 				tipTex = Text.renderstroked(p[1].trim(), Color.WHITE, Color.BLACK, tipF).tex();
 			}
 		}
