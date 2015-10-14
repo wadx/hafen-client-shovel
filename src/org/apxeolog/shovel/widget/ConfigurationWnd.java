@@ -174,6 +174,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().showPlayersPaths), new Coord(200, 150));
+            generalSettings.add(new CheckBox("Disable clouds", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().disableClouds = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().disableClouds), new Coord(200, 175));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

@@ -29,6 +29,7 @@ public class Settings {
     public boolean showMeterValues = false;
     public boolean showPlayersPaths = false;
     public boolean showRadiuses = false;
+    public boolean disableClouds = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size
