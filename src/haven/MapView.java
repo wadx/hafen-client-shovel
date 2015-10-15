@@ -443,7 +443,6 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	this.glob = glob;
 	this.cc = cc;
 	this.plgob = plgob;
-		toggleradius(Shovel.getSettings().showRadiuses);
 	setcanfocus(true);
     }
     
@@ -551,6 +550,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    }
 	}
 	rl.add(gob, GLState.compose(extra, xf, gob.olmod, gob.save));
+		try {
+			Resource res = gob.getres();
+			if (res != null && radmap.containsKey(res.name)) {
+				Gob.Overlay rovl = radmap.get(res.name);
+				if (Shovel.getSettings().showRadiuses) {
+					if (!gob.ols.contains(rovl))
+						gob.ols.add(rovl);
+				} else {
+					gob.ols.remove(rovl);
+				}
+			}
+		} catch (Loading l) {}
     }
 
     private final Rendered gobs = new Rendered() {
@@ -1416,7 +1427,6 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_R) {
 			Shovel.getSettings().showRadiuses = !Shovel.getSettings().showRadiuses;
 			Shovel.saveSettings();
-			toggleradius(Shovel.getSettings().showRadiuses);
 			return true;
 		}
 	return(false);
@@ -1431,23 +1441,6 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	return(super.tooltip(c, prev));
     }
-
-	private void toggleradius(boolean show) {
-		synchronized (glob.oc) {
-			for (Gob gob : glob.oc) {
-				try {
-					Resource res = gob.getres();
-					if (res != null && radmap.containsKey(res.name)) {
-						Gob.Overlay rovl = radmap.get(res.name);
-						if (Shovel.getSettings().showRadiuses)
-							gob.ols.add(rovl);
-						else
-							gob.ols.remove(rovl);
-					}
-				} catch (Loading l) {}
-			}
-		}
-	}
 
     public class GrabXL implements Grabber {
 	private final Grabber bk;
