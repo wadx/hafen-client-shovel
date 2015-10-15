@@ -1037,6 +1037,14 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     public void tick(double dt) {
+		if (lastInteractC != null) {
+			if (GameUI.instance.hand.isEmpty()) {
+				lastInteractC = null;
+				lastInteractU = null;
+			} else {
+				iteminteract(lastInteractC, lastInteractU);
+			}
+		}
 	camload = null;
 	try {
 	    camera.tick(dt);
@@ -1374,7 +1382,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    });
 	return(true);
     }
-    
+
+
+	private Coord lastInteractC;
+	private Coord lastInteractU;
     public boolean iteminteract(Coord cc, Coord ul) {
 	delay(new Hittest(cc) {
 		public void hit(Coord pc, Coord mc, ClickInfo inf) {
@@ -1388,6 +1399,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		    }
 		}
 	    });
+		if (ui.modctrl) {
+			lastInteractC = cc;
+			lastInteractU = ul;
+		}
 	return(true);
     }
 
