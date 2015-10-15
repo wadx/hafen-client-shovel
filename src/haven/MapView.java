@@ -569,8 +569,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    
 	    public boolean setup(RenderList rl) {
 		synchronized(glob.oc) {
-		    for(Gob gob : glob.oc)
-			addgob(rl, gob);
+		    for(Gob gob : glob.oc) {
+				if (Shovel.getSettings().disableCrops) {
+					Resource r = gob.getres();
+					if (r != null && r.name.startsWith("gfx/terobjs/plants/") && !r.basename().equals("trellis")) {
+						continue;
+					} else {
+						addgob(rl, gob);
+					}
+				} else {
+					addgob(rl, gob);
+				}
+			}
 		}
 		return(false);
 	    }
@@ -1426,6 +1436,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public boolean globtype(char c, KeyEvent ev) {
 		if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_R) {
 			Shovel.getSettings().showRadiuses = !Shovel.getSettings().showRadiuses;
+			Shovel.saveSettings();
+			return true;
+		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_H) {
+			Shovel.getSettings().disableCrops = !Shovel.getSettings().disableCrops;
 			Shovel.saveSettings();
 			return true;
 		}
