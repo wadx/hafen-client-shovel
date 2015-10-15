@@ -57,6 +57,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
     Color clWhite = new Color(255, 255, 255);
 	private String gobTip;
+	private TileOutline gridol;
+	private Coord lasttc = Coord.z;
+	private boolean showTileGrid = Shovel.getSettings().showTileGrid;
 
 	private static final Map<String, Gob.Overlay> radmap = new HashMap<String, Gob.Overlay>(4) {{
 		put("gfx/terobjs/minesupport", new Gob.Overlay(new BPRadSprite(100.0F, 0)));
@@ -443,6 +446,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	this.glob = glob;
 	this.cc = cc;
 	this.plgob = plgob;
+	this.gridol = new TileOutline(glob.map, MCache.cutsz.mul(2 * (view + 1)));
 	setcanfocus(true);
     }
     
@@ -662,6 +666,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    rl.add(outlines, null);
 	rl.add(map, null);
 	rl.add(mapol, null);
+		if (showTileGrid)
+			rl.add(gridol, null);
 	rl.add(gobs, null);
 	if(placing != null)
 	    addgob(rl, placing);
@@ -1042,6 +1048,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		drawDebugInformation(g);
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
+		if (showTileGrid) {
+			Coord tc = cc.div(MCache.tilesz);
+			if (tc.manhattan2(lasttc) > 20) {
+				lasttc = tc;
+				gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+			}
+		}
 	} catch(Loading e) {
 	    lastload = e;
 	    String text = e.getMessage();
@@ -1441,6 +1454,16 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_H) {
 			Shovel.getSettings().disableCrops = !Shovel.getSettings().disableCrops;
 			Shovel.saveSettings();
+			return true;
+		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_G) {
+			Shovel.getSettings().showTileGrid = !Shovel.getSettings().showTileGrid;
+			Shovel.saveSettings();
+			showTileGrid = Shovel.getSettings().showTileGrid;
+			if (showTileGrid) {
+				Coord tc = cc.div(tilesz);
+				lasttc = tc.div(MCache.cmaps);
+				gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+			}
 			return true;
 		}
 	return(false);
