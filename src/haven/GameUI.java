@@ -871,7 +871,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		Coord addC = new Coord(0, addH);
 		handsList[0].c = handsList[0].c.add(addC);
 		handsList[1].c = handsList[1].c.add(addC);
-		studyInfoWidget.c = studyInfoWidget.c.add(addC);
+		if (studyInfoWidget != null)
+			studyInfoWidget.c = studyInfoWidget.c.add(addC);
 	}
 
     public boolean globtype(char key, KeyEvent ev) {
