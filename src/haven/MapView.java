@@ -59,7 +59,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private String gobTip;
 	private TileOutline gridol;
 	private Coord lasttc = Coord.z;
-	private boolean showTileGrid = Shovel.getSettings().showTileGrid;
+	private boolean showTileGrid = false;
 
 	private static final Map<String, Gob.Overlay> radmap = new HashMap<String, Gob.Overlay>(4) {{
 		put("gfx/terobjs/minesupport", new Gob.Overlay(new BPRadSprite(100.0F, 0)));
@@ -1456,9 +1456,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			Shovel.saveSettings();
 			return true;
 		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_G) {
-			Shovel.getSettings().showTileGrid = !Shovel.getSettings().showTileGrid;
-			Shovel.saveSettings();
-			showTileGrid = Shovel.getSettings().showTileGrid;
+			showTileGrid = !showTileGrid;
 			if (showTileGrid) {
 				Coord tc = cc.div(tilesz);
 				lasttc = tc.div(MCache.cmaps);
