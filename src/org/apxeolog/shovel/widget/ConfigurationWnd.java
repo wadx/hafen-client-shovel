@@ -181,6 +181,24 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().disableClouds), new Coord(200, 175));
+            generalSettings.add(new CheckBox("Show FEP and Hunger bars", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().showFepAndHunger = val;
+                    Shovel.saveSettings();
+                    if (val) {
+                        if (GameUI.instance.fepMeter != null)
+                            GameUI.instance.fepMeter.show();
+                        if (GameUI.instance.hungerMeter != null)
+                            GameUI.instance.hungerMeter.show();
+                    } else {
+                        if (GameUI.instance.fepMeter != null)
+                            GameUI.instance.fepMeter.hide();
+                        if (GameUI.instance.hungerMeter != null)
+                            GameUI.instance.hungerMeter.hide();
+                    }
+                }
+            }.chainSet(Shovel.getSettings().showFepAndHunger), new Coord(200, 200));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

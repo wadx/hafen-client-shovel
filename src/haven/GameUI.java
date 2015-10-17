@@ -80,6 +80,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	public Widget studyWidget = null;
 	private Widget[] handsList = new Widget[2];
 	private StudyInfoWidget studyInfoWidget = null;
+	public FepMeter fepMeter;
+	public HungerMeter hungerMeter;
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -590,8 +592,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	} else if(place == "chr") {
 	    chrwdg = add((CharWnd)child, new Coord(300, 50));
 	    chrwdg.hide();
-		ulpanel.add(new HungerMeter(chrwdg.glut), portrait.c.x + portrait.sz.x * 2 + 45, portrait.c.y + 55);
-		ulpanel.add(new FepMeter(chrwdg.feps), portrait.c.x + portrait.sz.x * 2 + 45 + IMeter.fsz.x + 5, portrait.c.y + 55);
+		hungerMeter = ulpanel.add(new HungerMeter(chrwdg.glut), portrait.c.x + portrait.sz.x * 2 + 42, portrait.c.y + 55);
+		fepMeter = ulpanel.add(new FepMeter(chrwdg.feps), portrait.c.x + portrait.sz.x * 2 + 42 + IMeter.fsz.x + 5, portrait.c.y + 55);
+		if (!Shovel.getSettings().showFepAndHunger) {
+			fepMeter.hide();
+			hungerMeter.hide();
+		}
 	} else if(place == "craft") {
 	    final Widget mkwdg = child;
 	    makewnd = new Window(Coord.z, "Crafting", true) {
