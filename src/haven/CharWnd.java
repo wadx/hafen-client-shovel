@@ -1350,23 +1350,43 @@ public class CharWnd extends Window {
 	resize(contentsz().add(15, 10));
     }
 
-	public void addchild(Widget child, Object... args) {
+	public void addchild(Widget incomingChild, Object... args) {
 	String place = (args[0] instanceof String)?(((String)args[0]).intern()):null;
 	if(place == "study") {
 		if (!Shovel.getSettings().studyAtMinimap) {
-			sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
-			Frame.around(sattr, Collections.singletonList(child));
+			sattr.add(incomingChild, new Coord(260, 35).add(wbox.btloff()));
+			Frame.around(sattr, Collections.singletonList(incomingChild));
 		}
-	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, incomingChild.sz.y), incomingChild), new Coord(260 + 150, incomingChild.c.y).add(wbox.btloff().x, 0));
 		if (!Shovel.getSettings().studyAtMinimap)
 	    	Frame.around(sattr, Collections.singletonList(inf));
+
+		/*CheckBox lb = */sattr.add(new CheckBox("Lock") {
+			{
+				a = Shovel.getSettings().lockStudy;
+				set(a);
+			}
+
+			public void set(boolean b) {
+				a = b;
+				Shovel.getSettings().lockStudy = b;
+				Shovel.saveSettings();
+				if (b) {
+					incomingChild.addIgnoreMessage("take");
+					incomingChild.addIgnoreMessage("transfer");
+					incomingChild.addIgnoreMessage("drop");
+				} else {
+					incomingChild.clearAllIgnoreMessages();
+				}
+			}
+		}, new Coord(418, 10));
 	} else if(place == "fmg") {
-	    fgt.add(child, 0, 0);
+	    fgt.add(incomingChild, 0, 0);
 	} else if(place == "wound") {
-	    this.wound = (Wound.Info)child;
-	    woundbox.add(child, Coord.z);
+	    this.wound = (Wound.Info)incomingChild;
+	    woundbox.add(incomingChild, Coord.z);
 	} else {
-	    super.addchild(child, args);
+	    super.addchild(incomingChild, args);
 	}
     }
 

@@ -32,6 +32,7 @@ public class Settings {
     public boolean disableClouds = false;
     public boolean disableCrops = false;
     public boolean showFepAndHunger = false;
+    public boolean lockStudy = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size

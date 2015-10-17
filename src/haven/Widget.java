@@ -48,6 +48,9 @@ public class Widget {
     private Widget prevtt;
     static Map<String, Factory> types = new TreeMap<String, Factory>();
 
+	private HashSet<String> ignoreMessages = new HashSet<>();
+	public boolean logMsgs = false;
+
 	/* Event listener system for advanced hooks */
 
 	private HashMap<WidgetEvent, HashSet<WidgetEventListener>> eventHandlers = new HashMap<>();
@@ -609,12 +612,30 @@ public class Widget {
 	    System.err.println("Unhandled widget message: " + msg);
 	}
     }
+
+	public void addIgnoreMessage(String im) {
+		ignoreMessages.add(im);
+	}
+
+	public void removeIgnoreMessage(String im) {
+		ignoreMessages.remove(im);
+	}
+
+	public boolean hasIgnoreMessage(String im) {
+		return ignoreMessages.contains(im);
+	}
+
+	public void clearAllIgnoreMessages() {
+		ignoreMessages.clear();
+	}
 	
     public void wdgmsg(String msg, Object... args) {
 	wdgmsg(this, msg, args);
     }
 	
     public void wdgmsg(Widget sender, String msg, Object... args) {
+		if (ignoreMessages.contains(msg))
+			return;
 	if(parent == null)
 	    ui.wdgmsg(sender, msg, args);
 	else
