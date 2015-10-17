@@ -72,5 +72,11 @@ public class GobExtendManager {
                 gob.setattr(new CustomAttrib.CropStageAttrib(gob, sdt.rbuf[0]));
             }
         }
+        // Bushes stages
+        if (resource.name.startsWith("gfx/terobjs/bushes")) {
+            if (sdt.rbuf.length > 0 && sdt.rbuf[0] < 100) {
+                gob.setattr(new CustomAttrib.CropStageAttrib(gob, sdt.rbuf[0]));
+            }
+        }
     }
 }

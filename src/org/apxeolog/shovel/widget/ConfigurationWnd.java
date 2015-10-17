@@ -108,7 +108,7 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().drawMinimapFOV), new Coord(15, 300));
-            generalSettings.add(new CheckBox("Show crop stages", false) {
+            generalSettings.add(new CheckBox("Show crops/trees/bushes stages", false) {
                 @Override
                 public void changed(boolean val) {
                     Shovel.getSettings().showCropStages = val;
