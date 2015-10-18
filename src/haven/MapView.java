@@ -1463,6 +1463,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
 			}
 			return true;
+		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_C) {
+			if (camera != null) {
+				camera = makecam(camtypes.get(camera instanceof OrthoCam ? "bad" : "ortho"), new String[0]);
+			}
 		}
 	return(false);
     }
