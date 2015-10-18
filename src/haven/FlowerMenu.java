@@ -33,6 +33,7 @@ import static java.lang.Math.PI;
 public class FlowerMenu extends Widget {
     public static final Color pink = new Color(255, 0, 128);
     public static final Color ptc = Color.YELLOW;
+	public static final Color petalGreen = Color.GREEN;
     public static final Text.Foundry ptf = new Text.Foundry(Text.dfont, 12);
     public static final IBox pbox = Window.wbox;
     public static final Tex pbg = Window.bg;
@@ -60,7 +61,10 @@ public class FlowerMenu extends Widget {
 	public Petal(String name) {
 	    super(Coord.z);
 	    this.name = name;
-	    text = ptf.render(name, ptc);
+		if (!name.startsWith("Travel along "))
+	    	text = ptf.render(name, ptc);
+		else
+			text = ptf.render(name, petalGreen);
 	    resize(text.sz().x + 25, ph);
 	}
 
@@ -170,6 +174,8 @@ public class FlowerMenu extends Widget {
 		tt = -1;
 		opts[i].ta = ta;
 		opts[i].tr = tr;
+			if (opts.length >= 8)
+				opts[i].tr += 40;
 		i++;
 	    }
 	    if(++p >= (ppl * l)) {
