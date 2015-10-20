@@ -529,6 +529,40 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		studyInfoWidget = add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 20));
 	}
 
+	public void insertCurio () {
+		//close all other windows
+		for (Widget w = lchild; w != null; w = w.prev) {
+			if (w instanceof Window) {
+				Window cw = (Window)w;
+				if (!cw.cap.text.equals("Inventory"))
+					cw.wdgmsg("close");
+			}
+		}
+
+		Window inv = findWindow("Inventory");
+		if (inv == null) return;
+
+		Inventory invinv = null;
+		for (Widget w = inv.lchild; w != null; w = w.prev) {
+			if (w instanceof Inventory) {
+				invinv = (Inventory)w;
+				break;
+			}
+		}
+
+		if (invinv == null) return;
+
+		for (Widget w = invinv.lchild; w != null; w = w.prev) {
+			if (w instanceof GItem) {
+				GItem gi = (GItem)w;
+				Curiosity ci = ItemInfo.find(Curiosity.class, gi.info());
+				if (ci != null) {
+					gi.wdgmsg("transfer", Coord.z);
+				}
+			}
+		}
+	}
+
 	public Window findWindow (String name) {
 		if (name.isEmpty())
 			return null;

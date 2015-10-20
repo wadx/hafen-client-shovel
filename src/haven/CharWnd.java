@@ -655,6 +655,8 @@ public class CharWnd extends Window {
 			@Override
 			public void call(Widget widget) {
 				// Widget is child widget
+
+				// study alert
 				if (widget instanceof GItem) {
 					GItem gItem = (GItem) widget;
 					if (gItem.ready()) {
@@ -663,6 +665,11 @@ public class CharWnd extends Window {
 							GameUI.instance.msg("You have studied " + gItem.getItemName() + " for " + ci.exp + " LP.", Color.YELLOW);
 						}
 					}
+				}
+
+				//auto
+				if (Shovel.getSettings().autoStudy) {
+					GameUI.instance.insertCurio();
 				}
 			}
 		});
@@ -1361,7 +1368,7 @@ public class CharWnd extends Window {
 		if (!Shovel.getSettings().studyAtMinimap)
 	    	Frame.around(sattr, Collections.singletonList(inf));
 
-		/*CheckBox lb = */sattr.add(new CheckBox("Lock") {
+		CheckBox lb = sattr.add(new CheckBox("Lock") {
 			{
 				a = Shovel.getSettings().lockStudy;
 				set(a);
@@ -1379,7 +1386,20 @@ public class CharWnd extends Window {
 					incomingChild.clearAllIgnoreMessages();
 				}
 			}
-		}, new Coord(418, 10));
+		}, new Coord(415, 10));
+
+		sattr.add(new CheckBox("Auto") {
+			{
+				a = Shovel.getSettings().autoStudy;
+				set(a);
+			}
+
+			public void set(boolean b) {
+				a = b;
+				Shovel.getSettings().autoStudy = b;
+				Shovel.saveSettings();
+			}
+		}, new Coord(lb.sz.x + lb.c.x + 4, 10));
 	} else if(place == "fmg") {
 	    fgt.add(incomingChild, 0, 0);
 	} else if(place == "wound") {
