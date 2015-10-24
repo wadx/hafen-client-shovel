@@ -967,6 +967,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		act("lo", "cs");
 	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
 		swapHands();
+	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_1) {
+		if (handsList[0] != null)
+			handsList[0].mousedown(Coord.z, 1);
+	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_2) {
+		if (handsList[1] != null)
+			handsList[1].mousedown(Coord.z, 1);
 	}
 	return(super.globtype(key, ev));
     }
