@@ -65,6 +65,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public HelpWnd help;
     public OptWnd opts;
     public Collection<DraggedItem> hand = new LinkedList<DraggedItem>();
+	public Collection<DraggedItem> leftHand = new LinkedList<DraggedItem>();
     private WItem vhand;
     public ChatUI chat;
     public ChatUI.Channel syslog;
@@ -529,6 +530,17 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		studyInfoWidget = add(new StudyInfoWidget(new Coord(97, beltwdg.sz.y - 16)), new Coord(chat.c.x + 4, beltwdg.c.y - chat.sz.y + 20));
 	}
 
+	public void swapHands() {
+		if (hand.isEmpty()) {
+			hand.addAll(leftHand);
+			leftHand.clear();
+		} else {
+			leftHand.addAll(hand);
+			hand.clear();
+		}
+		updhand();
+	}
+
 	public void insertCurio () {
 		//close all other windows
 		for (Widget w = lchild; w != null; w = w.prev) {
@@ -953,6 +965,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		act("lo");
 	} else if (ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_S) {
 		act("lo", "cs");
+	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
+		swapHands();
 	}
 	return(super.globtype(key, ev));
     }
