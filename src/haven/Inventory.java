@@ -75,14 +75,27 @@ public class Inventory extends Widget implements DTarget {
     }
     
     public boolean mousewheel(Coord c, int amount) {
+		Inventory minv = getparent(GameUI.class).maininv;
 	if(ui.modshift) {
-	    Inventory minv = getparent(GameUI.class).maininv;
 	    if(minv != this) {
 		if(amount < 0)
 		    wdgmsg("invxf", minv.wdgid(), 1);
 		else if(amount > 0)
 		    minv.wdgmsg("invxf", this.wdgid(), 1);
 	    }
+	} else if (ui.modctrl) {
+		Comparator<GItem> comparator;
+		if (amount < 0)
+			comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+					? ItemQualityInfo.MaxQualityComparatorAsc : ItemQualityInfo.AverageQualityComparatorAsc;
+		else
+			comparator = Shovel.getSettings().qualityDisplayType == Settings.QualityDisplayType.MAX
+					? ItemQualityInfo.MaxQualityComparatorDesc : ItemQualityInfo.AverageQualityComparatorDesc;
+		ArrayList<GItem> items = new ArrayList<>();
+		items.addAll(wmap.keySet());
+		items.sort(comparator);
+		if (items.size() > 0 && items.get(0) != null)
+			items.get(0).wdgmsg("transfer", Coord.z);
 	}
 	return(true);
     }
