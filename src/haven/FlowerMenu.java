@@ -174,7 +174,7 @@ public class FlowerMenu extends Widget {
 		tt = -1;
 		opts[i].ta = ta;
 		opts[i].tr = tr;
-			if (opts.length >= 8)
+			if (opts.length >= 5)
 				opts[i].tr += 40;
 		i++;
 	    }
@@ -200,7 +200,9 @@ public class FlowerMenu extends Widget {
 	mg = ui.grabmouse(this);
 	kg = ui.grabkeys(this);
 	organize(opts);
-	new Opening();
+	//new Opening();
+		for(Petal p : opts)
+			p.move(p.ta, p.tr);
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -213,7 +215,8 @@ public class FlowerMenu extends Widget {
 
     public void uimsg(String msg, Object... args) {
 	if(msg == "cancel") {
-	    new Cancel();
+	    //new Cancel();
+		ui.destroy(FlowerMenu.this);
 	    mg.remove();
 	    kg.remove();
 	} else if(msg == "act") {
