@@ -555,6 +555,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		for (Widget w = invinv.lchild; w != null; w = w.prev) {
 			if (w instanceof GItem) {
 				GItem gi = (GItem)w;
+				if (!gi.ready())
+					continue;
 				Curiosity ci = ItemInfo.find(Curiosity.class, gi.info());
 				if (ci != null) {
 					gi.wdgmsg("transfer", Coord.z);
