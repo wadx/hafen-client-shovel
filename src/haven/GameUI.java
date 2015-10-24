@@ -949,6 +949,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	} else if((key == 27) && (map != null) && !map.hasfocus) {
 	    setfocus(map);
 	    return(true);
+	} else if (ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_L) {
+		act("lo");
+	} else if (ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_S) {
+		act("lo", "cs");
 	}
 	return(super.globtype(key, ev));
     }
