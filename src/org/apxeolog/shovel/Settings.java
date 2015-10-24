@@ -34,6 +34,7 @@ public class Settings {
     public boolean showFepAndHunger = false;
     public boolean lockStudy = false;
     public boolean autoStudy = false;
+    public boolean simpleTiles = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size

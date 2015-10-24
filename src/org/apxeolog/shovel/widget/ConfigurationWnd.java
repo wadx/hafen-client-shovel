@@ -199,6 +199,13 @@ public class ConfigurationWnd extends Window {
                     }
                 }
             }.chainSet(Shovel.getSettings().showFepAndHunger), new Coord(200, 200));
+            generalSettings.add(new CheckBox("Simple tiles (on map load)", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().simpleTiles = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().simpleTiles), new Coord(200, 225));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

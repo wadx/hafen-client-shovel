@@ -34,6 +34,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import haven.Surface.Vertex;
 import haven.Surface.MeshVertex;
+import org.apxeolog.shovel.Shovel;
 
 public class MapMesh implements Rendered, Disposable {
     public final Coord ul, sz;
@@ -316,7 +317,8 @@ public class MapMesh implements Rendered, Disposable {
 		Coord gc = c.add(ul);
 		long ns = rnd.nextLong();
 		mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
-		dotrans(m, rnd, c, gc);
+			if (!Shovel.getSettings().simpleTiles)
+				dotrans(m, rnd, c, gc);
 		rnd.setSeed(ns);
 	    }
 	}
