@@ -36,6 +36,7 @@ import java.awt.font.TextAttribute;
 public class OptWnd extends Window {
     public final Panel main, video, audio;
     public Panel current;
+	private Button sSettings = null;
 
     public void chpanel(Panel p) {
 	if(current != null)
@@ -193,6 +194,10 @@ public class OptWnd extends Window {
 
 	private ConfigurationWnd configurationWnd = null;
 
+	public void showShovelSettigns() {
+		sSettings.click();
+	}
+
     public OptWnd(boolean gopts) {
 	super(Coord.z, "Options", true);
 	main = add(new Panel());
@@ -202,7 +207,7 @@ public class OptWnd extends Window {
 
 	main.add(new PButton(200, "Video settings", 'v', video), new Coord(0, 0));
 	main.add(new PButton(200, "Audio settings", 'a', audio), new Coord(0, 30));
-	main.add(new Button(200, "Shovel settings") {
+	sSettings = main.add(new Button(200, "Shovel settings") {
 		@Override
 		public void click() {
 			if (configurationWnd == null) {
