@@ -31,6 +31,7 @@ import org.apxeolog.shovel.ALS;
 import org.apxeolog.shovel.info.ItemQualityInfo;
 
 import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -195,7 +196,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 				if (info.getClass().getSimpleName().equals("QBuff")) {
 					try {
 						String qname = (String) info.getClass().getDeclaredField("name").get(info);
-						Integer qval = (Integer) info.getClass().getDeclaredField("q").get(info);
+						//Integer qval = (Integer) info.getClass().getDeclaredField("q").get(info);
+						Double qval = (Double) info.getClass().getDeclaredField("q").get(info);
 						itemQualityInfoCache.setByType(qname, qval);
 					} catch (Exception ex) {
 
