@@ -963,18 +963,48 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    return(true);
 	} else if (ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_L) {
 		act("lo");
+		return true;
 	} else if (ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_S) {
 		act("lo", "cs");
+		return true;
 	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
 		swapHands();
+		return true;
 	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_1) {
-		if (handsList[0] != null)
+		if (handsList[0] != null) {
 			handsList[0].mousedown(Coord.z, 1);
+			return true;
+		}
 	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_2) {
-		if (handsList[1] != null)
+		if (handsList[1] != null) {
 			handsList[1].mousedown(Coord.z, 1);
+			return true;
+		}
 	} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_S) {
 		opts.showShovelSettigns();
+		return true;
+	} else if (ev.isShiftDown()) {
+		int sn = -1;
+		if (ev.getKeyCode() == KeyEvent.VK_F1)
+			sn = 0;
+		else if (ev.getKeyCode() == KeyEvent.VK_F2)
+			sn = 1;
+		else if (ev.getKeyCode() == KeyEvent.VK_F3)
+			sn = 2;
+		else if (ev.getKeyCode() == KeyEvent.VK_F4)
+			sn = 3;
+		else if (ev.getKeyCode() == KeyEvent.VK_F5)
+			sn = 4;
+
+		if (sn < 0)
+			return true;
+
+		if (chrwdg != null && chrwdg.fightWindow != null) {
+			chrwdg.fightWindow.load(sn);
+			chrwdg.fightWindow.use(sn);
+		}
+
+		return true;
 	}
 	return(super.globtype(key, ev));
     }
@@ -1039,12 +1069,13 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 
     private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void error(String msg) {
-	msg(msg, new Color(192, 0, 0), new Color(255, 0, 0));
-	Audio.play(errsfx);
-    }
+		msg(msg, new Color(192, 0, 0), new Color(255, 0, 0));
+		Audio.play(errsfx);
+	}
 
-    public void error2(String msg) {
-		msg(msg, Color.RED, Color.RED);
+	public void soundMsg(String msg, Color c) {
+		msg(msg, c, c);
+		Audio.play(errsfx);
 	}
 
     public void msg(String msg) {

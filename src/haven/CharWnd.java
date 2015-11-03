@@ -56,6 +56,7 @@ public class CharWnd extends Window {
     public final ExperienceList exps;
     public final Widget woundbox;
     public final WoundList wounds;
+	public FightWnd fightWindow = null;
     public Wound.Info wound;
     public int exp, enc;
     private int scost;
@@ -662,7 +663,7 @@ public class CharWnd extends Window {
 					if (gItem.ready()) {
 						Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
 						if (ci != null && expDelt >= ci.exp) {
-							GameUI.instance.msg("You have studied " + gItem.getItemName() + " for " + ci.exp + " LP.", Color.YELLOW);
+							GameUI.instance.soundMsg("You have studied " + gItem.getItemName() + " for " + ci.exp + " LP.", Color.YELLOW);
 						}
 					}
 				}
@@ -1401,7 +1402,8 @@ public class CharWnd extends Window {
 			}
 		}, new Coord(lb.sz.x + lb.c.x + 4, 10));
 	} else if(place == "fmg") {
-	    fgt.add(incomingChild, 0, 0);
+		fgt.add(incomingChild, 0, 0);
+		fightWindow = (FightWnd)incomingChild;
 	} else if(place == "wound") {
 	    this.wound = (Wound.Info)incomingChild;
 	    woundbox.add(incomingChild, Coord.z);

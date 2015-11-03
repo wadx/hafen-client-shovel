@@ -326,6 +326,9 @@ public class FightWnd extends Widget {
 	    }
 	} else if(nm == "use") {
 	    usesave = (Integer)args[0];
+		int s = usesave;
+		if (usesave > -1)
+			GameUI.instance.soundMsg("Loaded combat school "+(s+1), new Color(130, 130, 255));
 	} else {
 	    super.uimsg(nm, args);
 	}
