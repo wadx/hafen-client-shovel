@@ -1383,6 +1383,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 					gobTip = null;
 				}
 			}
+
+			public void nohit(Coord c) {
+				gobTip = null;
+			}
 		});
 	}
     }
@@ -1476,7 +1480,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if(selection.tt != null)
 		return(selection.tt);
 	} else if (ui.modctrl && gobTip != null) {
-		return gobTip;
+		return Text.render(gobTip);
 	}
 	return(super.tooltip(c, prev));
     }
