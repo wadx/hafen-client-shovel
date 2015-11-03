@@ -26,11 +26,15 @@
 
 package haven;
 
+import com.jogamp.opengl.util.awt.Screenshot;
+
 import java.awt.GraphicsConfiguration;
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.*;
@@ -55,6 +59,8 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
     private GLState gstate, rtstate, ostate;
     private GLState.Applier state = null;
     private GLConfig glconf = null;
+
+	public static boolean makess = false;
     
     private static GLCapabilities stdcaps() {
 	GLProfile prof = GLProfile.getDefault();
@@ -88,8 +94,24 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
 	final haven.error.ErrorHandler h = haven.error.ErrorHandler.find();
 	addGLEventListener(new GLEventListener() {
 		Debug.DumpGL dump = null;
+
+		public void makeScreeShot(int w, int h) {
+			try {
+				String curtimestamp = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss.SSS").format(new Date());
+				File outputfile = new File(String.format("screenshots/%s.jpg", curtimestamp));
+				outputfile.getParentFile().mkdirs();
+				Screenshot.writeToFile(outputfile, w, h);
+			} catch (Exception ex) {
+			}
+		}
+
 		public void display(GLAutoDrawable d) {
-		    GL2 gl = d.getGL().getGL2();
+			if (HavenPanel.makess) {
+				makeScreeShot(d.getWidth(), d.getHeight());
+				HavenPanel.makess = false;
+			}
+
+			GL2 gl = d.getGL().getGL2();
 		    /*
 		    if((dump == null) || (dump.getDownstreamGL() != gl))
 			dump = new Debug.DumpGL((GL4bc)gl);
@@ -98,71 +120,77 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
 		    dump.reset();
 		    gl = dump;
 		    */
-		    if(inited)
-			redraw(gl);
+			if (inited)
+				redraw(gl);
 		}
-			
+
 		public void init(GLAutoDrawable d) {
-		    GL gl = d.getGL();
-		    glconf = GLConfig.fromgl(gl, d.getContext(), getChosenGLCapabilities());
-		    glconf.pref = GLSettings.load(glconf, true);
-		    ui.cons.add(glconf);
-		    if(h != null) {
-			h.lsetprop("gl.vendor", gl.glGetString(gl.GL_VENDOR));
-			h.lsetprop("gl.version", gl.glGetString(gl.GL_VERSION));
-			h.lsetprop("gl.renderer", gl.glGetString(gl.GL_RENDERER));
-			h.lsetprop("gl.exts", Arrays.asList(gl.glGetString(gl.GL_EXTENSIONS).split(" ")));
-			h.lsetprop("gl.caps", d.getChosenGLCapabilities().toString());
-			h.lsetprop("gl.conf", glconf);
-		    }
-		    gstate = new GLState() {
-			    public void apply(GOut g) {
-				BGL gl = g.gl;
-				gl.glColor3f(1, 1, 1);
-				gl.glPointSize(4);
-				gl.joglSetSwapInterval(1);
-				gl.glEnable(GL.GL_BLEND);
-				//gl.glEnable(GL.GL_LINE_SMOOTH);
-				gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-				if(g.gc.glmajver >= 2)
-				    gl.glBlendEquationSeparate(GL.GL_FUNC_ADD, GL2.GL_MAX);
-				if(g.gc.havefsaa()) {
+			GL gl = d.getGL();
+			glconf = GLConfig.fromgl(gl, d.getContext(), getChosenGLCapabilities());
+			glconf.pref = GLSettings.load(glconf, true);
+			ui.cons.add(glconf);
+			if (h != null) {
+				h.lsetprop("gl.vendor", gl.glGetString(gl.GL_VENDOR));
+				h.lsetprop("gl.version", gl.glGetString(gl.GL_VERSION));
+				h.lsetprop("gl.renderer", gl.glGetString(gl.GL_RENDERER));
+				h.lsetprop("gl.exts", Arrays.asList(gl.glGetString(gl.GL_EXTENSIONS).split(" ")));
+				h.lsetprop("gl.caps", d.getChosenGLCapabilities().toString());
+				h.lsetprop("gl.conf", glconf);
+			}
+			gstate = new GLState() {
+				public void apply(GOut g) {
+					BGL gl = g.gl;
+					gl.glColor3f(1, 1, 1);
+					gl.glPointSize(4);
+					gl.joglSetSwapInterval(1);
+					gl.glEnable(GL.GL_BLEND);
+					//gl.glEnable(GL.GL_LINE_SMOOTH);
+					gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+					if (g.gc.glmajver >= 2)
+						gl.glBlendEquationSeparate(GL.GL_FUNC_ADD, GL2.GL_MAX);
+					if (g.gc.havefsaa()) {
 				    /* Apparently, having sample
 				     * buffers in the config enables
 				     * multisampling by default on
 				     * some systems. */
-				    g.gl.glDisable(GL.GL_MULTISAMPLE);
+						g.gl.glDisable(GL.GL_MULTISAMPLE);
+					}
+					GOut.checkerr(gl);
 				}
-				GOut.checkerr(gl);
-			    }
-			    public void unapply(GOut g) {
-			    }
-			    public void prep(Buffer buf) {
-				buf.put(global, this);
-			    }
+
+				public void unapply(GOut g) {
+				}
+
+				public void prep(Buffer buf) {
+					buf.put(global, this);
+				}
 			};
 		}
 
 		public void reshape(GLAutoDrawable d, final int x, final int y, final int w, final int h) {
-		    ostate = OrthoState.fixed(new Coord(w, h));
-		    rtstate = new GLState() {
-			    public void apply(GOut g) {
-				g.st.proj = Projection.makeortho(new Matrix4f(), 0, w, 0, h, -1, 1);
-			    }
-			    public void unapply(GOut g) {
-			    }
-			    public void prep(Buffer buf) {
-				buf.put(proj2d, this);
-			    }
-			};
-		    HavenPanel.this.w = w;
-		    HavenPanel.this.h = h;
-		}
-		
-		public void displayChanged(GLAutoDrawable d, boolean cp1, boolean cp2) {}
+			ostate = OrthoState.fixed(new Coord(w, h));
+			rtstate = new GLState() {
+				public void apply(GOut g) {
+					g.st.proj = Projection.makeortho(new Matrix4f(), 0, w, 0, h, -1, 1);
+				}
 
-		public void dispose(GLAutoDrawable d) {}
-	    });
+				public void unapply(GOut g) {
+				}
+
+				public void prep(Buffer buf) {
+					buf.put(proj2d, this);
+				}
+			};
+			HavenPanel.this.w = w;
+			HavenPanel.this.h = h;
+		}
+
+		public void displayChanged(GLAutoDrawable d, boolean cp1, boolean cp2) {
+		}
+
+		public void dispose(GLAutoDrawable d) {
+		}
+	});
     }
 
     public static abstract class OrthoState extends GLState {

@@ -1005,6 +1005,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		}
 
 		return true;
+	} else if (ev.getKeyCode() == KeyEvent.VK_F11) {
+		HavenPanel.makess = true;
+		return true;
 	}
 	return(super.globtype(key, ev));
     }
