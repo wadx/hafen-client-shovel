@@ -997,7 +997,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			sn = 4;
 
 		if (sn < 0)
-			return true;
+			return super.globtype(key, ev);
 
 		if (chrwdg != null && chrwdg.fightWindow != null) {
 			chrwdg.fightWindow.load(sn);
