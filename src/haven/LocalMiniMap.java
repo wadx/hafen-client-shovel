@@ -170,7 +170,8 @@ public class LocalMiniMap extends Window {
                             } else if (highlightAttrib.highlightOption.icon != null) {
                                 Coord dotPosition = p2c(gob.rc);
                                 try {
-                                    g.aimage(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition, 0.5, 0.5);
+                                    //g.aimage(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition, 0.5, 0.5);
+                                    g.image(Resource.loadtex(highlightAttrib.highlightOption.icon), dotPosition.sub(10, 10), new Coord(20, 20));
                                 } catch (Exception ex) {
                                 }
                             }
