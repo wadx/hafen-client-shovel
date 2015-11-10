@@ -1325,6 +1325,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	protected void hit(Coord pc, Coord mc, ClickInfo inf) {
 		updateDebugInformation(inf, pc, mc);
 	    if(inf == null) {
+			if (Shovel.getSettings().tileCentering)
+				mc = mc.div(11).mul(11).add(5, 5);
 		wdgmsg("click", pc, mc, clickb, ui.modflags());
 	    } else {
 		if(inf.ol == null) {
@@ -1471,6 +1473,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			if (camera != null) {
 				camera = makecam(camtypes.get(camera instanceof OrthoCam ? "bad" : "ortho"), new String[0]);
 			}
+		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_Z) {
+			Shovel.getSettings().tileCentering = !Shovel.getSettings().tileCentering;
+			Shovel.saveSettings();
+			GameUI.instance.soundMsg("Tile centering "+(Shovel.getSettings().tileCentering ? "ON" : "OFF"), Color.RED);
 		}
 	return(false);
     }
