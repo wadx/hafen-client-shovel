@@ -209,9 +209,13 @@ public class LocalMiniMap extends Window {
         synchronized (oc) {
             for (Gob gob : oc) {
                 try {
-                    GobIcon icon = gob.getattr(GobIcon.class);
+                    boolean highlighted = false;
                     CustomAttrib.HighlightAttrib highlightAttrib = gob.getattr(CustomAttrib.HighlightAttrib.class);
-                    if (icon != null || highlightAttrib != null) {
+                    if (highlightAttrib != null && highlightAttrib.highlightOption.enabled)
+                        highlighted = true;
+
+                    GobIcon icon = gob.getattr(GobIcon.class);
+                    if (icon != null || highlighted) {
                         Coord gc = p2c(gob.rc);
                         Coord sz;
                         if (icon != null)
