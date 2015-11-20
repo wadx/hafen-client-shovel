@@ -421,8 +421,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		chfield(tfield + 50);
 		return(true);
 	    } else if(ev.getKeyCode() == KeyEvent.VK_HOME) {
-		tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.25f - angl);
-		chfield((float)(100 * Math.sqrt(2)));
+		tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.5f - angl);
+		//chfield((float)(100 * Math.sqrt(2)));
 	    }
 	    return(false);
 	}
