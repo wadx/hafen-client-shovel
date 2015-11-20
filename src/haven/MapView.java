@@ -256,12 +256,19 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public boolean wheel(Coord c, int amount) {
-	    float d = dist + (amount * 5);
+	    float d = dist + (amount * 10);
 	    if(d < 5)
 		d = 5;
 	    dist = d;
 	    return(true);
 	}
+
+		public boolean keydown(KeyEvent ev) {
+			if(ev.getKeyCode() == KeyEvent.VK_HOME) {
+				angl = angl + (float)Utils.cangle(-(float)Math.PI * 0.5f - angl);
+			}
+			return false;
+		}
 
 		@Override
 		public float zoom() {
