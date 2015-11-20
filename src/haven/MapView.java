@@ -1471,7 +1471,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			return true;
 		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_C) {
 			if (camera != null) {
-				camera = makecam(camtypes.get(camera instanceof OrthoCam ? "bad" : "ortho"), new String[0]);
+				String cam = camera instanceof OrthoCam ? "bad" : "ortho";
+				camera = makecam(camtypes.get(cam), new String[0]);
+				GameUI.instance.soundMsg("Switched camera to '"+cam+"'.", Color.RED);
 			}
 		} else if (ev.isShiftDown() && ev.getKeyCode() == KeyEvent.VK_Z) {
 			Shovel.getSettings().tileCentering = !Shovel.getSettings().tileCentering;
