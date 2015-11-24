@@ -46,7 +46,7 @@ public class LocalMiniMap extends Window {
     private Coord playerCoordinates = null;
     private BufferedImage gridCellImage = null;
 
-    private static final Text.Foundry borkaF = new Text.Foundry(Text.sansb, 12).aa(true);
+    private static final Text.Foundry borkaF = new Text.Foundry(Text.monob, 16).aa(true);
 
     @Override
     public void wdgmsg(Widget sender, String msg, Object... args) {
@@ -137,7 +137,7 @@ public class LocalMiniMap extends Window {
                         ptc = p2c(ptc);
                         //g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 200);
                         //g.image(MiniMap.plx.layer(Resource.imgc).tex(), ptc.add(MiniMap.plx.layer(Resource.negc).cc.inv()));
-                        g.image(Text.renderstroked("X", m.col, Color.BLACK, borkaF).tex(), ptc.add(MiniMap.plx.layer(Resource.negc).cc.inv()));
+                        g.image(Text.renderstroked("x", m.col, Color.BLACK, borkaF).tex(), ptc.add(MiniMap.plx.layer(Resource.negc).cc.inv()).add(0, -8));
                         //g.chcolor();
                     } catch (Exception ex) {
 
