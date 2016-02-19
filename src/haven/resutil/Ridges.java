@@ -482,7 +482,7 @@ public class Ridges extends MapMesh.Hooks {
 		md = zd;
 	    }
 	}
-	Vertex[] ret = new Vertex[1 + h - l];
+	Vertex[] ret = new Vertex[Math.min(0, 1 + h - l)];
 	for(i = 0; i < ret.length; i++)
 	    ret[i] = ms.new Vertex(cl[i + l]);
 	return(ret);
