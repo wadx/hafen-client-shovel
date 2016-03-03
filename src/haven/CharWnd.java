@@ -437,8 +437,6 @@ public class CharWnd extends Window {
 	    this.rnm = attrf.render(tip);
 	    this.attr = glob.cattr.get(attr);
 	    this.bg = bg;
-
-		this.attr.addObserver(new AttributeChangeObserver(tip));
 	}
 
 	public void tick(double dt) {
@@ -483,20 +481,6 @@ public class CharWnd extends Window {
 	public void lvlup() {
 	    lvlt = 1.0;
 	}
-		private class AttributeChangeObserver implements Observer {
-			private String attrName;
-
-			public AttributeChangeObserver(String attrn) {
-				attrName = attrn;
-			}
-
-			@Override
-			public void update(Observable obs, Object attr) {
-				int adiff = (int)attr;
-				if (adiff > 0)
-					GameUI.instance.msg("You have raised your "+attrName+" by "+adiff+".", Color.GREEN);
-			}
-		}
     }
 
     public class SAttr extends Widget {
