@@ -139,6 +139,7 @@ public class OCache implements Iterable<Gob> {
 	    d.sdt = sdt;
 	} else if((d == null) || (d.res != res) || !d.sdt.equals(sdt)) {
 	    g.setattr(new ResDrawable(g, res, sdt));
+        g.hide = null;
 	}
     }
 	

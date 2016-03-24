@@ -28,8 +28,11 @@ package haven;
 
 import org.apxeolog.shovel.Shovel;
 import org.apxeolog.shovel.gob.OverlayListener;
+import org.apxeolog.shovel.render.RenderedRect;
 
+import java.awt.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public Coord rc, sc;
@@ -419,27 +422,69 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 
     public void draw(GOut g) {}
 
+    public Resource getBaseResource() {
+        Drawable drawable = getattr(Drawable.class);
+        if (drawable != null) {
+            return drawable.getres();
+        }
+        Composite composite = getattr(Composite.class);
+        if (composite != null) {
+            try {
+                return composite.getres();
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private RenderedRect renderedRect = null;
+    public Boolean hide = null;
+
     public boolean setup(RenderList rl) {
-	loc.tick();
-	for(Overlay ol : ols)
-	    rl.add(ol, null);
-	for(Overlay ol : ols) {
-	    if(ol.spr instanceof Overlay.SetupMod)
-		((Overlay.SetupMod)ol.spr).setupmain(rl);
-	}
-	GobHealth hlt = getattr(GobHealth.class);
-	if(hlt != null)
-	    rl.prepc(hlt.getfx());
-	Drawable d = getattr(Drawable.class);
-	if(d != null)
-	    d.setup(rl);
-	Speaking sp = getattr(Speaking.class);
-	if(sp != null)
-	    rl.add(sp.fx, null);
-	KinInfo ki = getattr(KinInfo.class);
-	if(ki != null)
-	    rl.add(ki.fx, null);
-	return(false);
+        loc.tick();
+        if (hide == null) {
+            Resource res = getBaseResource();
+            if (res != null) {
+                hide = false;
+                for (Pattern pattern : Shovel.getHideList().patterns) {
+                    if (pattern.matcher(res.name).matches()) {
+                        hide = true;
+                    }
+                }
+                if (hide == true) {
+                    Resource.Neg neg = res.layer(Resource.negc);
+                    if (neg != null) {
+                        renderedRect = new RenderedRect(neg.hitboxTl, neg.hitboxBr, Color.BLUE);
+                    }
+                }
+            }
+        }
+        if (Shovel.getSettings().enableHide == false || (hide != null && hide == false)) {
+            for (Overlay ol : ols)
+                rl.add(ol, null);
+            for (Overlay ol : ols) {
+                if (ol.spr instanceof Overlay.SetupMod)
+                    ((Overlay.SetupMod) ol.spr).setupmain(rl);
+            }
+            Drawable d = getattr(Drawable.class);
+            if (d != null)
+                d.setup(rl);
+        } else if (Shovel.getSettings().enableHide == true && hide != null && hide == true) {
+            if (renderedRect != null)
+                rl.add(renderedRect, null);
+        }
+
+        GobHealth hlt = getattr(GobHealth.class);
+        if (hlt != null)
+            rl.prepc(hlt.getfx());
+        Speaking sp = getattr(Speaking.class);
+        if (sp != null)
+            rl.add(sp.fx, null);
+        KinInfo ki = getattr(KinInfo.class);
+        if (ki != null)
+            rl.add(ki.fx, null);
+        return (false);
     }
 
     public Random mkrandoom() {

@@ -36,6 +36,7 @@ public class Settings {
     public boolean autoStudy = false;
     public boolean simpleTiles = false;
     public boolean tileCentering = false;
+    public boolean enableHide = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size

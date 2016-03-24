@@ -932,10 +932,14 @@ public class Resource implements Serializable {
     public class Neg extends Layer {
 	public Coord cc;
 	public Coord[][] ep;
+        public Coord hitboxTl;
+        public Coord hitboxBr;
 		
 	public Neg(Message buf) {
 	    cc = cdec(buf);
-	    buf.skip(12);
+        hitboxTl = cdec(buf);
+        hitboxBr = cdec(buf);
+        cdec(buf);
 	    ep = new Coord[8][0];
 	    int en = buf.uint8();
 	    for(int i = 0; i < en; i++) {
