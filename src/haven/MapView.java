@@ -1735,6 +1735,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			}
 			if (lastMC != null) {
 				g.text("Click MC: " + String.valueOf(lastMC), new Coord(x, y += offsetY));
+                int tiletype = glob.map.gettile(lastMC.div(11));
+                g.text("Click Tile: " + glob.map.tilesetr(tiletype).name, new Coord(x, y += offsetY));
 			}
 			if (lastInfo != null) {
 				if (lastInfo.gob != null) {
@@ -1756,7 +1758,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				}
 			}
 		} catch (Exception ex) {
-
+            ex.printStackTrace();
 		}
 	}
 }
