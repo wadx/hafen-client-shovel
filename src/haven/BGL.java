@@ -35,9 +35,9 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class BGL {
-    private static abstract class Command {
-		public long commandId;
+
+public abstract class BGL {
+    protected static abstract class Command {
 
 	public abstract void run(GL2 gl);
     }
@@ -95,11 +95,9 @@ public class BGL {
 		}
 	}
 
-    private void add(Command cmd) {
-	if(n >= list.length)
-	    list = Utils.extend(list, list.length * 2);
-	list[n++] = cmd;
-    }
+    protected abstract void add(Command cmd);
+    protected abstract Iterable<Command> dump();
+
 
     public static class BGLException extends RuntimeException {
 		public final Dump dump;
@@ -1024,13 +1022,12 @@ public class BGL {
 	}
 
 	public Dump(BGL buf, Command mark) {
-	    int n = buf.n;
-	    this.list = new ArrayList<DCmd>(n);
+	    this.list = new ArrayList<DCmd>();
 	    DCmd marked = null;
-	    for(int i = 0; i < n; i++) {
-		DCmd cmd = new DCmd(this, buf.list[i]);
+	    for(Command ocmd : buf.dump()) {
+		DCmd cmd = new DCmd(this, ocmd);
 		list.add(cmd);
-		if(buf.list[i] == mark)
+		if(ocmd == mark)
 		    marked = cmd;
 	    }
 	    this.mark = marked;
