@@ -37,6 +37,7 @@ public class Settings {
     public boolean simpleTiles = false;
     public boolean tileCentering = false;
     public boolean enableHide = false;
+    public boolean restrictAnimations = false;
     public QualityDisplayType qualityDisplayType = QualityDisplayType.MAX;
 
     // Window position and size

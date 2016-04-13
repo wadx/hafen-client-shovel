@@ -42,6 +42,7 @@ import java.io.*;
 import javax.imageio.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.regex.Pattern;
 
 public class Resource implements Serializable {
     private static ResCache prscache;
@@ -1641,10 +1642,42 @@ public class Resource implements Serializable {
 	    buf.skip();
 	}
 	this.layers = layers;
+        checkAnimations();
 	for(Layer l : layers)
 	    l.init();
 	used = false;
 		ready = true;
+
+    }
+
+    private boolean hasAnimations = true;
+
+    private void checkAnimations() {
+        if (!Shovel.getSettings().restrictAnimations) return;
+
+        for (Pattern pattern : Shovel.getAnimationSuspendList().patterns) {
+            if (pattern.matcher(name).matches()) {
+                hasAnimations = false; break;
+            }
+        }
+        if (!hasAnimations) {
+            // Remove some layers
+            Iterator<Layer> iterator = layers.iterator();
+            while (iterator.hasNext()) {
+                Layer layer = iterator.next();
+                if (layer instanceof Skeleton.ResPose) {
+                    iterator.remove();
+                } else if (layer instanceof MeshAnim.Res) {
+                    iterator.remove();
+                }/* else if (layer instanceof Material.Res) {
+                    ((Material.Res) layer).removeTexRot();
+                }*/
+            }
+        }
+    }
+
+    public boolean canHasAnimations() {
+        return hasAnimations;
     }
 
     private transient Named indir = null;
