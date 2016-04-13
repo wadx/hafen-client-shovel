@@ -27,6 +27,7 @@ public class AnimationSuspendList {
         animationSuspendList.forbiddenObjects.add("gfx/terobjs/dreca");
         animationSuspendList.forbiddenObjects.add("gfx/terobjs/beehive");
         animationSuspendList.forbiddenObjects.add("gfx/terobjs/villageidol");
+        animationSuspendList.forbiddenObjects.add("gfx/terobjs/stockpile-trash");
         animationSuspendList.init();
         return animationSuspendList;
     }
