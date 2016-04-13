@@ -216,7 +216,7 @@ public class ConfigurationWnd extends Window {
                     Shovel.getSettings().restrictAnimations = val;
                     Shovel.saveSettings();
                 }
-            }.chainSet(Shovel.getSettings().restrictAnimations), new Coord(200, 225));
+            }.chainSet(Shovel.getSettings().restrictAnimations), new Coord(200, 250));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }
