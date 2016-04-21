@@ -24,43 +24,54 @@
  *  Boston, MA 02111-1307 USA
  */
 
-package haven.resutil;
-
-import haven.*;
-import haven.res.lib.tree.Tree;
+package haven;
 
 import java.util.*;
+import javax.media.opengl.*;
 
-public class CSprite extends Sprite {
-    private final Coord3f cc;
-    private final List<Rendered> parts = new ArrayList<Rendered>();
-    private final Random rnd;
+public class BufferBGL extends BGL {
+    private Command[] list;
+    private int n = 0;
 
-    public CSprite(Owner owner, Resource res) {
-	super(owner, res);
-	rnd = owner.mkrandoom();
-	Gob gob = (Gob)owner;
-	cc = gob.getrc();
+    public BufferBGL(int c) {
+	list = new Command[c];
+    }
+    public BufferBGL() {this(128);}
+
+    public void run(GL2 gl) {
+	for(int i = 0; i < n; i++) {
+	    try {
+		list[i].run(gl);
+	    } catch(Exception exc) {
+		throw(new BGLException(this, list[i], exc));
+	    }
+	}
     }
 
-    public void addpart(Location loc, GLState mat, Rendered part) {
-	parts.add(GLState.compose(loc, mat).apply(part));
+    protected void add(Command cmd) {
+	if(n >= list.length)
+	    list = Utils.extend(list, list.length * 2);
+	list[n++] = cmd;
     }
 
-    public void addpart(float xo, float yo, GLState mat, Rendered part) {
-	Coord3f pc = new Coord3f(xo, -yo, owner.glob().map.getcz(cc.x + xo, cc.y + yo) - cc.z);
-	Location loc = new Location(Transform.makexlate(new Matrix4f(), pc)
-				    .mul1(Transform.makerot(new Matrix4f(), Coord3f.zu, (float)(rnd.nextFloat() * Math.PI * 2))));
-	addpart(loc, mat, part);
-    }
-
-    public boolean setup(RenderList rl) {
-        rl.prepc(Location.goback("gobx"));
-        for(Rendered p : parts)
-            rl.add(p, null);
-        return(false);
-    }
-    public Object staticp() {
-	return(CONSTANS);
+    protected Iterable<Command> dump() {
+	return(new Iterable<Command>() {
+		public Iterator<Command> iterator() {
+		    return(new Iterator<Command>() {
+			    int i = 0;
+			    public boolean hasNext() {
+				return(i < n);
+			    }
+			    public Command next() {
+				if(i < n)
+				    return(list[i++]);
+				throw(new NoSuchElementException());
+			    }
+			    public void remove() {
+				throw(new UnsupportedOperationException());
+			    }
+			});
+		}
+	    });
     }
 }

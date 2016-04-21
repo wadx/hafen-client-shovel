@@ -43,8 +43,17 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public long id;
     public int frame;
     public final Glob glob;
+
     Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
-    public Collection<Overlay> ols = new LinkedList<Overlay>();
+    public Collection<Overlay> ols = new LinkedList<Overlay>() {
+        public boolean add(Overlay item) {
+	    /* XXX: Remove me once local code is changed to use addol(). */
+            if(glob.oc.getgob(id) != null)
+                glob.oc.changed(Gob.this);
+            return(super.add(item));
+        }
+    };
+
 	private Overlay gobpath = null;
 
 	private ArrayList<OverlayListener> overlayListeners = new ArrayList<>();
@@ -127,6 +136,10 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	    return(false);
 	}
 
+        public Object staticp() {
+            return((spr == null)?null:spr.staticp());
+        }
+
 		@Override
 		public String toString() {
 			try {
@@ -136,7 +149,6 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 			}
 		}
 	}
-
 
     /* XXX: This whole thing didn't turn out quite as nice as I had
      * hoped, but hopefully it can at least serve as a source of
@@ -203,6 +215,8 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	}
     }
 
+    public static class Static {}
+
     public Gob(Glob glob, Coord c, long id, int frame) {
 	this.glob = glob;
 	this.rc = c;
@@ -244,6 +258,14 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 			glob.oc.remove(id);
 	}
 
+
+    /* Intended for local code. Server changes are handled via OCache. */
+    public void addol(Overlay ol) {
+	ols.add(ol);
+    }
+    public void addol(Sprite ol) {
+	addol(new Overlay(ol));
+    }
 
     public Overlay findol(int id) {
 	for(Overlay ol : ols) {
@@ -485,6 +507,38 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
         if (ki != null)
             rl.add(ki.fx, null);
         return (false);
+    }
+
+    private static final Object DYNAMIC = new Object();
+    private Object seq = null;
+    public Object staticp() {
+	if(seq == null) {
+	    Object fs = new Static();
+	    for(GAttrib attr1 : attr.values()) {
+		Object as = attr1.staticp();
+		if(as == Rendered.CONSTANS) {
+		} else if(as instanceof Static) {
+		} else {
+		    fs = null;
+		    break;
+		}
+	    }
+	    for(Overlay ol : ols) {
+		Object os = ol.staticp();
+		if(os == Rendered.CONSTANS) {
+		} else if(os instanceof Static) {
+		} else {
+		    fs = null;
+		    break;
+		}
+	    }
+	    seq = fs;
+	}
+	return((seq == DYNAMIC)?null:seq);
+    }
+
+    void changed() {
+	seq = null;
     }
 
     public Random mkrandoom() {

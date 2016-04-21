@@ -24,43 +24,32 @@
  *  Boston, MA 02111-1307 USA
  */
 
-package haven.resutil;
+package haven.glsl;
 
 import haven.*;
-import haven.res.lib.tree.Tree;
+import static haven.glsl.Cons.*;
+import static haven.glsl.Function.PDir.*;
+import static haven.glsl.Type.*;
+import haven.glsl.ValBlock.Value;
 
-import java.util.*;
+public class BaseColor implements ShaderMacro {
+    public static final InstancedUniform u_color = new InstancedUniform.Vec4("color", States.color) {
+	    public float[] forstate(GOut g, GLState.Buffer buf) {
+		return(buf.get(States.color).ca);
+	    }
+	};
 
-public class CSprite extends Sprite {
-    private final Coord3f cc;
-    private final List<Rendered> parts = new ArrayList<Rendered>();
-    private final Random rnd;
+    public static final AutoVarying transfer = new AutoVarying(VEC4) {
+	    protected Expression root(VertexContext vctx) {
+		return(u_color.ref());
+	    }
+	};
 
-    public CSprite(Owner owner, Resource res) {
-	super(owner, res);
-	rnd = owner.mkrandoom();
-	Gob gob = (Gob)owner;
-	cc = gob.getrc();
-    }
-
-    public void addpart(Location loc, GLState mat, Rendered part) {
-	parts.add(GLState.compose(loc, mat).apply(part));
-    }
-
-    public void addpart(float xo, float yo, GLState mat, Rendered part) {
-	Coord3f pc = new Coord3f(xo, -yo, owner.glob().map.getcz(cc.x + xo, cc.y + yo) - cc.z);
-	Location loc = new Location(Transform.makexlate(new Matrix4f(), pc)
-				    .mul1(Transform.makerot(new Matrix4f(), Coord3f.zu, (float)(rnd.nextFloat() * Math.PI * 2))));
-	addpart(loc, mat, part);
-    }
-
-    public boolean setup(RenderList rl) {
-        rl.prepc(Location.goback("gobx"));
-        for(Rendered p : parts)
-            rl.add(p, null);
-        return(false);
-    }
-    public Object staticp() {
-	return(CONSTANS);
+    public void modify(ProgramContext prog) {
+	prog.fctx.fragcol.mod(new Macro1<Expression>() {
+		public Expression expand(Expression in) {
+		    return(mul(in, transfer.ref()));
+		}
+	    }, 0);
     }
 }
