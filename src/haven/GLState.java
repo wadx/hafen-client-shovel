@@ -288,38 +288,39 @@ public abstract class GLState {
 		return(null);
 	    return((T)states[slot.id]);
 	}
-	
+
 	public int hashCode() {
-	    int h = 0;
-	    for(int i = 0; i < states.length; i++) {
-		if(states[i] != null)
-		    h = (h * 31) + states[i].hashCode();
-	    }
-	    return(h);
+        int h = 0;
+        for (int i = 0; i < states.length; i++) {
+            if (states[i] != null) {
+                h = (h * 31) + states[i].hashCode();
+            }
+        }
+        return h;
 	}
 
-	public boolean equals(Object oo) {
-	    if(!(oo instanceof Buffer))
-		return(false);
-	    Buffer o = (Buffer)oo;
-	    GLState[] a, b;
-	    int i = 0;
+        public boolean equals(Object oo) {
+            if(!(oo instanceof Buffer))
+                return(false);
+            Buffer o = (Buffer)oo;
+            GLState[] a, b;
+            int i = 0;
 
-	    if(states.length > o.states.length) {
-		a = states; b = o.states;
-	    } else {
-		b = states; a = o.states;
-	    }
-	    for(; i < b.length; i++) {
-		if(!Utils.eq(a[i], b[i]))
-		    return(false);
-	    }
-	    for(; i < a.length; i++) {
-		if(a[i] != null)
-		    return(false);
-	    }
-	    return(true);
-	}
+            if(states.length > o.states.length) {
+                a = states; b = o.states;
+            } else {
+                b = states; a = o.states;
+            }
+            for(; i < b.length; i++) {
+                if(!Utils.eq(a[i], b[i]))
+                    return(false);
+            }
+            for(; i < a.length; i++) {
+                if(a[i] != null)
+                    return(false);
+            }
+            return(true);
+        }
 
 	public String toString() {
 	    StringBuilder buf = new StringBuilder();

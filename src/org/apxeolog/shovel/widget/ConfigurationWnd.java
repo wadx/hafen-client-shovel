@@ -206,6 +206,13 @@ public class ConfigurationWnd extends Window {
                     Shovel.saveSettings();
                 }
             }.chainSet(Shovel.getSettings().simpleTiles), new Coord(200, 225));
+            generalSettings.add(new CheckBox("Restrict animations (need restart)", false) {
+                @Override
+                public void changed(boolean val) {
+                    Shovel.getSettings().restrictAnimations = val;
+                    Shovel.saveSettings();
+                }
+            }.chainSet(Shovel.getSettings().restrictAnimations), new Coord(200, 250));
             chckQMax.linked.add(chckQAvg);
             chckQAvg.linked.add(chckQMax);
         }

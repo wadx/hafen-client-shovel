@@ -445,17 +445,17 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public void draw(GOut g) {}
 
     public Resource getBaseResource() {
-        Drawable drawable = getattr(Drawable.class);
-        if (drawable != null) {
-            return drawable.getres();
-        }
-        Composite composite = getattr(Composite.class);
-        if (composite != null) {
-            try {
-                return composite.getres();
-            } catch (Exception ex) {
-                return null;
+        try {
+            Drawable drawable = getattr(Drawable.class);
+            if (drawable != null) {
+                return drawable.getres();
             }
+            Composite composite = getattr(Composite.class);
+            if (composite != null) {
+                return composite.getres();
+            }
+        } catch (Exception ex) {
+            return null;
         }
         return null;
     }
