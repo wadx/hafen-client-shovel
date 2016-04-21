@@ -485,7 +485,7 @@ public class FastMesh implements FRendered, Rendered.Instanced, Disposable {
 	public transient FastMesh m;
 	public transient Material.Res mat;
 	public final Map<String, String> rdat;
-	private transient short[] tmp;
+	public transient short[] tmp;
 	public final int id, ref;
 	private int matid;
 	

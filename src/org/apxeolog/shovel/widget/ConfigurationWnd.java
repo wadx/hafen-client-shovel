@@ -187,15 +187,19 @@ public class ConfigurationWnd extends Window {
                     Shovel.getSettings().showFepAndHunger = val;
                     Shovel.saveSettings();
                     if (val) {
-                        if (GameUI.instance.fepMeter != null)
-                            GameUI.instance.fepMeter.show();
-                        if (GameUI.instance.hungerMeter != null)
-                            GameUI.instance.hungerMeter.show();
+                        if (GameUI.instance != null) {
+                            if (GameUI.instance.fepMeter != null)
+                                GameUI.instance.fepMeter.show();
+                            if (GameUI.instance.hungerMeter != null)
+                                GameUI.instance.hungerMeter.show();
+                        }
                     } else {
-                        if (GameUI.instance.fepMeter != null)
-                            GameUI.instance.fepMeter.hide();
-                        if (GameUI.instance.hungerMeter != null)
-                            GameUI.instance.hungerMeter.hide();
+                        if (GameUI.instance != null) {
+                            if (GameUI.instance.fepMeter != null)
+                                GameUI.instance.fepMeter.hide();
+                            if (GameUI.instance.hungerMeter != null)
+                                GameUI.instance.hungerMeter.hide();
+                        }
                     }
                 }
             }.chainSet(Shovel.getSettings().showFepAndHunger), new Coord(200, 200));

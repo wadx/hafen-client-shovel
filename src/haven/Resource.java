@@ -1650,6 +1650,37 @@ public class Resource implements Serializable {
 	    l.init();
 	used = false;
 		ready = true;
+
+    }
+
+    private boolean hasAnimations = true;
+
+    private void checkAnimations() {
+        if (!Shovel.getSettings().restrictAnimations) return;
+
+        for (Pattern pattern : Shovel.getAnimationSuspendList().patterns) {
+            if (pattern.matcher(name).matches()) {
+                hasAnimations = false; break;
+            }
+        }
+        if (!hasAnimations) {
+            // Remove some layers
+            Iterator<Layer> iterator = layers.iterator();
+            while (iterator.hasNext()) {
+                Layer layer = iterator.next();
+                if (layer instanceof Skeleton.ResPose) {
+                    iterator.remove();
+                } else if (layer instanceof MeshAnim.Res) {
+                    iterator.remove();
+                }/* else if (layer instanceof Material.Res) {
+                    ((Material.Res) layer).removeTexRot();
+                }*/
+            }
+        }
+    }
+
+    public boolean canHasAnimations() {
+        return hasAnimations;
     }
 
     private boolean hasAnimations = true;
