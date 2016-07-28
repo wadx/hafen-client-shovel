@@ -15,20 +15,20 @@ import java.util.HashMap;
  * Check github releases for new version
  */
 public class VersionChecker {
-    private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/apxeolog/hafen-client-shovel/releases/latest";
+//    private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/apxeolog/hafen-client-shovel/releases/latest";
 
     public static String check() {
-        String response = getUrlResponse(LATEST_RELEASE_URL);
-        if (response != null && !response.isEmpty()) {
-            HashMap<String, String> responseMap = new HashMap<>();
-            Gson gson = new Gson();
-            responseMap = gson.fromJson(response, responseMap.getClass());
-            // Check version
-            String version = responseMap.get("tag_name");
-            String information = responseMap.get("body");
-            if (getVersionNum(version) > getVersionNum(Shovel.getVersion()))
-                return "Version " + version + "\n\n" + information;
-        }
+//        String response = getUrlResponse(LATEST_RELEASE_URL);
+//        if (response != null && !response.isEmpty()) {
+//            HashMap<String, String> responseMap = new HashMap<>();
+//            Gson gson = new Gson();
+//            responseMap = gson.fromJson(response, responseMap.getClass());
+//            // Check version
+//            String version = responseMap.get("tag_name");
+//            String information = responseMap.get("body");
+//            if (getVersionNum(version) > getVersionNum(Shovel.getVersion()))
+//                return "Version " + version + "\n\n" + information;
+//        }
         return null;
     }
 
